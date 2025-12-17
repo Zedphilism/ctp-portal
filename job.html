@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CT&P Portal | Job</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="./assets/app.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          boxShadow: { soft: "0 10px 30px rgba(0,0,0,.08)" }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .scrollbar-thin::-webkit-scrollbar { height: 10px; width: 10px; }
+    .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(15, 23, 42, .18); border-radius: 999px; }
+    .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+  </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900">
+  <!-- Top bar -->
+  <header class="sticky top-0 z-40 border-b border-slate-200 glass">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="h-10 w-10 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-extrabold shrink-0">
+          CTP
+        </div>
+        <div class="min-w-0">
+          <div class="text-lg font-extrabold truncate" id="title">Job</div>
+          <div class="text-xs smallmuted">Read only details</div>
+        </div>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-2 flex-wrap justify-end">
+        <a class="px-3 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-sm font-semibold" href="./index.html">Jobs</a>
+        <a class="px-3 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-sm font-semibold" href="./inspectors.html">Inspectors</a>
+        <a class="px-3 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-sm font-semibold" href="./analytics.html">Analytics</a>
+        <a class="px-3 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-sm font-semibold" href="./timeline.html">Timeline</a>
+        <a class="px-3 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-sm font-semibold" href="./map.html">Map</a>
+      </nav>
+
+      <!-- Mobile nav -->
+      <div class="md:hidden flex items-center gap-2">
+        <a class="px-3 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-sm font-semibold" href="./index.html">Jobs</a>
+        <a class="px-3 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-sm font-semibold" href="./inspectors.html">Inspectors</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-6">
+    <!-- Hero summary -->
+    <section class="rounded-3xl border border-slate-200 bg-white shadow-soft">
+      <div class="p-5 sm:p-6">
+        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+          <div class="min-w-0">
+            <div class="text-xs smallmuted">Job ID</div>
+
+            <div class="flex items-center gap-3 mt-1">
+              <div class="text-2xl sm:text-3xl font-extrabold tracking-tight" id="jobId">...</div>
+              <span class="hidden sm:inline-flex text-xs px-2.5 py-1 rounded-full border border-slate-200 bg-slate-50 text-slate-600">
+                Details view
+              </span>
+            </div>
+
+            <!-- chips injected by JS -->
+            <div class="mt-3 flex flex-wrap gap-2" id="chips"></div>
+          </div>
+
+          <div class="sm:text-right text-xs smallmuted">
+            <div class="inline-flex items-center gap-2 px-3 py-2 rounded-2xl border border-slate-200 bg-slate-50">
+              <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+              <span id="ts">...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick guidance row -->
+        <div class="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <div class="text-sm font-semibold text-slate-900">Quick view</div>
+          <div class="text-xs text-slate-600 mt-1">
+            Key fields are curated for readability. Full row is available below for audit level checking.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key fields -->
+    <section class="mt-4 rounded-3xl border border-slate-200 bg-white shadow-soft">
+      <div class="px-5 sm:px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-3">
+        <div>
+          <div class="font-extrabold">Key fields</div>
+          <div class="text-xs smallmuted">The important stuff without the noise</div>
+        </div>
+
+        <div class="text-xs text-slate-500">
+          Tip: screenshot this section for quick sharing
+        </div>
+      </div>
+
+      <div class="p-5 sm:p-6">
+        <!-- JS fills this grid -->
+        <div id="key" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm"></div>
+      </div>
+    </section>
+
+    <!-- Full row -->
+    <section class="mt-4 rounded-3xl border border-slate-200 bg-white shadow-soft">
+      <div class="px-5 sm:px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-3">
+        <div>
+          <div class="font-extrabold">Full row</div>
+          <div class="text-xs smallmuted">Raw fields exactly as received</div>
+        </div>
+
+        <button
+          type="button"
+          class="text-sm px-3 py-2 rounded-xl border border-slate-200 hover:bg-slate-50"
+          onclick="document.getElementById('dumpWrap').classList.toggle('hidden')"
+        >
+          Toggle
+        </button>
+      </div>
+
+      <div id="dumpWrap" class="p-5 sm:p-6">
+        <div class="text-xs text-slate-500 mb-3">
+          This section is meant for verification. If something looks off, it is usually a header name mismatch.
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 overflow-auto scrollbar-thin">
+          <!-- JS fills this grid -->
+          <div id="dump" class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs"></div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="py-8 text-xs text-slate-500">
+      CT&P Portal. Read only view. Data displayed from Apps Script API.
+    </footer>
+  </main>
+
+  <script src="./js/config.js"></script>
+  <script src="./js/api.js"></script>
+  <script src="./js/ui.js"></script>
+  <script src="./js/pages.job.js"></script>
+</body>
+</html>

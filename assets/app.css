@@ -1,0 +1,71 @@
+:root{
+  color-scheme: light;
+  --bg: #f6f8fc;
+  --card: rgba(255,255,255,.86);
+  --stroke: rgba(15, 23, 42, .08);
+  --stroke2: rgba(15, 23, 42, .12);
+  --text: #0f172a;
+  --muted: rgba(15,23,42,.62);
+  --muted2: rgba(15,23,42,.42);
+  --shadow: 0 14px 40px rgba(2,6,23,.08);
+  --shadow2: 0 10px 26px rgba(2,6,23,.06);
+  --radius: 18px;
+}
+
+body{
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  background: radial-gradient(1200px 600px at 15% 0%, rgba(37,99,235,.09), transparent 60%),
+              radial-gradient(900px 520px at 95% 10%, rgba(16,185,129,.10), transparent 55%),
+              var(--bg);
+  color: var(--text);
+}
+
+.card{
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: var(--shadow2);
+}
+
+.glass{
+  background: rgba(255,255,255,.72);
+  backdrop-filter: blur(14px);
+}
+
+.smallmuted{ color: var(--muted); }
+.smallmuted2{ color: var(--muted2); }
+
+.btn{
+  border-radius: 14px;
+  transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+}
+.btn:hover{ transform: translateY(-1px); box-shadow: 0 12px 28px rgba(2,6,23,.10); }
+.btn:active{ transform: translateY(0px); opacity: .95; }
+
+.pill{
+  border: 1px solid var(--stroke);
+  background: rgba(255,255,255,.8);
+  border-radius: 999px;
+}
+
+.listItem{
+  border-radius: 16px;
+  transition: background .12s ease, transform .12s ease;
+}
+.listItem:hover{
+  background: rgba(2, 6, 23, .03);
+  transform: translateY(-1px);
+}
+
+.kpi{
+  border: 1px solid var(--stroke);
+  border-radius: 16px;
+  background: rgba(255,255,255,.8);
+  padding: 12px;
+}
+
+.hr{
+  height: 1px;
+  background: var(--stroke);
+  width: 100%;
+}

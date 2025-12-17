@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CT&P Portal | Timeline</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="./assets/app.css">
+</head>
+<body class="bg-slate-50 text-slate-900">
+  <header class="sticky top-0 z-40 border-b border-slate-200 glass">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between gap-3">
+      <div>
+        <div class="text-lg font-extrabold">Timeline</div>
+        <div class="text-xs smallmuted">Submitted, Assigned, Completed events</div>
+      </div>
+      <nav class="flex items-center gap-2 flex-wrap justify-end">
+        <a class="px-3 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-sm font-semibold" href="./index.html">Jobs</a>
+        <a class="px-3 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-sm font-semibold" href="./inspectors.html">Inspectors</a>
+        <a class="px-3 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-sm font-semibold" href="./analytics.html">Analytics</a>
+        <a class="px-3 py-2 rounded-xl bg-slate-900 text-white text-sm font-semibold" href="./timeline.html">Timeline</a>
+        <a class="px-3 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-sm font-semibold" href="./map.html">Map</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-6">
+    <section class="card bg-white p-4">
+      <div class="flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
+        <div class="flex gap-2 flex-wrap">
+          <select id="type" class="px-4 py-3 rounded-xl border border-slate-200">
+            <option value="">All events</option>
+            <option value="submitted">Submitted</option>
+            <option value="assigned">Assigned</option>
+            <option value="completed">Completed</option>
+          </select>
+          <input id="q" class="w-full md:w-96 px-4 py-3 rounded-xl border border-slate-200" placeholder="Search Job ID, unit, inspector..." />
+          <button id="refresh" class="px-4 py-3 rounded-xl bg-slate-900 text-white font-semibold hover:opacity-90">Refresh</button>
+        </div>
+        <div class="text-xs smallmuted" id="count"></div>
+      </div>
+    </section>
+
+    <section class="mt-4 card bg-white p-4">
+      <div id="list" class="space-y-3"></div>
+    </section>
+  </main>
+
+  <script src="./js/config.js"></script>
+  <script src="./js/api.js"></script>
+  <script src="./js/ui.js"></script>
+  <script src="./js/pages.timeline.js"></script>
+</body>
+</html>
