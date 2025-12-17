@@ -6,6 +6,11 @@
   <title>CT&P Portal</title>
   <meta name="description" content="CT&P Portal for inspection job tracking and coordination." />
 
+  <!-- ===== Map libs (added, does not touch your UI) ===== -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+
   <style>
     :root{
       --bg:#0b0f14;
@@ -774,6 +779,65 @@
       .controls{ gap:12px; }
       .controls-left{ width:100%; }
     }
+
+    /* ===== Added: Map + Timeline only (does not change existing UI) ===== */
+    .map-wrap{
+      margin-top:12px;
+      overflow:hidden;
+      border-radius: var(--radius);
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.18);
+    }
+    #map{
+      width:100%;
+      height:540px;
+    }
+    .tl{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:12px;
+    }
+    .tl-item{
+      padding:12px;
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(0,0,0,.18);
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .tl-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .tl-title{
+      font-weight:1000;
+      letter-spacing:.2px;
+    }
+    .tl-sub{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+    }
+    .tl-meta{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    /* Leaflet popup to match your dark UI */
+    .leaflet-popup-content-wrapper,
+    .leaflet-popup-tip{
+      background: rgba(15,22,32,.98);
+      color: var(--text);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: 0 20px 60px rgba(0,0,0,.45);
+    }
+    .leaflet-container a{ color: var(--text); }
   </style>
 </head>
 
@@ -798,6 +862,9 @@
           <button class="tab active" id="tabJobs" role="tab" aria-selected="true" aria-controls="viewJobs">Jobs</button>
           <button class="tab" id="tabDir" role="tab" aria-selected="false" aria-controls="viewDir">Inspector Directory</button>
           <button class="tab" id="tabAna" role="tab" aria-selected="false" aria-controls="viewAna">Analytics</button>
+          <!-- Added tabs only -->
+          <button class="tab" id="tabTime" role="tab" aria-selected="false" aria-controls="viewTime">Timeline</button>
+          <button class="tab" id="tabMap" role="tab" aria-selected="false" aria-controls="viewMap">Map</button>
         </div>
 
         <span class="pill"><strong id="today"></strong></span>
@@ -1016,6 +1083,64 @@
         </div>
       </section>
     </section>
+
+    <!-- ===== Added view: Timeline (new, no impact on existing views) ===== -->
+    <section class="view" id="viewTime" role="tabpanel" aria-labelledby="tabTime">
+      <section class="panel">
+        <div class="panel-title">
+          <div>
+            <h2>Timeline</h2>
+            <p>Chronological record built from all jobs. Sorted by Tarikh Tugasan (latest first).</p>
+          </div>
+          <div class="meta">
+            <span class="badge"><span class="dot"></span><span id="tlCount">0 items</span></span>
+          </div>
+        </div>
+
+        <div class="controls" style="margin-top:12px;">
+          <div class="controls-left" style="width:100%;">
+            <div class="input" title="Search timeline by Job ID, Unit, Location, Inspector">
+              <span style="opacity:.85;">🔎</span>
+              <input id="tlQ" type="text" placeholder="Search timeline (Job ID, Unit, Lokasi, Pemeriksa)" />
+            </div>
+            <select class="select" id="tlStatus" title="Filter timeline by status">
+              <option value="">All Status</option>
+              <option value="Pending">Pending</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="tl" id="tlList"></div>
+        <div class="mini-note" id="tlEmpty" style="display:none;">No timeline items match your filter.</div>
+      </section>
+    </section>
+
+    <!-- ===== Added view: Map (new, no impact on existing views) ===== -->
+    <section class="view" id="viewMap" role="tabpanel" aria-labelledby="tabMap">
+      <section class="panel">
+        <div class="panel-title">
+          <div>
+            <h2>Map</h2>
+            <p>Blue pins show only In Progress inspections. Heat view shows frequency using all jobs.</p>
+          </div>
+          <div class="meta">
+            <span class="badge"><span class="dot"></span><span id="mapNote">Ready</span></span>
+          </div>
+        </div>
+
+        <div class="map-wrap">
+          <div id="map"></div>
+        </div>
+
+        <div class="mini-note">
+          🔵 Pins: In Progress only. Click to view details.<br>
+          🔥 Heat: workload density based on all jobs (Pending, In Progress, Completed, Cancelled).
+        </div>
+      </section>
+    </section>
   </main>
 
   <div class="backdrop" id="backdrop"></div>
@@ -1092,9 +1217,14 @@
     const $tabJobs = $("#tabJobs");
     const $tabDir = $("#tabDir");
     const $tabAna = $("#tabAna");
+    const $tabTime = $("#tabTime");   // added
+    const $tabMap = $("#tabMap");     // added
+
     const $viewJobs = $("#viewJobs");
     const $viewDir = $("#viewDir");
     const $viewAna = $("#viewAna");
+    const $viewTime = $("#viewTime"); // added
+    const $viewMap = $("#viewMap");   // added
 
     const $dirQ = $("#dirQ");
     const $dirSpec = $("#dirSpec");
@@ -1122,6 +1252,16 @@
     const $aJenisLegend = $("#aJenisLegend");
     const $aLoadChart = $("#aLoadChart");
     const $aLoadLegend = $("#aLoadLegend");
+
+    // Timeline refs (added)
+    const $tlList = $("#tlList");
+    const $tlQ = $("#tlQ");
+    const $tlStatus = $("#tlStatus");
+    const $tlCount = $("#tlCount");
+    const $tlEmpty = $("#tlEmpty");
+
+    // Map refs (added)
+    const $mapNote = $("#mapNote");
 
     function safe(v){ return (v ?? "").toString().trim(); }
     function normalizeText(s){ return safe(s).toLowerCase().replace(/\s+/g," ").trim(); }
@@ -1237,7 +1377,6 @@
     }
 
     function mapRowToInspector(row) {
-        // Looks for columns in the 'Pemeriksa' sheet
         const name = pick(row, ["Nama Pemeriksa", "Name", "Inspector Name", "Nama"]);
         const rank = pick(row, ["Pangkat", "Rank", "Gred"]);
         const role = pick(row, ["Penjawatan", "Role"]);
@@ -1246,10 +1385,8 @@
         const phone = pick(row, ["Phone Number", "No Telefon", "Phone"]);
         const email = pick(row, ["Email", "Emel"]);
         const status = pick(row, ["Status", "Availability"]);
-        
-        // Try to find a local photo if name matches
+
         let photo = PHOTO_MAP[name] || "";
-        // If not found in map, check if there is a 'Photo_URL' column in sheet
         if (!photo) photo = pick(row, ["Photo_URL", "Photo", "Image"]);
 
         return {
@@ -1269,38 +1406,41 @@
     async function loadData(){
       setBadge("loading","Loading");
       try{
-        // 1. Fetch Jobs
         const urlJobs = WEB_APP_URL + (WEB_APP_URL.includes("?") ? "&" : "?") + "action=listJobs&t=" + Date.now();
         const reqJobs = fetch(urlJobs, { method:"GET", cache:"no-store" }).then(r => r.json());
 
-        // 2. Fetch Inspectors
         const urlInsp = WEB_APP_URL + (WEB_APP_URL.includes("?") ? "&" : "?") + "action=listInspectors&t=" + Date.now();
         const reqInsp = fetch(urlInsp, { method:"GET", cache:"no-store" }).then(r => r.json());
 
-        // Wait for both
         const [resJobs, resInsp] = await Promise.all([reqJobs, reqInsp]);
 
-        // Process Jobs
         if(resJobs && resJobs.ok && Array.isArray(resJobs.jobs)){
            JOBS = resJobs.jobs.map(mapRowToJob).filter(j => safe(j.jobId) !== "");
         } else {
            console.error("Jobs error", resJobs);
         }
 
-        // Process Inspectors (Real Data from Sheet)
         if(resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)){
            INSPECTORS = resInsp.inspectors.map(mapRowToInspector).filter(i => safe(i.name) !== "");
         } else {
            console.error("Inspector error", resInsp);
-           // Fallback if inspector fetch failed? (Empty array)
            INSPECTORS = [];
         }
 
         setBadge("live","Live");
         renderJobs();
-        rebuildDirectory(); // Merges job loads into inspector objects
+        rebuildDirectory();
         renderDirectory();
         renderAnalytics();
+
+        // Added: update timeline + map based on fresh data
+        renderTimeline();
+        if($viewMap.classList.contains("active")) {
+          renderMapView();
+        } else {
+          // keep it ready
+          $mapNote.textContent = "Ready";
+        }
 
       } catch(err){
         console.error("loadData error:", err);
@@ -1311,6 +1451,8 @@
         rebuildDirectory();
         renderDirectory();
         renderAnalytics();
+        renderTimeline();
+        $mapNote.textContent = "Offline";
       }
     }
 
@@ -1444,18 +1586,26 @@
       const isJobs = name === "jobs";
       const isDir = name === "dir";
       const isAna = name === "ana";
+      const isTime = name === "time";
+      const isMap = name === "map";
 
       $tabJobs.classList.toggle("active", isJobs);
       $tabDir.classList.toggle("active", isDir);
       $tabAna.classList.toggle("active", isAna);
+      $tabTime.classList.toggle("active", isTime);
+      $tabMap.classList.toggle("active", isMap);
 
       $tabJobs.setAttribute("aria-selected", isJobs ? "true" : "false");
       $tabDir.setAttribute("aria-selected", isDir ? "true" : "false");
       $tabAna.setAttribute("aria-selected", isAna ? "true" : "false");
+      $tabTime.setAttribute("aria-selected", isTime ? "true" : "false");
+      $tabMap.setAttribute("aria-selected", isMap ? "true" : "false");
 
       $viewJobs.classList.toggle("active", isJobs);
       $viewDir.classList.toggle("active", isDir);
       $viewAna.classList.toggle("active", isAna);
+      $viewTime.classList.toggle("active", isTime);
+      $viewMap.classList.toggle("active", isMap);
 
       if(isDir){
         rebuildDirectory();
@@ -1464,11 +1614,19 @@
       if(isAna){
         renderAnalytics();
       }
+      if(isTime){
+        renderTimeline();
+      }
+      if(isMap){
+        renderMapView();
+      }
     }
 
     $tabJobs.addEventListener("click", () => setActiveTab("jobs"));
     $tabDir.addEventListener("click", () => setActiveTab("dir"));
     $tabAna.addEventListener("click", () => setActiveTab("ana"));
+    $tabTime.addEventListener("click", () => setActiveTab("time"));
+    $tabMap.addEventListener("click", () => setActiveTab("map"));
 
     function buildInspectorBio(spec){
       if(spec === "Documentation"){
@@ -1503,15 +1661,11 @@
       const visibleJobs = getVisibleJobs();
       const loadMapVisible = computeInspectorLoad(visibleJobs);
 
-      // We modify the global INSPECTORS array in-place to add dynamic stats
-      // but the core data (Name, Spec, Zone) remains what we fetched from the API
       INSPECTORS.forEach(p => {
          p.bio = buildInspectorBio(p.specialization);
-         
-         // Calculate load based on visible jobs
+
          let load = loadMapVisible.get(p.name) || 0;
-         
-         // Fuzzy match load if exact match fails
+
          if(load === 0 && loadMapVisible.size > 0){
              const target = normalizeText(p.name);
              for(const [k,v] of loadMapVisible.entries()){
@@ -1523,8 +1677,7 @@
          }
          p.loadVisible = load;
       });
-      
-      // Sort by Name
+
       INSPECTORS.sort((a,b) => a.name.localeCompare(b.name));
     }
 
@@ -1555,13 +1708,7 @@
               onerror="this.style.opacity=.6; this.src='data:image/svg+xml;utf8,<?xml version=%221.0%22?><svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22150%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22rgba(255,255,255,.06)%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22rgba(231,238,248,.55)%22 font-family=%22Arial%22 font-size=%2212%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22>PHOTO</text></svg>';" />
           `;
 
-          // Determine status color
-          let stColor = "Active"; // default style
-          const sLower = p.status.toLowerCase();
-          if(sLower.includes("cuti") || sLower.includes("kursus")) stColor = "Away";
-          if(sLower.includes("bertugas")) stColor = "Busy";
-
-          let stStyle = "background: rgba(255,255,255,.03); color:var(--muted);"; // default
+          let stStyle = "background: rgba(255,255,255,.03); color:var(--muted);";
           if(p.status.toLowerCase().includes("aktif") || p.status.toLowerCase() === "active") {
              stStyle = "background: rgba(35,194,107,.15); color:#4ade80;";
           } else if (p.status.toLowerCase().includes("cuti") || p.status.toLowerCase().includes("kursus")){
@@ -1789,9 +1936,9 @@
     }
 
     // ===== Events =====
-    $q.addEventListener("input", () => { renderJobs(); rebuildDirectory(); });
-    $status.addEventListener("change", () => { renderJobs(); rebuildDirectory(); });
-    $refresh.addEventListener("click", loadData); // CHANGED: calls loadData which fetches BOTH
+    $q.addEventListener("input", () => { renderJobs(); rebuildDirectory(); renderTimeline(); });
+    $status.addEventListener("change", () => { renderJobs(); rebuildDirectory(); renderTimeline(); });
+    $refresh.addEventListener("click", loadData);
 
     $grid.addEventListener("click", (e) => {
       const btn = e.target.closest("button[data-id]");
@@ -1805,9 +1952,269 @@
     $backdrop.addEventListener("click", closeDrawer);
     window.addEventListener("keydown", (e) => { if(e.key === "Escape") closeDrawer(); });
 
+    // ===== Timeline (added) =====
+    function tlMatches(j, q){
+      const hay = [
+        j.jobId, j.unit, j.jenis, j.daerah, j.negeri, j.zon,
+        j.assigned1, j.assigned2, j.status, j.priority
+      ].map(safe).join(" ").toLowerCase();
+      return hay.includes(q.toLowerCase());
+    }
+
+    function timelineList(){
+      const q = safe($tlQ.value);
+      const st = safe($tlStatus.value);
+
+      let list = [...JOBS];
+      if(st) list = list.filter(j => safe(j.status) === st);
+      if(q) list = list.filter(j => tlMatches(j, q));
+
+      list.sort((a,b)=>{
+        const da = new Date(a.tarikhTugasan);
+        const db = new Date(b.tarikhTugasan);
+        const ta = isNaN(da.getTime()) ? 0 : da.getTime();
+        const tb = isNaN(db.getTime()) ? 0 : db.getTime();
+        return tb - ta;
+      });
+
+      return list;
+    }
+
+    function renderTimeline(){
+      const list = timelineList();
+      $tlCount.textContent = `${list.length} items`;
+
+      if(!list.length){
+        $tlList.innerHTML = "";
+        $tlEmpty.style.display = "block";
+        return;
+      }
+      $tlEmpty.style.display = "none";
+
+      $tlList.innerHTML = list.map(j=>{
+        const loc = `${safe(j.daerah)}, ${safe(j.negeri)}`.replace(/^,\s*|,\s*$/g, "");
+        const stClass = statusClass(j.status);
+        return `
+          <div class="tl-item">
+            <div class="tl-top">
+              <div>
+                <div class="tl-title">${escapeHtml(j.jobId || "JOB")}</div>
+                <div class="tl-sub">${escapeHtml(j.unit)} • ${escapeHtml(j.jenis)}</div>
+              </div>
+              <div class="tl-meta">
+                <span class="chip ${stClass}"><span class="dot"></span>${escapeHtml(j.status || "-")}</span>
+                <span class="chip"><span class="dot"></span>${escapeHtml(formatDate(j.tarikhTugasan))}</span>
+              </div>
+            </div>
+            <div class="tl-sub">
+              <b>Lokasi:</b> ${escapeHtml(loc || "-")} &nbsp; <span style="opacity:.7;">(${escapeHtml(j.zon || "Zon -")})</span>
+            </div>
+            <div class="tl-sub">
+              <b>Pemeriksa:</b> ${escapeHtml(j.assigned1 || "Unassigned")} , ${escapeHtml(j.assigned2 || "Unassigned")}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    $tlQ.addEventListener("input", renderTimeline);
+    $tlStatus.addEventListener("change", renderTimeline);
+
+    // ===== Map (added) =====
+    let MAP = null;
+    let MAP_READY = false;
+    let PIN_LAYER = null;
+    let HEAT_LAYER = null;
+
+    // simple local cache to avoid slamming geocoder
+    const GEO_MEM = new Map();
+    const GEO_KEY = "ctp_geo_cache_v1";
+
+    function loadGeoCache(){
+      try{
+        const raw = localStorage.getItem(GEO_KEY);
+        if(!raw) return;
+        const obj = JSON.parse(raw);
+        Object.keys(obj).forEach(k=>{
+          const v = obj[k];
+          if(v && typeof v.lat === "number" && typeof v.lon === "number"){
+            GEO_MEM.set(k, [v.lat, v.lon]);
+          }
+        });
+      } catch(e){}
+    }
+
+    function saveGeoCache(){
+      try{
+        const obj = {};
+        for(const [k,v] of GEO_MEM.entries()){
+          obj[k] = { lat: v[0], lon: v[1] };
+        }
+        localStorage.setItem(GEO_KEY, JSON.stringify(obj));
+      } catch(e){}
+    }
+
+    async function geocodeNominatim(query){
+      const key = normalizeText(query);
+      if(GEO_MEM.has(key)) return GEO_MEM.get(key);
+
+      const url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" + encodeURIComponent(query);
+      const res = await fetch(url, { method:"GET" });
+      const data = await res.json();
+
+      if(Array.isArray(data) && data[0] && data[0].lat && data[0].lon){
+        const lat = parseFloat(data[0].lat);
+        const lon = parseFloat(data[0].lon);
+        if(!isNaN(lat) && !isNaN(lon)){
+          const val = [lat, lon];
+          GEO_MEM.set(key, val);
+          return val;
+        }
+      }
+      return null;
+    }
+
+    // small concurrency limiter so map loads reliably
+    async function mapWithConcurrency(items, limit, fn){
+      const out = new Array(items.length);
+      let idx = 0;
+      const workers = new Array(Math.min(limit, items.length)).fill(0).map(async ()=>{
+        while(idx < items.length){
+          const i = idx++;
+          out[i] = await fn(items[i], i);
+        }
+      });
+      await Promise.all(workers);
+      return out;
+    }
+
+    function ensureMap(){
+      if(MAP_READY) return;
+
+      loadGeoCache();
+
+      MAP = L.map("map", { zoomControl:true }).setView([4.2105, 101.9758], 6);
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 18,
+        attribution: "© OpenStreetMap"
+      }).addTo(MAP);
+
+      PIN_LAYER = L.layerGroup().addTo(MAP);
+      MAP_READY = true;
+    }
+
+    function pinPopupHtml(job){
+      const p1 = PHOTO_MAP[job.assigned1] || "";
+      const p2 = PHOTO_MAP[job.assigned2] || "";
+
+      const img = (src, name) => `
+        <img src="${escapeHtml(src)}" alt="${escapeHtml(name)}"
+          style="width:42px;height:52px;object-fit:cover;border-radius:10px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);"
+          onerror="this.style.display='none';" />
+      `;
+
+      const loc = `${safe(job.daerah)}, ${safe(job.negeri)}`.replace(/^,\s*|,\s*$/g, "");
+
+      return `
+        <div style="min-width:240px;">
+          <div style="font-weight:1000; letter-spacing:.2px;">${escapeHtml(job.unit || "-")}</div>
+          <div style="color:rgba(159,176,198,.9); font-size:12px; margin-top:2px;">${escapeHtml(job.jenis || "-")}</div>
+          <div style="color:rgba(159,176,198,.9); font-size:12px; margin-top:6px;">${escapeHtml(loc || "-")}</div>
+
+          <div style="display:flex; gap:10px; margin-top:10px; align-items:flex-start;">
+            <div style="display:flex; gap:6px;">
+              ${p1 ? img(p1, job.assigned1) : ""}
+              ${p2 ? img(p2, job.assigned2) : ""}
+            </div>
+            <div style="font-size:12px; line-height:1.35;">
+              <div><b>1:</b> ${escapeHtml(job.assigned1 || "Unassigned")}</div>
+              <div><b>2:</b> ${escapeHtml(job.assigned2 || "Unassigned")}</div>
+              <div style="margin-top:6px; color:#93c5fd; font-weight:900;">In Progress</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    async function renderMapView(){
+      try{
+        $mapNote.textContent = "Loading";
+        ensureMap();
+
+        // Leaflet needs a resize after the tab becomes visible
+        setTimeout(()=> { try{ MAP.invalidateSize(true); } catch(e){} }, 60);
+
+        PIN_LAYER.clearLayers();
+        if(HEAT_LAYER){
+          MAP.removeLayer(HEAT_LAYER);
+          HEAT_LAYER = null;
+        }
+
+        // Heat uses all jobs (Option 1)
+        const locCount = new Map();
+        const locKey = (j) => normalizeText(`${safe(j.daerah)}|${safe(j.negeri)}`);
+        JOBS.forEach(j=>{
+          if(!safe(j.daerah) || !safe(j.negeri)) return;
+          const k = locKey(j);
+          locCount.set(k, (locCount.get(k)||0) + 1);
+        });
+
+        const uniqueLocs = Array.from(locCount.keys()).map(k=>{
+          const parts = k.split("|");
+          return {
+            key: k,
+            query: `${parts[0]}, ${parts[1]}, Malaysia`,
+            count: locCount.get(k) || 1
+          };
+        });
+
+        const geoHeat = await mapWithConcurrency(uniqueLocs, 2, async (it)=>{
+          const pos = await geocodeNominatim(it.query);
+          if(!pos) return null;
+          // weight based on frequency
+          const w = Math.min(1, 0.25 + Math.log(it.count + 1) / 3);
+          return [pos[0], pos[1], w];
+        });
+
+        const heatPoints = geoHeat.filter(Boolean);
+        HEAT_LAYER = L.heatLayer(heatPoints, { radius: 28, blur: 22, maxZoom: 9 }).addTo(MAP);
+
+        // Pins only for In Progress
+        const active = JOBS.filter(j => safe(j.status) === "In Progress" && safe(j.daerah) && safe(j.negeri));
+
+        const geoPins = await mapWithConcurrency(active, 2, async (j)=>{
+          const query = `${safe(j.daerah)}, ${safe(j.negeri)}, Malaysia`;
+          const pos = await geocodeNominatim(query);
+          return pos ? { job:j, pos } : null;
+        });
+
+        const pinItems = geoPins.filter(Boolean);
+
+        pinItems.forEach(({job, pos})=>{
+          const marker = L.circleMarker(pos, {
+            radius: 9,
+            color: "#3aa0ff",
+            weight: 2,
+            fillColor: "#3aa0ff",
+            fillOpacity: 0.82
+          });
+          marker.bindPopup(pinPopupHtml(job), { maxWidth: 360, closeButton: true });
+          marker.addTo(PIN_LAYER);
+        });
+
+        saveGeoCache();
+        $mapNote.textContent = `${pinItems.length} active pins`;
+      } catch(e){
+        console.error("renderMapView error", e);
+        $mapNote.textContent = "Error";
+      }
+    }
+
+    // ===== Added: keep existing job filters, but timeline is independent =====
+
     setToday();
-    loadData(); // Initial load
+    loadData();
   </script>
 </body>
-
 </html>
