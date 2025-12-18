@@ -1335,7 +1335,7 @@
       return safe(raw);
     }
 
-    function mapRowToJob(row){
+function mapRowToJob(row){
       const jobId = pick(row, ["Job ID","JobID","jobId","JOB ID","ID"]);
       const unit = pick(row, ["Nama pasukan / unit","Nama Pasukan / Unit","Unit","Pasukan","Nama Unit","nama unit"]);
       const jenis = pick(row, ["Jenis pemeriksaan","Jenis Pemeriksaan","jenis","Type","Jenis"]);
@@ -1349,10 +1349,8 @@
       const assigned1 = pick(row, ["Assigned Inspector 1","Pemeriksa 1","Inspector 1","Pemeriksa Teknikal 1","Assigned 1"]);
       const assigned2 = pick(row, ["Assigned Inspector 2","Pemeriksa 2","Inspector 2","Pemeriksa Teknikal 2","Assigned 2"]);
 
-      const callingLetter = pick(row, ["Calling Letter","Surat Panggilan","Surat","Calling Letter Link","Surat Panggilan Link"]);
-      const borangTugas = pick(row, ["Borang Tugas Rasmi","BTR","Borang","Borang Link"]);
-      const perintahPergerakan = pick(row, ["Perintah Pergerakan","PP","Perintah","Perintah Link"]);
-      const wpua = pick(row, ["WPUA","WPUA Link"]);
+      // --- ADDED: Fetch the Structured Data Column ---
+      const structRaw = pick(row, ["Inspector Structured Data", "Structured Data", "json", "Data Pemeriksaan"]);
 
       return {
         jobId: safe(jobId),
@@ -1366,12 +1364,8 @@
         priority: safe(priority),
         assigned1: safe(assigned1),
         assigned2: safe(assigned2),
-        docs: {
-          callingLetter: safe(callingLetter),
-          borangTugas: safe(borangTugas),
-          perintahPergerakan: safe(perintahPergerakan),
-          wpua: safe(wpua)
-        },
+        // Store the raw JSON string
+        inspectorData: safe(structRaw), 
         _raw: row
       };
     }
@@ -1538,11 +1532,11 @@
         </div>
       `;
     }
-
-    function openDrawer(job){
+function openDrawer(job){
       $dTitle.textContent = job.jobId || "JOB";
       $dSub.textContent = `${job.unit} | ${job.jenis}`.replace(/^\s*\|\s*|\s*\|\s*$/g, "");
 
+      // 1. Job Info
       $kvJob.innerHTML = [
         kvRow("Job ID", job.jobId),
         kvRow("Unit / Pasukan", job.unit),
@@ -1552,29 +1546,86 @@
         kvRow("Tarikh Tugasan", formatDate(job.tarikhTugasan))
       ].join("");
 
+      // 2. Location
       $kvLoc.innerHTML = [
         kvRow("Daerah", job.daerah),
         kvRow("Negeri", job.negeri),
         kvRow("Zon", job.zon)
       ].join("");
 
+      // 3. Inspectors
       $kvIns.innerHTML = [
         kvRow("Inspector 1", job.assigned1),
         kvRow("Inspector 2", job.assigned2)
       ].join("");
 
-      const d = job.docs || {};
-      $docList.innerHTML = [
-        docRow("Calling Letter", "Request letter from unit", d.callingLetter),
-        docRow("Borang Tugas Rasmi", "Official task form", d.borangTugas),
-        docRow("Perintah Pergerakan", "Movement order", d.perintahPergerakan),
-        docRow("WPUA", "Sabah/Sarawak flight document", d.wpua)
-      ].join("");
+      // --- 4. ORGANIZED INSPECTION RESULTS ---
+      const $docSection = document.querySelector("#docList").parentElement; 
+      // Update Title to match your request
+      $docSection.querySelector("h3").textContent = "HASIL PEMERIKSAAN";
+      
+      let htmlContent = "";
+      
+      if (job.inspectorData && job.inspectorData.trim() !== "{}" && job.inspectorData.trim() !== "") {
+        try {
+          const data = JSON.parse(job.inspectorData);
+          
+          // A. Extract System Fields (So they don't clutter the view)
+          const submitDate = data.submitDate ? new Date(data.submitDate).toLocaleString() : "";
+          delete data.submitDate;
+          delete data.inspectorStatus; // We already see status in the header
+
+          // B. Extract "Tarikh Pemeriksaan" to put it FIRST
+          let dateRow = "";
+          // Check for various casing or naming
+          const dateKey = Object.keys(data).find(k => k.toLowerCase().includes("tarikh"));
+          if (dateKey) {
+             dateRow = kvRow("Tarikh Pemeriksaan", formatDate(data[dateKey]));
+             delete data[dateKey]; // Remove from main list so it doesn't duplicate
+          }
+
+          // C. Process the rest of the questions
+          const otherRows = Object.entries(data).map(([key, val]) => {
+            // Clean up the Label
+            // 1. Remove "Dyn_q_" prefix if it exists
+            // 2. Capitalize first letter
+            let label = key.replace("Dyn_q_", "").replace(/^./, str => str.toUpperCase());
+            
+            // Format Value
+            let displayVal = val;
+            if (!val) displayVal = "-";
+
+            // If it's a long text (Catatan), we might want to ensure it wraps nicely
+            // kvRow handles this via CSS usually, but we ensure string format here.
+            return kvRow(label, displayVal);
+          });
+          
+          // D. Build the HTML
+          htmlContent = `
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              ${dateRow} ${otherRows.join("")} ${submitDate ? `
+                <div style="margin-top:12px; padding-top:10px; border-top:1px solid var(--line); color:var(--muted); font-size:11px; text-align:right;">
+                  <em>Submitted: ${submitDate}</em>
+                </div>
+              ` : ""}
+            </div>
+          `;
+          
+        } catch (e) {
+          console.error("JSON Parse Error", e);
+          htmlContent = `<div style="color:var(--warn); font-size:12px;">Data formatting error (Raw JSON invalid).</div>`;
+        }
+      } else {
+        htmlContent = `<div style="color:var(--muted); font-size:12px; font-style:italic;">Belum ada laporan pemeriksaan.</div>`;
+      }
+      
+      // Render the content
+      $docList.innerHTML = htmlContent;
 
       $drawer.classList.add("open");
       $backdrop.classList.add("open");
       $drawer.setAttribute("aria-hidden", "false");
-    }
+}
 
     function closeDrawer(){
       $drawer.classList.remove("open");
@@ -2218,3 +2269,4 @@
   </script>
 </body>
 </html>
+
