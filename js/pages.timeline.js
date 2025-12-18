@@ -48,60 +48,44 @@
   }
 
   // Helper: Build Event List
-  function buildEvents(jobs) {
-    const ev = [];
-    for (const j of jobs) {
-      const jobId = String(j["Job ID"] || "");
-      const unit = String(j["Nama Pasukan / Unit"] || "");
-      const insp1 = j["Assigned Inspector 1"];
-      const insp2 = j["Assigned Inspector 2"];
+function buildEvents(jobs) {
+  const ev = [];
+  jobs.forEach(j => {
+    // 1. Get the original Submission Date
+    const subDate = new Date(j["Timestamp"]);
+    
+    // 2. Look for the Inspection Date in the JSON data
+    let jsonStr = j["Inspector Structured Data"] || "";
+    let inspDate = null;
+    let competencyLabel = "Pending Inspection";
 
-      // 1. Submitted Event
-      const tSubmit = toDate(j["Timestamp"]);
-      if (tSubmit) {
-        ev.push({
-          type: "submitted",
-          label: "Submitted",
-          badgeClass: "bg-slate-100 text-slate-600",
-          time: tSubmit,
-          jobId,
-          unit,
-          extra: ""
-        });
-      }
-
-      // 2. Assigned Event
-      const tAssign = toDate(j["Assigned Date"]);
-      if (tAssign) {
-        ev.push({
-          type: "assigned",
-          label: "Assigned",
-          badgeClass: "bg-blue-100 text-blue-700",
-          time: tAssign,
-          jobId,
-          unit,
-          extra: [insp1, insp2].filter(Boolean).join(", ")
-        });
-      }
-
-      // 3. Completed Event
-      const tEnd = toDate(j["End Date"]);
-      if (tEnd) {
-        ev.push({
-          type: "completed",
-          label: "Completed",
-          badgeClass: "bg-emerald-100 text-emerald-700",
-          time: tEnd,
-          jobId,
-          unit,
-          extra: [insp1, insp2].filter(Boolean).join(", ")
-        });
-      }
+    if (jsonStr && jsonStr.startsWith('{')) {
+      try {
+        const obj = JSON.parse(jsonStr);
+        // Find the "Tarikh Pemeriksaan" entered by the inspector
+        const dateKey = Object.keys(obj).find(k => k.toLowerCase().includes('tarikh'));
+        if (dateKey && obj[dateKey]) {
+          inspDate = new Date(obj[dateKey]);
+          
+          // CALCULATE COMPETENCY (The "Not Boring" part)
+          const diffMs = Math.abs(inspDate - subDate);
+          const days = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+          competencyLabel = `Completed in ${days} Days`;
+        }
+      } catch(e) { console.error("JSON Error", e); }
     }
-    // Sort Newest First
-    ev.sort((a, b) => b.time.getTime() - a.time.getTime());
-    return ev;
-  }
+
+    // Add the event to the timeline
+    ev.push({
+      time: inspDate || subDate, // Use inspection date if done, else submission
+      type: inspDate ? 'completed' : 'submitted',
+      jobId: j["Job ID"],
+      unit: j["Nama Pasukan / Unit"],
+      extra: competencyLabel // This shows the "Days Taken" on your timeline
+    });
+  });
+  return ev.sort((a, b) => b.time - a.time);
+}
 
   async function load() {
     $list.innerHTML = `<div class="py-10 text-center text-sm text-slate-400">Loading timeline...</div>`;
@@ -145,4 +129,5 @@
   $q.onkeydown = (e) => e.key === "Enter" && load();
 
   load();
+
 })();
