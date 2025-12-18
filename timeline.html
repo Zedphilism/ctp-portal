@@ -3,252 +3,292 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CT&P Portal | Competency Timeline</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <title>CT&P | Competency Tracker</title>
   
-  <style>
-    body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
-    .mono { font-family: 'JetBrains Mono', monospace; }
-    
-    /* Custom Card Styling */
-    .job-card {
-      transition: all 0.2s ease;
-      border-left: 4px solid transparent;
-    }
-    .job-card:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-    
-    /* Competency Badges */
-    .comp-fast { border-left-color: #22c55e; } /* Green */
-    .comp-avg  { border-left-color: #eab308; } /* Yellow */
-    .comp-slow { border-left-color: #ef4444; } /* Red */
-    .comp-none { border-left-color: #94a3b8; } /* Grey */
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    .badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
-    .badge-fast { background: #dcfce7; color: #15803d; }
-    .badge-avg  { background: #fef9c3; color: #a16207; }
-    .badge-slow { background: #fee2e2; color: #b91c1c; }
+  <style>
+    body { font-family: 'Outfit', sans-serif; background-color: #f8fafc; color: #334155; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* ANIMATIONS */
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .card-anim { animation: slideIn 0.3s ease-out forwards; opacity: 0; }
+
+    /* TIMELINE CONNECTOR STYLES */
+    .timeline-line {
+      height: 2px;
+      flex-grow: 1;
+      position: relative;
+      margin: 0 15px;
+      border-radius: 2px;
+    }
+    
+    /* The "Days Taken" Bubble */
+    .days-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 800;
+      white-space: nowrap;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    /* STATUS COLORS */
+    .status-fast .timeline-line { background: #10b981; } /* Green */
+    .status-fast .days-badge { background: #d1fae5; color: #047857; }
+    
+    .status-avg .timeline-line { background: #f59e0b; } /* Orange */
+    .status-avg .days-badge { background: #fef3c7; color: #b45309; }
+    
+    .status-slow .timeline-line { background: #ef4444; } /* Red */
+    .status-slow .days-badge { background: #fee2e2; color: #b91c1c; }
+    
+    .status-pending .timeline-line { background: #cbd5e1; border-top: 2px dashed #94a3b8; background: transparent; }
+    .status-pending .days-badge { background: #f1f5f9; color: #64748b; }
+
+    /* CUSTOM SCROLLBAR */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
   </style>
 </head>
-<body class="text-slate-800">
+<body class="bg-slate-50 min-h-screen flex flex-col">
 
-  <header class="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-slate-200">
-    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between gap-3">
-      <div>
-        <div class="text-lg font-extrabold tracking-tight text-slate-900">INSPECTION COMPETENCY</div>
-        <div class="text-xs text-slate-500 font-medium">Measuring efficiency from Submission to Execution</div>
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+      
+      <div class="flex items-center gap-3">
+        <div class="h-10 w-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-200">
+          <i class="fa-solid fa-stopwatch text-lg"></i>
+        </div>
+        <div>
+          <h1 class="font-extrabold text-xl text-slate-800 tracking-tight">COMPETENCY TRACKER</h1>
+          <p class="text-xs text-slate-400 font-medium">Monitoring Inspection Efficiency</p>
+        </div>
       </div>
-      <nav class="flex items-center gap-2">
-        <a class="px-3 py-2 rounded-lg hover:bg-slate-100 text-sm font-semibold text-slate-600" href="./index.html">Back to Jobs</a>
-        <button onclick="loadData()" class="px-4 py-2 rounded-lg bg-slate-900 text-white text-sm font-bold shadow-lg hover:bg-slate-800 transition">REFRESH DATA</button>
-      </nav>
+
+      <div class="flex gap-4">
+         <div class="bg-slate-50 border border-slate-100 px-4 py-2 rounded-lg text-center">
+            <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Avg Speed</div>
+            <div class="text-lg font-black text-slate-800" id="statAvg">--</div>
+         </div>
+         <div class="bg-emerald-50 border border-emerald-100 px-4 py-2 rounded-lg text-center">
+            <div class="text-[10px] uppercase font-bold text-emerald-400 tracking-wider">Fastest</div>
+            <div class="text-lg font-black text-emerald-600" id="statFast">--</div>
+         </div>
+      </div>
+
     </div>
   </header>
 
-  <main class="max-w-3xl mx-auto px-4 py-8">
+  <main class="flex-grow max-w-6xl mx-auto w-full px-6 py-8">
     
-    <div class="grid grid-cols-3 gap-4 mb-8">
-      <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 text-center">
-        <div class="text-xs font-bold text-slate-400 uppercase">Avg. Speed</div>
-        <div class="text-2xl font-black text-slate-800 mt-1" id="statAvg">--</div>
-        <div class="text-xs text-slate-400">Days / Job</div>
+    <div class="relative max-w-lg mx-auto mb-10 group">
+      <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+        <i class="fa-solid fa-search text-slate-400 group-focus-within:text-blue-500 transition"></i>
       </div>
-      <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 text-center">
-        <div class="text-xs font-bold text-slate-400 uppercase">Fastest</div>
-        <div class="text-2xl font-black text-emerald-600 mt-1" id="statFast">--</div>
-        <div class="text-xs text-slate-400">Days</div>
-      </div>
-      <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 text-center">
-        <div class="text-xs font-bold text-slate-400 uppercase">Pending</div>
-        <div class="text-2xl font-black text-slate-800 mt-1" id="statPending">--</div>
-        <div class="text-xs text-slate-400">Jobs</div>
-      </div>
+      <input type="text" id="searchInput" onkeyup="renderData()" 
+             class="block w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-semibold shadow-sm focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition" 
+             placeholder="Search by Job ID, Inspector, or Unit...">
     </div>
 
-    <div class="flex items-center gap-2 mb-6">
-       <input id="searchInput" onkeyup="renderTimeline()" class="w-full px-4 py-3 rounded-xl border border-slate-200 shadow-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Filter by Unit or Inspector Name..." />
-    </div>
-
-    <div id="timelineList" class="space-y-4">
-      <div class="text-center py-10 text-slate-400 animate-pulse">
-        Fetching Inspection Data...
-      </div>
+    <div id="cardsArea" class="space-y-4">
+       <div class="flex flex-col items-center justify-center py-20 opacity-50">
+          <i class="fa-solid fa-circle-notch fa-spin text-3xl mb-3 text-blue-500"></i>
+          <span class="text-sm font-bold">Analyzing Performance Data...</span>
+       </div>
     </div>
 
   </main>
 
   <script>
-    let ALL_JOBS = [];
+    let RAW_DATA = [];
 
-    // --- 1. FETCH DATA (Connects to your Google Script) ---
-    function loadData() {
-        const list = document.getElementById('timelineList');
-        list.innerHTML = '<div class="text-center py-10 text-slate-400">Loading data from server...</div>';
+    // 1. INITIALIZE
+    document.addEventListener('DOMContentLoaded', () => {
+       fetchData();
+    });
 
-        // NOTE: We assume your backend has a standard fetch function. 
-        // If you usually use 'getAllJobs', use that. 
-        // Here we use 'getJobsByInspectorName' with a wildcard or similar if needed, 
-        // but typically you have a 'getData' or 'doGet' endpoint.
-        
-        // For now, let's assume we can fetch EVERYTHING.
-        // If this fails, make sure you have a function in Code.gs that returns all rows.
-        google.script.run
-            .withSuccessHandler(processData)
-            .withFailureHandler(err => {
-                list.innerHTML = `<div class="p-4 bg-red-50 text-red-600 rounded-xl text-center">Error: ${err.message}</div>`;
-            })
-            .getAllJobs(); // <--- ENSURE THIS FUNCTION EXISTS IN Code.gs
+    // 2. FETCH DATA FROM GOOGLE APPS SCRIPT
+    function fetchData() {
+       // We call 'getAllJobs' from Code.gs
+       google.script.run
+         .withSuccessHandler(data => {
+            processData(data);
+         })
+         .withFailureHandler(err => {
+            document.getElementById('cardsArea').innerHTML = `
+              <div class="bg-red-50 text-red-600 p-4 rounded-xl text-center font-bold">
+                Error: ${err.message} <br>
+                <small>Make sure you redeployed the script!</small>
+              </div>`;
+         })
+         .getAllJobs();
     }
 
-    // --- 2. PROCESS DATA (The Competency Logic) ---
+    // 3. PROCESS DATA (Logic Engine)
     function processData(data) {
-        ALL_JOBS = data.map(row => {
-            // A. Parse Submission Date (Timestamp - Column 0 usually)
-            // We try to find the timestamp key or use the first index if array
-            let subDateRaw = row["Timestamp"] || row[0]; 
-            let subDate = subDateRaw ? new Date(subDateRaw) : null;
+       RAW_DATA = data.map(row => {
+          // A. Parse SUBMISSION Date (Col 1/Timestamp)
+          const ts = row["Timestamp"] || row[0];
+          const subDate = ts ? new Date(ts) : null;
 
-            // B. Parse Inspection Date (From JSON Column)
-            let inspDate = null;
-            let jsonRaw = row["Inspector Structured Data"] || row["json"] || "";
-            
-            if (jsonRaw && jsonRaw.toString().trim().startsWith("{")) {
-                try {
-                    const parsed = JSON.parse(jsonRaw);
-                    // Look for our "Tarikh Pemeriksaan" field
-                    // We look for any key containing "tarikh"
-                    const dateKey = Object.keys(parsed).find(k => k.toLowerCase().includes("tarikh"));
-                    if (dateKey && parsed[dateKey]) {
-                        inspDate = new Date(parsed[dateKey]);
-                    }
-                } catch(e) { console.log("JSON Error", e); }
-            }
-
-            // C. Calculate Competency Gap (Days)
-            let daysTaken = null;
-            if (subDate && inspDate) {
-                const diffTime = Math.abs(inspDate - subDate);
-                daysTaken = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-            }
-
-            return {
-                id: row["Job ID"] || row["ID"] || "N/A",
-                unit: row["Nama pasukan / unit"] || row["Unit"] || "Unknown Unit",
-                type: row["Jenis pemeriksaan"] || "General",
-                inspector: row["Assigned Inspector 1"] || "Unassigned",
-                subDate: subDate,
-                inspDate: inspDate,
-                days: daysTaken,
-                raw: row
-            };
-        });
-
-        // Initial Render
-        renderTimeline();
-        updateStats();
-    }
-
-    // --- 3. RENDER UI ---
-    function renderTimeline() {
-        const list = document.getElementById('timelineList');
-        const search = document.getElementById('searchInput').value.toLowerCase();
-        
-        // Filter
-        const filtered = ALL_JOBS.filter(j => 
-            (j.unit.toLowerCase().includes(search) || j.inspector.toLowerCase().includes(search) || j.id.toLowerCase().includes(search))
-        );
-
-        if (filtered.length === 0) {
-            list.innerHTML = '<div class="text-center py-10 text-slate-400">No matching jobs found.</div>';
-            return;
-        }
-
-        // Generate HTML
-        list.innerHTML = filtered.map(job => {
-            
-            // Determine Competency Visuals
-            let compClass = "comp-none";
-            let badgeHtml = `<span class="badge bg-slate-100 text-slate-500">PENDING INSPECTION</span>`;
-            let daysText = "Not finished yet";
-
-            if (job.days !== null) {
-                if (job.days <= 3) {
-                    compClass = "comp-fast";
-                    badgeHtml = `<span class="badge badge-fast">⚡ EXCELLENT (${job.days} DAYS)</span>`;
-                } else if (job.days <= 7) {
-                    compClass = "comp-avg";
-                    badgeHtml = `<span class="badge badge-avg">⚠️ AVERAGE (${job.days} DAYS)</span>`;
-                } else {
-                    compClass = "comp-slow";
-                    badgeHtml = `<span class="badge badge-slow">🔥 SLOW (${job.days} DAYS)</span>`;
+          // B. Parse INSPECTION Date (From JSON)
+          let inspDate = null;
+          let jsonStr = row["Inspector Structured Data"] || row["json"];
+          
+          if (jsonStr && typeof jsonStr === 'string' && jsonStr.trim().startsWith('{')) {
+             try {
+                const obj = JSON.parse(jsonStr);
+                // Find any key that looks like "Tarikh" or "Date"
+                const dateKey = Object.keys(obj).find(k => k.toLowerCase().includes('tarikh') || k.toLowerCase().includes('date'));
+                if (dateKey && obj[dateKey]) {
+                   inspDate = new Date(obj[dateKey]);
                 }
-                daysText = `${job.days} Days to complete`;
-            }
+             } catch(e) {}
+          }
 
-            // Format Dates nicely
-            const d1 = job.subDate ? job.subDate.toLocaleDateString('en-GB') : "-";
-            const d2 = job.inspDate ? job.inspDate.toLocaleDateString('en-GB') : "Waiting...";
+          // C. Calculate DIFF
+          let days = null;
+          if (subDate && inspDate) {
+             const ms = Math.abs(inspDate - subDate);
+             days = Math.ceil(ms / (1000 * 60 * 60 * 24));
+          }
 
-            return `
-            <div class="job-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 ${compClass}">
-                <div class="flex justify-between items-start mb-3">
-                    <div>
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="font-black text-slate-700 mono text-sm bg-slate-100 px-2 py-1 rounded">${job.id}</span>
-                            ${badgeHtml}
-                        </div>
-                        <h3 class="font-bold text-lg text-slate-800">${job.unit}</h3>
-                        <div class="text-xs font-semibold text-slate-400 uppercase tracking-wide">${job.type}</div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-xs font-bold text-slate-400">INSPECTOR</div>
-                        <div class="text-sm font-bold text-slate-700">${job.inspector}</div>
-                    </div>
-                </div>
+          // D. Fallback status
+          const inspector = row["Assigned Inspector 1"] || "Unassigned";
+          const unit = row["Nama pasukan / unit"] || row["Unit"] || "Unknown Unit";
+          const id = row["Job ID"] || row["ID"];
 
-                <div class="relative pt-4 pb-2">
-                    <div class="flex items-center justify-between text-xs font-semibold text-slate-500 mb-2">
-                        <div>
-                            <div class="text-[10px] uppercase text-slate-400">Submission</div>
-                            <div>${d1}</div>
-                        </div>
-                        
-                        <div class="h-0.5 flex-1 mx-4 bg-slate-100 relative top-1">
-                             <div class="absolute -top-2 left-1/2 -translate-x-1/2 bg-white px-2 text-[10px] text-slate-400 font-bold whitespace-nowrap">
-                                ${daysText}
-                             </div>
-                        </div>
+          return { id, unit, inspector, subDate, inspDate, days };
+       });
 
-                        <div class="text-right">
-                            <div class="text-[10px] uppercase text-slate-400">Inspection Date</div>
-                            <div class="${job.inspDate ? 'text-slate-700' : 'text-orange-400'}">${d2}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            `;
-        }).join('');
+       updateStats();
+       renderData();
     }
 
-    // --- 4. UPDATE STATS DASHBOARD ---
+    // 4. RENDER CARDS (The Visual Part)
+    function renderData() {
+       const term = document.getElementById('searchInput').value.toLowerCase();
+       const container = document.getElementById('cardsArea');
+       
+       // Filter
+       const filtered = RAW_DATA.filter(j => 
+          (j.id && j.id.toLowerCase().includes(term)) || 
+          (j.unit && j.unit.toLowerCase().includes(term)) || 
+          (j.inspector && j.inspector.toLowerCase().includes(term))
+       );
+
+       if (filtered.length === 0) {
+          container.innerHTML = `<div class="text-center py-10 text-slate-400">No jobs match your search.</div>`;
+          return;
+       }
+
+       // HTML Generation
+       container.innerHTML = filtered.map((job, index) => {
+          
+          // Logic: Determine Status & Style
+          let statusClass = "status-pending";
+          let daysLabel = "Waiting";
+          let inspDateText = "Pending Inspection";
+          let icon = "fa-clock";
+          let color = "text-slate-400";
+
+          if (job.days !== null) {
+             daysLabel = `${job.days} DAYS`;
+             inspDateText = job.inspDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+             
+             if (job.days <= 3) {
+                statusClass = "status-fast";
+                icon = "fa-bolt";
+                color = "text-emerald-500";
+             } else if (job.days <= 7) {
+                statusClass = "status-avg";
+                icon = "fa-check";
+                color = "text-amber-500";
+             } else {
+                statusClass = "status-slow";
+                icon = "fa-triangle-exclamation";
+                color = "text-red-500";
+             }
+          }
+
+          const subDateText = job.subDate ? job.subDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "N/A";
+          const delay = index * 50; // Stagger animation
+
+          return `
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col md:flex-row items-center gap-6 card-anim ${statusClass}" style="animation-delay: ${delay}ms">
+             
+             <div class="w-full md:w-1/4">
+                <div class="flex items-center gap-2 mb-1">
+                   <div class="h-8 w-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500">
+                      <i class="fa-solid fa-hashtag text-xs"></i>
+                   </div>
+                   <span class="mono font-bold text-slate-700 text-sm tracking-tighter">${job.id}</span>
+                </div>
+                <h3 class="font-bold text-slate-800 leading-tight">${job.unit}</h3>
+                <p class="text-xs text-slate-400 mt-1 font-medium"><i class="fa-solid fa-user-shield mr-1"></i> ${job.inspector}</p>
+             </div>
+
+             <div class="w-full md:flex-1 flex items-center justify-between relative px-2">
+                
+                <div class="text-center z-10">
+                   <div class="text-[10px] uppercase font-bold text-slate-400 mb-1">Requested</div>
+                   <div class="font-bold text-slate-700 text-sm whitespace-nowrap">${subDateText}</div>
+                   <div class="h-3 w-3 rounded-full bg-slate-300 mx-auto mt-2 border-2 border-white shadow"></div>
+                </div>
+
+                <div class="timeline-line flex items-center justify-center">
+                   <div class="days-badge shadow-sm">
+                      <i class="fa-solid ${icon} mr-1 text-[8px]"></i> ${daysLabel}
+                   </div>
+                </div>
+
+                <div class="text-center z-10">
+                   <div class="text-[10px] uppercase font-bold text-slate-400 mb-1">Inspected</div>
+                   <div class="font-bold ${color} text-sm whitespace-nowrap">${inspDateText}</div>
+                   <div class="h-3 w-3 rounded-full ${job.days !== null ? 'bg-current ' + color : 'bg-slate-200'} mx-auto mt-2 border-2 border-white shadow"></div>
+                </div>
+
+             </div>
+
+             <div class="hidden md:block">
+                <button class="h-10 w-10 rounded-full bg-slate-50 hover:bg-blue-50 text-slate-400 hover:text-blue-600 transition flex items-center justify-center">
+                   <i class="fa-solid fa-chevron-right"></i>
+                </button>
+             </div>
+
+          </div>
+          `;
+       }).join('');
+    }
+
+    // 5. UPDATE HEADER STATS
     function updateStats() {
-        const completed = ALL_JOBS.filter(j => j.days !== null);
-        
-        if (completed.length > 0) {
-            const totalDays = completed.reduce((sum, j) => sum + j.days, 0);
-            const avg = (totalDays / completed.length).toFixed(1);
-            const fastest = Math.min(...completed.map(j => j.days));
-            
-            document.getElementById('statAvg').textContent = avg;
-            document.getElementById('statFast').textContent = fastest;
-        }
-        
-        document.getElementById('statPending').textContent = ALL_JOBS.filter(j => j.days === null).length;
+       const completed = RAW_DATA.filter(j => j.days !== null);
+       if(completed.length > 0) {
+          const total = completed.reduce((sum, j) => sum + j.days, 0);
+          const avg = (total / completed.length).toFixed(1);
+          const fast = Math.min(...completed.map(j => j.days));
+          
+          document.getElementById('statAvg').textContent = avg + "d";
+          document.getElementById('statFast').textContent = fast + "d";
+       }
     }
-
-    // Load on start
-    document.addEventListener('DOMContentLoaded', loadData);
-
   </script>
 </body>
 </html>
