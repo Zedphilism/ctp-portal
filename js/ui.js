@@ -110,23 +110,35 @@ function typeChip(jobId) {
 let currentActiveTab = 'permohonan'; // Default
 
 async function switchTab(tabName) {
-  currentActiveTab = tabName;
-  
-  // AESTHETIC TOGGLE LOGIC
-  const btns = document.querySelectorAll('.tab-btn');
-  btns.forEach(btn => {
-    if (btn.id === `btn-${tabName}`) {
-      // Active State: White background, Blue text, Shadow
-      btn.className = "tab-btn px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 bg-white text-blue-600 shadow-sm border border-slate-200";
-    } else {
-      // Inactive State: Transparent background, Slate text
-      btn.className = "tab-btn px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 text-slate-600 hover:text-slate-900 border border-transparent";
-    }
-  });
+    currentActiveTab = tabName;
+    
+    const btns = document.querySelectorAll('.tab-btn');
+    btns.forEach(btn => {
+        if (btn.id === `btn-${tabName}`) {
+            // Active: Accent Blue, Solid Background
+            btn.className = "tab-btn px-4 py-1.5 rounded-md text-xs font-bold transition-all duration-200 bg-blue-600 text-white shadow-lg";
+        } else {
+            // Inactive: Muted text, Transparent
+            btn.className = "tab-btn px-4 py-1.5 rounded-md text-xs font-bold transition-all duration-200 text-slate-400 hover:text-white border border-transparent";
+        }
+    });
 
-  // Re-fetch data for the selected tab
-  // Assuming your main load function is called loadJobs()
-  if (typeof loadJobs === "function") {
-    loadJobs(tabName);
-  }
+    if (typeof loadJobs === "function") {
+        loadJobs(tabName);
+    }
+}
+
+// THE TYPE CHIP - Use this in your table rendering loop
+function typeChip(jobId) {
+    const id = String(jobId || "").toUpperCase();
+    const isWdp = id.startsWith("WDP");
+    
+    // Using opacity-based colors to match your translucent UI
+    const cls = isWdp 
+        ? "bg-purple-500/20 text-purple-400 border-purple-500/30" 
+        : "bg-blue-500/20 text-blue-400 border-blue-500/30";
+    
+    const label = isWdp ? "WDP" : "CTP";
+
+    return `<span class="px-2 py-0.5 rounded border text-[10px] font-black tracking-widest uppercase ${cls}">${label}</span>`;
 }
