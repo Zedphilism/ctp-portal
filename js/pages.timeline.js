@@ -5,107 +5,127 @@
   const $q = document.querySelector("#q");
   const $refresh = document.querySelector("#refresh");
 
-  // Helper: Parse Date
+  // Helper: Parse Date strings into JS Date objects
   function toDate(v) {
     if (!v) return null;
     const d = new Date(v);
     return isNaN(d.getTime()) ? null : d;
   }
 
-  // Helper: Date Formatter
+  // Helper: Format Date for the UI (DD/MM/YYYY)
   function fmtDate(d) {
     if (!d) return "";
-    // DD/MM/YYYY format with Time
-    // Example: 17/12/2025, 14:30
     return d.toLocaleString("en-GB", { 
       day: "2-digit", 
       month: "2-digit", 
-      year: "numeric", 
-      hour: "2-digit", 
-      minute: "2-digit" 
+      year: "numeric"
     });
   }
 
-  // Helper: Event Card HTML
+  // Build the Visual Card for each event
   function eventCard(ev) {
+    // Logic for Competency Badges
+    let badgeClass = "bg-slate-100 text-slate-500";
+    if (ev.daysTaken !== null) {
+      if (ev.daysTaken <= 3) badgeClass = "bg-emerald-100 text-emerald-700";
+      else if (ev.daysTaken <= 7) badgeClass = "bg-amber-100 text-amber-700";
+      else badgeClass = "bg-rose-100 text-rose-700";
+    }
+
     return `
-      <div class="p-4 rounded-xl border border-slate-200 bg-white hover:border-slate-300 transition-colors">
+      <div class="p-4 rounded-xl border border-slate-200 bg-white hover:border-slate-300 transition-shadow shadow-sm">
         <div class="flex items-start justify-between gap-3">
           <div class="min-w-0">
-            <div class="flex items-center gap-2">
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${ev.badgeClass}">${ev.label}</span>
-              <span class="text-xs text-slate-400">${fmtDate(ev.time)}</span>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-[10px] font-black px-2 py-0.5 rounded bg-slate-100 text-slate-600 mono">${ev.jobId}</span>
+              ${ev.daysTaken !== null ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded ${badgeClass}">${ev.daysTaken} DAYS TAKEN</span>` : ''}
             </div>
-            <div class="font-bold text-slate-900 mt-1">
-              <a href="./job.html?jobId=${encodeURIComponent(ev.jobId)}" class="hover:text-blue-700 hover:underline transition-colors">${ev.jobId}</a>
+            <h3 class="font-bold text-slate-900 truncate">${ev.unit}</h3>
+            <div class="text-xs text-slate-500 mt-1">
+              <i class="fa-solid fa-calendar-day mr-1"></i> ${fmtDate(ev.time)} 
+              <span class="mx-2 text-slate-300">|</span> 
+              <span class="capitalize font-semibold">${ev.type}</span>
             </div>
-            <div class="text-sm text-slate-600 mt-0.5">${ev.unit}</div>
-            ${ev.extra ? `<div class="text-xs text-slate-400 mt-2 flex items-center gap-1">👤 ${ev.extra}</div>` : ""}
+          </div>
+          <div class="text-right">
+             <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Type</div>
+             <div class="text-xs font-bold text-blue-600 uppercase">${ev.type}</div>
           </div>
         </div>
       </div>
     `;
   }
 
-  // Helper: Build Event List
-function buildEvents(jobs) {
-  const ev = [];
-  jobs.forEach(j => {
-    // 1. Get the original Submission Date
-    const subDate = new Date(j["Timestamp"]);
-    
-    // 2. Look for the Inspection Date in the JSON data
-    let jsonStr = j["Inspector Structured Data"] || "";
-    let inspDate = null;
-    let competencyLabel = "Pending Inspection";
+  // --- THE COMPETENCY ENGINE ---
+  function buildEvents(jobs) {
+    const ev = [];
+    jobs.forEach(j => {
+      const subDate = toDate(j["Timestamp"]);
+      
+      // Extract Inspection Date from the JSON column
+      let inspDate = null;
+      let daysTaken = null;
+      const jsonStr = j["Inspector Structured Data"] || j["json"];
 
-    if (jsonStr && jsonStr.startsWith('{')) {
-      try {
-        const obj = JSON.parse(jsonStr);
-        // Find the "Tarikh Pemeriksaan" entered by the inspector
-        const dateKey = Object.keys(obj).find(k => k.toLowerCase().includes('tarikh'));
-        if (dateKey && obj[dateKey]) {
-          inspDate = new Date(obj[dateKey]);
-          
-          // CALCULATE COMPETENCY (The "Not Boring" part)
-          const diffMs = Math.abs(inspDate - subDate);
-          const days = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-          competencyLabel = `Completed in ${days} Days`;
-        }
-      } catch(e) { console.error("JSON Error", e); }
-    }
+      if (jsonStr && typeof jsonStr === 'string' && jsonStr.startsWith('{')) {
+        try {
+          const obj = JSON.parse(jsonStr);
+          // Look for any key containing "Tarikh" (Date)
+          const dateKey = Object.keys(obj).find(k => k.toLowerCase().includes('tarikh'));
+          if (dateKey && obj[dateKey]) {
+            inspDate = new Date(obj[dateKey]);
+            
+            // Calculate Competency Gap
+            if (subDate && !isNaN(inspDate)) {
+              const diff = Math.abs(inspDate - subDate);
+              daysTaken = Math.ceil(diff / (1000 * 60 * 60 * 24));
+            }
+          }
+        } catch (e) { console.warn("JSON Parse failed for Job", j["Job ID"]); }
+      }
 
-    // Add the event to the timeline
-    ev.push({
-      time: inspDate || subDate, // Use inspection date if done, else submission
-      type: inspDate ? 'completed' : 'submitted',
-      jobId: j["Job ID"],
-      unit: j["Nama Pasukan / Unit"],
-      extra: competencyLabel // This shows the "Days Taken" on your timeline
+      // Add "Submitted" Event
+      if (subDate) {
+        ev.push({
+          time: subDate,
+          type: 'submitted',
+          jobId: j["Job ID"] || "N/A",
+          unit: j["Nama Pasukan / Unit"] || "Unknown Unit",
+          daysTaken: null
+        });
+      }
+
+      // Add "Completed" Event (Only if inspector date exists)
+      if (inspDate && !isNaN(inspDate)) {
+        ev.push({
+          time: inspDate,
+          type: 'completed',
+          jobId: j["Job ID"] || "N/A",
+          unit: j["Nama Pasukan / Unit"] || "Unknown Unit",
+          daysTaken: daysTaken
+        });
+      }
     });
-  });
-  return ev.sort((a, b) => b.time - a.time);
-}
+
+    // Sort by newest date first
+    return ev.sort((a, b) => b.time.getTime() - a.time.getTime());
+  }
 
   async function load() {
-    $list.innerHTML = `<div class="py-10 text-center text-sm text-slate-400">Loading timeline...</div>`;
-    $count.textContent = "";
-
+    $list.innerHTML = `<div class="py-10 text-center text-sm text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading competency data...</div>`;
+    
     try {
       const res = await API.listJobs();
-      if (!res.ok) throw new Error(res.error || "API Error");
-
       const jobs = res.jobs || [];
       const allEvents = buildEvents(jobs);
 
-      // Filter
       const typeFilter = $type.value;
       const qFilter = $q.value.trim().toLowerCase();
 
       const filtered = allEvents.filter(x => {
         if (typeFilter && x.type !== typeFilter) return false;
         if (qFilter) {
-          const str = `${x.jobId} ${x.unit} ${x.extra}`.toLowerCase();
+          const str = `${x.jobId} ${x.unit}`.toLowerCase();
           if (!str.includes(qFilter)) return false;
         }
         return true;
@@ -114,20 +134,21 @@ function buildEvents(jobs) {
       $count.textContent = `${filtered.length} event(s)`;
       
       $list.innerHTML = filtered.length 
-        ? filtered.map(eventCard).join('<div class="h-4 border-l-2 border-slate-100 ml-6 my-[-4px] relative z-0"></div>') 
-        : `<div class="py-10 text-center text-sm text-slate-400">No events found matching filters</div>`;
+        ? filtered.map(eventCard).join('<div class="h-4 border-l-2 border-slate-200 ml-8 my-[-4px] relative z-0"></div>') 
+        : `<div class="py-10 text-center text-sm text-slate-400">No events found matching filters.</div>`;
 
     } catch (e) {
       console.error(e);
-      $list.innerHTML = `<div class="py-10 text-center text-sm text-rose-600 font-bold">Failed to load timeline</div>`;
+      $list.innerHTML = `<div class="py-10 text-center text-rose-500 font-bold">Failed to load timeline. Check Console.</div>`;
     }
   }
 
-  // Init
-  $refresh.onclick = load;
-  $type.onchange = load;
-  $q.onkeydown = (e) => e.key === "Enter" && load();
+  // Listeners
+  $type.addEventListener("change", load);
+  $q.addEventListener("input", load);
+  $refresh.addEventListener("click", load);
 
+  // Initial load
   load();
 
 })();
