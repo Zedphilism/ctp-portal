@@ -17,39 +17,68 @@
   // Helper: Status Chip
   function chip(status) {
     const s = String(status || "").toLowerCase();
-    let cls = "bg-slate-100 text-slate-800";
-    if (s === "pending") cls = "bg-amber-100 text-amber-900";
-    if (s === "assigned") cls = "bg-blue-100 text-blue-900";
-    if (s === "completed") cls = "bg-emerald-100 text-emerald-900";
-    if (s === "cancelled") cls = "bg-rose-100 text-rose-900";
-    return `<span style="display:inline-block;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:600;${cls.replace("bg-", "background-color:var(--").replace(" text-", ";color:var(--") + ");"}">${safeText(status)}</span>`;
+    let cls = "background-color:#f1f5f9; color:#1e293b;"; // Default slate
+    if (s === "pending") cls = "background-color:#fef3c7; color:#92400e;";
+    if (s === "assigned") cls = "background-color:#dbeafe; color:#1e40af;";
+    if (s === "completed") cls = "background-color:#dcfce7; color:#166534;";
+    if (s === "cancelled") cls = "background-color:#fee2e2; color:#991b1b;";
+    
+    return `<span style="display:inline-block;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:700;${cls}">${safeText(status).toUpperCase()}</span>`;
+  }
+
+  // Helper: Format Date (DD/MM/YYYY)
+  function fmtDate(v) {
+    if (!v) return "-";
+    const d = new Date(v);
+    if (isNaN(d.getTime())) return safeText(v);
+    return d.toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric" });
+  }
+
+  // NEW Helper: Get Competency HTML
+  function getKompetensiBadge(subDateStr, structJson) {
+    if (!subDateStr) return '<span style="color:#94a3b8;">-</span>';
+    const start = new Date(subDateStr);
+    let end = null;
+    try {
+      const data = JSON.parse(structJson || "{}");
+      const dateKey = Object.keys(data).find(k => k.toLowerCase().includes('tarikh'));
+      if (dateKey && data[dateKey]) end = new Date(data[dateKey]);
+    } catch (e) { return '<span style="color:#94a3b8;">-</span>'; }
+
+    if (!end || isNaN(end.getTime())) {
+      return '<span style="font-size:9px; font-weight:700; color:#64748b;">BELUM DIPERIKSA</span>';
+    }
+
+    const diffTime = Math.abs(end - start);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    let color = "#b91c1c"; // Lewat (Red)
+    if (diffDays <= 3) color = "#059669"; // Cemerlang (Green)
+    else if (diffDays <= 7) color = "#d97706"; // Memuaskan (Yellow)
+
+    return `<span style="font-weight:800; color:${color}; font-size:10px;">${diffDays} HARI</span>`;
   }
 
   $meta.textContent = "Loading jobs...";
 
   try {
     const res = await API.listJobs();
-    
-    if (!res.ok) {
-      throw new Error(res.error || "API Error");
-    }
+    if (!res.ok) throw new Error(res.error || "API Error");
 
     const jobs = res.jobs || [];
     let pins = 0;
     const no = [];
 
     for (const j of jobs) {
-      // Parse Coordinates (Expects columns "Lat" and "Lng" in sheet)
       const lat = parseFloat(j.Lat);
       const lng = parseFloat(j.Lng);
-
       const id = j["Job ID"] || "";
       const unit = j["Nama Pasukan / Unit"] || "";
       const zon = j["Zon"] || "";
       const negeri = j["Negeri"] || "";
       const st = j["Status"] || "";
+      const struct = j["Inspector Structured Data"] || "{}";
+      const ts = j["Timestamp"] || "";
 
-      // If invalid coord, add to 'missing' list
       if (!isFinite(lat) || !isFinite(lng)) {
         no.push(j);
         continue;
@@ -57,14 +86,33 @@
 
       pins++;
       
+      const compBadge = getKompetensiBadge(ts, struct);
+
       const popup = `
-        <div style="min-width:200px; font-family:sans-serif;">
-          <div style="font-weight:800; font-size:14px; margin-bottom:2px;">${safeText(id)}</div>
-          <div style="font-size:12px; opacity:.8;">${safeText(unit)}</div>
-          <div style="font-size:11px; opacity:.6; margin-bottom:6px;">${safeText(negeri)} ${zon ? "• " + safeText(zon) : ""}</div>
-          <div>${chip(st)}</div>
-          <div style="margin-top:8px;">
-            <a href="./job.html?jobId=${encodeURIComponent(id)}" target="_blank" style="color:#2563eb; text-decoration:underline; font-size:12px;">Open Job</a>
+        <div style="min-width:200px; font-family:sans-serif; padding:2px;">
+          <div style="font-weight:800; font-size:11px; color:#64748b; margin-bottom:2px;">${safeText(id)}</div>
+          <div style="font-weight:bold; font-size:14px; color:#1e293b; margin-bottom:4px;">${safeText(unit)}</div>
+          <div style="font-size:11px; color:#94a3b8; margin-bottom:8px; border-bottom:1px solid #f1f5f9; padding-bottom:6px;">
+            ${safeText(negeri)} ${zon ? "• " + safeText(zon) : ""}
+          </div>
+          
+          <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; font-size:11px;">
+              <span style="color:#94a3b8;">Permohonan:</span>
+              <span style="font-weight:600; color:#475569;">${fmtDate(ts)}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:11px;">
+              <span style="color:#94a3b8;">Kompetensi:</span>
+              <span>${compBadge}</span>
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px;">
+            ${chip(st)}
+            <a href="./job.html?jobId=${encodeURIComponent(id)}" 
+               style="background:#0f172a; color:white; padding:6px 12px; border-radius:6px; text-decoration:none; font-size:10px; font-weight:bold;">
+               Buka Info
+            </a>
           </div>
         </div>
       `;
@@ -74,15 +122,13 @@
 
     $meta.textContent = `Map ready. ${pins} locations plotted.`;
 
-    // Render list of jobs without coordinates
     if (no.length > 0) {
       $nocoord.innerHTML = no.slice(0, 50).map(j => {
         const id = j["Job ID"] || "";
         const unit = j["Nama Pasukan / Unit"] || "";
         const loc = [j.Daerah, j.Negeri].filter(Boolean).join(", ");
-        
         return `
-          <div class="p-3 rounded-xl border border-slate-200 flex items-center justify-between gap-3">
+          <div class="p-3 rounded-xl border border-slate-200 flex items-center justify-between gap-3 bg-white">
             <div class="min-w-0">
               <div class="font-bold text-sm truncate">${safeText(id)}</div>
               <div class="text-xs text-slate-500 truncate">${safeText(unit)}</div>
