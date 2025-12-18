@@ -916,17 +916,27 @@
             <button class="btn" id="refresh">Refresh</button>
           </div>
 
-         <div class="flex items-center bg-slate-100 p-1 rounded-lg w-fit shadow-sm border border-slate-200">
-  <button id="btn-permohonan" 
-          onclick="switchTab('permohonan')" 
-          class="tab-btn px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 bg-white text-blue-600 shadow-sm border border-slate-200">
-    AGK
-  </button>
-  <button id="btn-wdp" 
-          onclick="switchTab('wdp')" 
-          class="tab-btn px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 text-slate-600 hover:text-slate-900">
-    WDP
-  </button>
+      <div class="flex items-center justify-between mb-6">
+    <h2 class="text-xl font-bold text-white">Inspection Overview</h2>
+    
+    <div class="flex items-center space-x-4">
+        <div class="flex items-center bg-[#0c121a] p-1 rounded-lg border border-white/10 shadow-inner">
+            <button id="btn-permohonan" 
+                    onclick="switchTab('permohonan')" 
+                    class="tab-btn px-4 py-1.5 rounded-md text-xs font-bold transition-all duration-200 bg-blue-600 text-white shadow-lg">
+                CT&P
+            </button>
+            <button id="btn-wdp" 
+                    onclick="switchTab('wdp')" 
+                    class="tab-btn px-4 py-1.5 rounded-md text-xs font-bold transition-all duration-200 text-slate-400 hover:text-white border border-transparent">
+                WDP
+            </button>
+        </div>
+
+        <button onclick="loadJobs(currentActiveTab)" class="p-2 rounded-lg bg-blue-600/10 text-blue-400 hover:bg-blue-600/20 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+        </button>
+    </div>
 </div>
 
           <div class="meta">
@@ -2425,6 +2435,7 @@ function openDrawer(job){
   </script>
 </body>
 </html>
+
 
 
 
