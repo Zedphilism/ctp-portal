@@ -18,3 +18,11 @@ async function fetchJobs(tab = 'permohonan') {
         return [];
     }
 }
+// In your main control file or ui.js
+async function refreshPortalView() {
+    // Uses the global 'currentActiveTab' we defined earlier
+    const jobs = await fetchJobs(currentActiveTab);
+    
+    // Pass to your rendering function
+    renderJobsTable(jobs); 
+}
