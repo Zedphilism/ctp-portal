@@ -1537,14 +1537,15 @@ function openDrawer(job){
       $dSub.textContent = `${job.unit} | ${job.jenis}`.replace(/^\s*\|\s*|\s*\|\s*$/g, "");
 
       // 1. Job Info
-      $kvJob.innerHTML = [
-        kvRow("Job ID", job.jobId),
-        kvRow("Unit / Pasukan", job.unit),
-        kvRow("Jenis Pemeriksaan", job.jenis),
-        kvRow("Priority", job.priority),
-        kvRow("Status", job.status),
-        kvRow("Tarikh Tugasan", formatDate(job.tarikhTugasan))
-      ].join("");
+     $kvJob.innerHTML = [
+    kvRow("Job ID", job.jobId),
+    kvRow("Tarikh Permohonan", fmtDate(job._raw[0])), // Index 0 biasanya adalah Timestamp asal
+    kvRow("Tarikh Tugasan", `${fmtDate(job._raw[23])} hingga ${fmtDate(job._raw[24])}`), // Index 23=Assigned Date, 24=End Date
+    kvRow("Kompetensi", getKompetensiBadge(job._raw[0], job.inspectorData)),
+    kvRow("Unit / Pasukan", job.unit),
+    kvRow("Jenis Pemeriksaan", job.jenis),
+    kvRow("Status", chip(job.status))
+  ].join("");
 
       // 2. Location
       $kvLoc.innerHTML = [
@@ -2269,4 +2270,5 @@ function openDrawer(job){
   </script>
 </body>
 </html>
+
 
