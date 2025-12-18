@@ -55,3 +55,39 @@ function initials(name) {
   const parts = n.split(/\s+/).slice(0, 2);
   return parts.map(p => p[0]?.toUpperCase() || "").join("") || "?";
 }
+
+/**
+ * Menghitung kompetensi (hari bekerja) & mengembalikan HTML badge
+ */
+function getCompetencyUI(subDateStr, jsonStr) {
+  if (!subDateStr) return `<span class="text-slate-400">-</span>`;
+  
+  const start = new Date(subDateStr);
+  let end = null;
+  
+  try {
+    const data = JSON.parse(jsonStr || "{}");
+    const dateKey = Object.keys(data).find(k => k.toLowerCase().includes('tarikh'));
+    if (dateKey && data[dateKey]) end = new Date(data[dateKey]);
+  } catch (e) { return `<span class="text-slate-400">-</span>`; }
+
+  if (!end || isNaN(end.getTime())) {
+    return `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500">BELUM DIPERIKSA</span>`;
+  }
+
+  const diffTime = Math.abs(end - start);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  let cls = "bg-rose-100 text-rose-700"; // Lewat (>7 hari)
+  let status = "LEWAT";
+  
+  if (diffDays <= 3) {
+    cls = "bg-emerald-100 text-emerald-700";
+    status = "CEMERLANG";
+  } else if (diffDays <= 7) {
+    cls = "bg-amber-100 text-amber-700";
+    status = "MEMUASKAN";
+  }
+
+  return `<span class="px-2 py-0.5 rounded text-[10px] font-bold ${cls}">${status} (${diffDays} HARI)</span>`;
+}
