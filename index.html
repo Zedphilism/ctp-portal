@@ -4,59 +4,187 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>CT&P Portal</title>
-  
+  <meta name="description" content="CT&P Portal for inspection job tracking and coordination." />
+
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
 
   <style>
     :root{
-      --bg:#0b0f14; --panel:#0f1620; --panel2:#0c121a;
-      --text:#e7eef8; --muted:#9fb0c6; --line:rgba(255,255,255,.08);
-      --accent:#3aa0ff; --good:#23c26b; --warn:#ffb020; --bad:#ff4d4d;
-      --shadow:0 20px 60px rgba(0,0,0,.45); --radius:16px;
+      --bg:#0b0f14;
+      --panel:#0f1620;
+      --panel2:#0c121a;
+      --text:#e7eef8;
+      --muted:#9fb0c6;
+      --line:rgba(255,255,255,.08);
+      --accent:#3aa0ff;
+      --good:#23c26b;
+      --warn:#ffb020;
+      --bad:#ff4d4d;
+      --shadow:0 20px 60px rgba(0,0,0,.45);
+      --radius:16px;
     }
 
     *{ box-sizing:border-box; }
-    body{ margin:0; font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); overflow:hidden; }
-    
-    .app{ display:grid; grid-template-columns: 320px 1fr; height:100vh; }
-    
-    /* Sidebar */
-    .sidebar{ background:var(--panel); border-right:1px solid var(--line); display:flex; flex-direction:column; }
-    .nav-header{ padding:24px; border-bottom:1px solid var(--line); }
-    .brand{ font-weight:800; font-size:20px; letter-spacing:-0.5px; color:var(--accent); }
-    
-    .scroll-area{ flex:1; overflow-y:auto; padding:12px; }
-    .list-item{ 
-      padding:16px; border-radius:12px; margin-bottom:8px; cursor:pointer; 
-      transition:all 0.2s; border:1px solid transparent; background:rgba(255,255,255,0.02);
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(1200px 500px at 15% -10%, rgba(58,160,255,0.08), transparent 70%),
+        var(--bg);
+      color: var(--text);
+      overflow:hidden;
+      -webkit-font-smoothing: antialiased;
     }
-    .list-item:hover{ background:var(--panel2); border-color:var(--line); }
-    
-    /* Main Map Area */
-    .main{ position:relative; background:#000; }
-    #map{ width:100%; height:100%; }
+
+    .app{
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      height:100vh;
+    }
+
+    /* Sidebar Area */
+    .sidebar{
+      background: var(--panel);
+      border-right: 1px solid var(--line);
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+      z-index:10;
+    }
+
+    .nav-header{
+      padding:24px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand{ font-weight:900; font-size:22px; letter-spacing:-0.5px; color:var(--text); display:flex; align-items:center; gap:8px; }
+    .brand span{ color:var(--accent); }
+
+    .scroll-area{ flex:1; overflow-y:auto; padding:12px; }
+    .scroll-area::-webkit-scrollbar{ width:6px; }
+    .scroll-area::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.1); border-radius:10px; }
+
+    .listItem{
+      padding:16px;
+      border-radius:12px;
+      margin-bottom:6px;
+      cursor:pointer;
+      transition: all .2s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid transparent;
+      background: rgba(255,255,255,0.02);
+      display:block;
+      text-decoration:none;
+      color:inherit;
+    }
+    .listItem:hover{
+      background: var(--panel2);
+      border-color: var(--line);
+      transform: translateY(-1px);
+    }
+
+    /* Main Area */
+    .main{
+      position:relative;
+      display:flex;
+      flex-direction:column;
+    }
+    #map{ flex:1; background:#000; }
+
+    /* Top Bar Over Map */
+    .map-tools{
+      position:absolute;
+      top:20px;
+      left:20px;
+      right:20px;
+      z-index:1000;
+      display:flex;
+      gap:10px;
+      pointer-events:none;
+    }
+    .map-tools > *{ pointer-events:auto; }
+
+    .search-input{
+      flex:1;
+      max-width:400px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: var(--text);
+      outline:none;
+      box-shadow: var(--shadow);
+      font-size:14px;
+    }
 
     /* Right Drawer */
-    .drawer-overlay{ position:fixed; inset:0; background:rgba(0,0,0,0.5); opacity:0; pointer-events:none; transition:0.3s; z-index:100; }
-    .drawer-overlay.open{ opacity:1; pointer-events:auto; }
-    .drawer{ 
-      position:fixed; top:0; right:-400px; width:400px; height:100%; 
-      background:var(--panel); border-left:1px solid var(--line); z-index:101;
-      transition:0.4s cubic-bezier(0.4, 0, 0.2, 1); padding:32px; overflow-y:auto;
+    .drawer-overlay{
+      position:fixed;
+      inset:0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      z-index:2000;
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .3s;
     }
-    .drawer.open{ right:0; box-shadow: var(--shadow); }
+    .drawer-overlay.open{ opacity:1; pointer-events:auto; }
 
-    /* UI Components */
-    .kv{ margin-bottom:20px; }
-    .kv .label{ color:var(--muted); font-size:10px; text-transform:uppercase; font-weight:700; margin-bottom:4px; letter-spacing:0.5px; }
-    .kv .val{ font-weight:500; font-size:14px; }
-    
-    .badge{ padding:4px 8px; border-radius:6px; font-size:10px; font-weight:800; border:1px solid transparent; }
-    
-    .search-box{ padding:16px; }
-    input{ width:100%; background:var(--panel2); border:1px solid var(--line); color:#white; padding:12px; border-radius:10px; outline:none; }
+    .drawer{
+      position:fixed;
+      top:0;
+      right:-420px;
+      width:420px;
+      height:100%;
+      background: var(--panel);
+      z-index:2001;
+      transition: transform .4s cubic-bezier(0.4, 0, 0.2, 1);
+      display:flex;
+      flex-direction:column;
+      box-shadow: var(--shadow);
+      border-left: 1px solid var(--line);
+    }
+    .drawer.open{ transform: translateX(-420px); }
+
+    .drawer-header{
+      padding:32px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .drawer-body{
+      flex:1;
+      overflow-y:auto;
+      padding:32px;
+    }
+
+    /* Stats & Info UI */
+    .kv-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:20px; }
+    .kv{ margin-bottom:24px; }
+    .kv .label{ font-size:10px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+    .kv .val{ font-size:14px; font-weight:500; line-height:1.5; }
+
+    .badge{
+      padding:4px 10px;
+      border-radius:6px;
+      font-size:10px;
+      font-weight:800;
+      display:inline-block;
+      text-transform:uppercase;
+    }
+
+    .inspector-card{
+      background: var(--panel2);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding:12px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:8px;
+    }
+    .inspector-img{ width:40px; height:40px; border-radius:10px; background:#222; object-fit:cover; }
+
   </style>
 </head>
 <body>
@@ -64,131 +192,179 @@
   <div class="app">
     <aside class="sidebar">
       <div class="nav-header">
-        <div class="brand">CT&P PORTAL</div>
-        <div style="font-size:10px; color:var(--muted); margin-top:4px;">PENGURUSAN PEMERIKSAAN</div>
+        <div class="brand">CT&P <span>PORTAL</span></div>
+        <div style="font-size:11px; color:var(--muted); margin-top:4px; font-weight:500;">Pemeriksaan Unit & Logistik</div>
       </div>
       
-      <div class="search-box">
-        <input type="text" id="q" placeholder="Cari Job ID atau Unit...">
+      <div class="scroll-area" id="list">
+        <div style="padding:20px; text-align:center; color:var(--muted); font-size:13px;">Loading database...</div>
       </div>
 
-      <div class="scroll-area" id="list">
-        </div>
+      <div style="padding:16px; border-top:1px solid var(--line); background:var(--panel2);">
+        <div id="stats" style="font-size:11px; color:var(--muted);">--</div>
+      </div>
     </aside>
 
     <main class="main">
       <div id="map"></div>
-      
-      <div style="position:absolute; top:20px; right:20px; z-index:1000; display:flex; gap:10px;">
-        <a href="./timeline.html" style="background:var(--panel); color:white; padding:10px 20px; border-radius:10px; text-decoration:none; font-size:12px; font-weight:700; border:1px solid var(--line);">TIMELINE</a>
-        <button id="refresh" style="background:var(--accent); color:white; border:none; padding:10px 20px; border-radius:10px; font-weight:700; cursor:pointer;">REFRESH</button>
+
+      <div class="map-tools">
+        <input type="text" id="q" class="search-input" placeholder="Cari Job ID, Unit atau Lokasi...">
+        <select id="status" style="background:var(--panel); color:white; border:1px solid var(--line); border-radius:12px; padding:0 12px; font-size:12px; outline:none; cursor:pointer;">
+          <option value="">Semua Status</option>
+          <option value="pending">Pending</option>
+          <option value="assigned">Assigned</option>
+          <option value="In Progress">In Progress</option>
+          <option value="completed">Completed</option>
+        </select>
+        <button id="refresh" style="background:var(--accent); color:white; border:none; border-radius:12px; padding:0 20px; font-size:12px; font-weight:700; cursor:pointer;">REFRESH</button>
       </div>
     </main>
   </div>
 
   <div class="drawer-overlay" id="overlay"></div>
   <div class="drawer" id="drawer">
-    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:30px;">
-      <div>
-        <h2 id="dTitle" style="margin:0; font-size:24px; font-weight:900;">-</h2>
-        <p id="dSub" style="color:var(--muted); margin:4px 0 0 0; font-size:12px;">-</p>
+    <div class="drawer-header">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+          <h2 id="dTitle" style="margin:0; font-size:24px; font-weight:900;">JOB</h2>
+          <p id="dSub" style="margin:6px 0 0 0; font-size:13px; color:var(--muted); font-weight:500;">Details</p>
+        </div>
+        <button onclick="closeDrawer()" style="background:rgba(255,255,255,0.05); border:none; color:white; width:32px; height:32px; border-radius:8px; cursor:pointer; font-size:18px;">&times;</button>
       </div>
-      <button onclick="closeDrawer()" style="background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer;">&times;</button>
     </div>
 
-    <div id="kvJob">
+    <div class="drawer-body">
+      <div id="kvJob"></div>
+
+      <div style="margin-top:32px;">
+        <div style="font-size:10px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:16px;">Pemeriksa Bertugas</div>
+        <div id="dInspectors"></div>
       </div>
 
-    <div style="margin-top:30px; padding-top:20px; border-top:1px solid var(--line);">
-       <div class="label" style="color:var(--muted); font-size:10px; font-weight:700; margin-bottom:12px;">PEMERIKSA BERTUGAS</div>
-       <div id="dInspectors" style="display:flex; gap:10px;"></div>
+      <div style="margin-top:32px; padding-top:24px; border-top:1px solid var(--line);">
+         <a id="dLink" href="#" target="_blank" style="display:block; width:100%; padding:14px; background:var(--accent); color:white; text-align:center; text-decoration:none; border-radius:12px; font-weight:700; font-size:14px;">Buka Maklumat Penuh</a>
+      </div>
     </div>
   </div>
 
   <script src="./js/config.js"></script>
   <script src="./js/api.js"></script>
   <script src="./js/ui.js"></script>
-  
+
   <script>
     let JOBS = [];
+    let INSPECTORS = [];
     let MAP, PIN_LAYER, HEAT_LAYER;
 
     const $list = document.querySelector("#list");
+    const $q = document.querySelector("#q");
+    const $status = document.querySelector("#status");
+    const $refresh = document.querySelector("#refresh");
     const $drawer = document.querySelector("#drawer");
     const $overlay = document.querySelector("#overlay");
     const $kvJob = document.querySelector("#kvJob");
+    const $dInspectors = document.querySelector("#dInspectors");
     const $dTitle = document.querySelector("#dTitle");
     const $dSub = document.querySelector("#dSub");
-    const $dInspectors = document.querySelector("#dInspectors");
-
-    // Initialize Page
-    document.addEventListener("DOMContentLoaded", () => {
-      initMap();
-      loadData();
-    });
-
-    function initMap() {
-      MAP = L.map("map", { zoomControl: false }).setView([4.2105, 101.9758], 6);
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png").addTo(MAP);
-      PIN_LAYER = L.layerGroup().addTo(MAP);
-    }
+    const $dLink = document.querySelector("#dLink");
 
     async function loadData() {
-      $list.innerHTML = '<div style="padding:20px; color:var(--muted); font-size:12px;">Memuatkan data...</div>';
       try {
-        const res = await API.listJobs();
-        JOBS = res.jobs || [];
+        const [jobRes, inspRes] = await Promise.all([API.listJobs(), API.listInspectors()]);
+        JOBS = jobRes.jobs || [];
+        INSPECTORS = inspRes.inspectors || [];
         renderJobs();
-        updateMap();
-      } catch (e) {
-        $list.innerHTML = '<div style="padding:20px; color:var(--bad);">Gagal memuatkan data.</div>';
-      }
+        initMap();
+      } catch(e) { console.error(e); }
     }
 
     function renderJobs() {
-      const q = document.querySelector("#q").value.toLowerCase();
-      const filtered = JOBS.filter(j => 
-        j["Job ID"].toLowerCase().includes(q) || 
-        j["Nama Pasukan / Unit"].toLowerCase().includes(q)
-      );
+      const q = $q.value.toLowerCase();
+      const st = $status.value.toLowerCase();
+
+      const filtered = JOBS.filter(j => {
+        const matchQ = !q || JSON.stringify(j).toLowerCase().includes(q);
+        const matchS = !st || String(j.Status).toLowerCase() === st;
+        return matchQ && matchS;
+      });
 
       $list.innerHTML = filtered.map(j => `
-        <div class="list-item" onclick='openDrawer(${JSON.stringify(j).replace(/'/g, "&apos;")})'>
-          <div style="font-size:10px; font-weight:800; color:var(--accent); margin-bottom:4px;">${j["Job ID"]}</div>
-          <div style="font-weight:700; font-size:14px; margin-bottom:2px;">${j["Nama Pasukan / Unit"]}</div>
-          <div style="font-size:11px; color:var(--muted);">${j["Negeri"]}</div>
+        <div class="listItem" onclick='openDrawer(${JSON.stringify(j).replace(/'/g, "&apos;")})'>
+          <div style="font-size:10px; font-weight:800; color:var(--accent); margin-bottom:4px; opacity:0.8;">${j["Job ID"]}</div>
+          <div style="font-weight:700; font-size:14px; margin-bottom:4px;">${j["Nama Pasukan / Unit"]}</div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+             <span style="font-size:11px; color:var(--muted);">${j.Negeri}</span>
+             ${chip(j.Status)}
+          </div>
         </div>
       `).join("");
+
+      document.getElementById("stats").textContent = `${filtered.length} Tugasan Ditemui`;
     }
 
-    function openDrawer(job) {
-      $dTitle.textContent = job["Job ID"];
-      $dSub.textContent = `${job["Nama Pasukan / Unit"]} | ${job["Jenis Pemeriksaan"]}`;
+    function openDrawer(j) {
+      $dTitle.textContent = j["Job ID"];
+      $dSub.textContent = `${j["Nama Pasukan / Unit"]} | ${j["Jenis Pemeriksaan"]}`;
+      $dLink.href = `./job.html?jobId=${encodeURIComponent(j["Job ID"])}`;
 
-      // Logic: Tarikh Tugasan range
-      const tugasanRange = `${fmtDate(job["Assigned Date"])} hingga ${fmtDate(job["End Date"])}`;
+      // COMPETENCY CALCULATION
+      const subDate = new Date(j["Timestamp"]);
+      const struct = JSON.parse(j["Inspector Structured Data"] || "{}");
+      const inspDate = struct.submitDate ? new Date(struct.submitDate) : null;
+      let compBadge = '<span class="badge" style="background:rgba(255,255,255,0.05); color:var(--muted);">Belum Diperiksa</span>';
       
-      // Logic: Competency Badge (From ui.js)
-      const compHtml = typeof getKompetensiBadge === 'function' 
-        ? getKompetensiBadge(job["Timestamp"], job["Inspector Structured Data"]) 
-        : "-";
+      if(subDate && inspDate) {
+        const diff = Math.ceil(Math.abs(inspDate - subDate) / (1000 * 60 * 60 * 24));
+        const color = diff <= 3 ? "var(--good)" : (diff <= 7 ? "var(--warn)" : "var(--bad)");
+        compBadge = `<span class="badge" style="background:${color}20; color:${color}; border:1px solid ${color}40;">${diff} HARI</span>`;
+      }
 
-      $kvJob.innerHTML = [
-        kvRow("Job ID", job["Job ID"]),
-        kvRow("Tarikh Permohonan", fmtDate(job["Timestamp"])),
-        kvRow("Tarikh Tugasan", tugasanRange),
-        kvRow("Kompetensi", compHtml),
-        kvRow("Unit / Pasukan", job["Nama Pasukan / Unit"]),
-        kvRow("Jenis Pemeriksaan", job["Jenis Pemeriksaan"]),
-        kvRow("Status", job["Status"])
-      ].join("");
+      // KV DATA WITH MALAY LABELS
+      $kvJob.innerHTML = `
+        <div class="kv-grid">
+          ${kv("Job ID", j["Job ID"])}
+          ${kv("Status", chip(j.Status))}
+        </div>
+        ${kv("Tarikh Permohonan", fmtDate(j["Timestamp"]))}
+        ${kv("Tarikh Tugasan", `${fmtDate(j["Assigned Date"])} hingga ${fmtDate(j["End Date"])}`)}
+        ${kv("Kompetensi", compBadge)}
+        ${kv("Unit / Pasukan", j["Nama Pasukan / Unit"])}
+        ${kv("Jenis Pemeriksaan", j["Jenis Pemeriksaan"])}
+      `;
 
-      // Photo handling
-      $dInspectors.innerHTML = ""; // Clear existing
-      // Logic would go here to find photos in database...
+      // INSPECTORS
+      const names = [j["Assigned Inspector 1"], j["Assigned Inspector 2"]].filter(Boolean);
+      $dInspectors.innerHTML = names.map(n => {
+        const match = INSPECTORS.find(i => i.Nama === n || i["Nama Pemeriksa"] === n);
+        const img = match?.Photo_URL || "https://ui-avatars.com/api/?name=" + n;
+        return `
+          <div class="inspector-card">
+            <img src="${img}" class="inspector-img">
+            <div>
+              <div style="font-size:13px; font-weight:700;">${n}</div>
+              <div style="font-size:11px; color:var(--muted);">${match?.Pangkat || "Pemeriksa"}</div>
+            </div>
+          </div>
+        `;
+      }).join("");
 
       $drawer.classList.add("open");
       $overlay.classList.add("open");
+    }
+
+    function kv(l, v) {
+      return `<div class="kv"><div class="label">${l}</div><div class="val">${v || "-"}</div></div>`;
+    }
+
+    function chip(s) {
+      const st = String(s).toLowerCase();
+      let color = "var(--muted)";
+      if(st === "pending") color = "var(--warn)";
+      if(st === "assigned") color = "var(--accent)";
+      if(st === "completed") color = "var(--good)";
+      if(st === "cancelled") color = "var(--bad)";
+      return `<span class="badge" style="background:${color}15; color:${color}; border:1px solid ${color}30;">${s}</span>`;
     }
 
     function closeDrawer() {
@@ -196,37 +372,31 @@
       $overlay.classList.remove("open");
     }
 
-    function kvRow(label, val) {
-      return `
-        <div class="kv">
-          <div class="label">${label}</div>
-          <div class="val">${val || "-"}</div>
-        </div>
-      `;
+    function initMap() {
+      if(MAP) return;
+      MAP = L.map("map", { zoomControl: false }).setView([4.2105, 101.9758], 6);
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png").addTo(MAP);
+      PIN_LAYER = L.layerGroup().addTo(MAP);
+      updateMap();
     }
 
-    function fmtDate(v) {
-      if (!v) return "-";
-      const d = new Date(v);
-      return isNaN(d.getTime()) ? v : d.toLocaleDateString("en-GB");
+    function updateMap() {
+      PIN_LAYER.clearLayers();
+      JOBS.forEach(j => {
+        const lat = parseFloat(j.Lat), lng = parseFloat(j.Lng);
+        if(!isNaN(lat) && !isNaN(lng)) {
+          L.circleMarker([lat, lng], { radius: 7, color: 'var(--accent)', weight: 2, fillOpacity: 0.5 }).addTo(PIN_LAYER)
+           .bindPopup(`<b style="color:#000">${j["Job ID"]}</b><br><span style="color:#000">${j["Nama Pasukan / Unit"]}</span>`);
+        }
+      });
     }
 
-    async function updateMap() {
-       PIN_LAYER.clearLayers();
-       JOBS.forEach(j => {
-          const lat = parseFloat(j.Lat);
-          const lng = parseFloat(j.Lng);
-          if (isFinite(lat) && isFinite(lng)) {
-             L.circleMarker([lat, lng], { radius: 6, color: '#3aa0ff' }).addTo(PIN_LAYER)
-              .bindPopup(`<b>${j["Job ID"]}</b><br>${j["Nama Pasukan / Unit"]}`);
-          }
-       });
-    }
-
-    // Search trigger
-    document.querySelector("#q").addEventListener("input", renderJobs);
-    document.querySelector("#refresh").addEventListener("click", loadData);
+    $q.addEventListener("input", renderJobs);
+    $status.addEventListener("change", renderJobs);
+    $refresh.addEventListener("click", loadData);
     $overlay.addEventListener("click", closeDrawer);
+
+    loadData();
   </script>
 </body>
 </html>
