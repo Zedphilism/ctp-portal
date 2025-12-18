@@ -916,6 +916,19 @@
             <button class="btn" id="refresh">Refresh</button>
           </div>
 
+          <div class="flex space-x-4 border-b border-slate-200 mb-4">
+  <button id="btn-permohonan" 
+          onclick="switchTab('permohonan')" 
+          class="tab-btn px-4 py-2 border-b-2 border-blue-600 text-blue-600 font-medium">
+    Alat Ganti
+  </button>
+  <button id="btn-wdp" 
+          onclick="switchTab('wdp')" 
+          class="tab-btn px-4 py-2 border-b-2 border-transparent text-slate-500 font-medium">
+    WDP
+  </button>
+</div>
+
           <div class="meta">
             <span>Showing <strong id="count">0</strong> jobs</span>
             <span class="badge b-loading" id="liveBadge"><span class="dot"></span><span id="liveText">Loading</span></span>
@@ -2412,6 +2425,7 @@ function openDrawer(job){
   </script>
 </body>
 </html>
+
 
 
 
