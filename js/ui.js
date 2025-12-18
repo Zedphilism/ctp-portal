@@ -105,3 +105,24 @@ function typeChip(jobId) {
   
   return `<span class="px-2 py-0.5 rounded text-[10px] font-bold ${cls}">${label}</span>`;
 }
+
+// Add these to ui.js
+let currentActiveTab = 'permohonan'; // Default
+
+async function switchTab(tabName) {
+  currentActiveTab = tabName;
+  
+  // 1. Update UI button styles
+  els('.tab-btn').forEach(btn => {
+    btn.classList.toggle('border-blue-600', btn.id === `btn-${tabName}`);
+    btn.classList.toggle('text-blue-600', btn.id === `btn-${tabName}`);
+    btn.classList.toggle('text-slate-500', btn.id !== `btn-${tabName}`);
+  });
+
+  // 2. Refresh the data
+  // Note: Ensure your main loading function (e.g. loadJobs()) 
+  // passes 'currentActiveTab' to the API fetch call.
+  if (typeof loadJobs === "function") {
+    loadJobs(currentActiveTab); 
+  }
+}
