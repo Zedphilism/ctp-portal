@@ -112,17 +112,21 @@ let currentActiveTab = 'permohonan'; // Default
 async function switchTab(tabName) {
   currentActiveTab = tabName;
   
-  // 1. Update UI button styles
-  els('.tab-btn').forEach(btn => {
-    btn.classList.toggle('border-blue-600', btn.id === `btn-${tabName}`);
-    btn.classList.toggle('text-blue-600', btn.id === `btn-${tabName}`);
-    btn.classList.toggle('text-slate-500', btn.id !== `btn-${tabName}`);
+  // AESTHETIC TOGGLE LOGIC
+  const btns = document.querySelectorAll('.tab-btn');
+  btns.forEach(btn => {
+    if (btn.id === `btn-${tabName}`) {
+      // Active State: White background, Blue text, Shadow
+      btn.className = "tab-btn px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 bg-white text-blue-600 shadow-sm border border-slate-200";
+    } else {
+      // Inactive State: Transparent background, Slate text
+      btn.className = "tab-btn px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 text-slate-600 hover:text-slate-900 border border-transparent";
+    }
   });
 
-  // 2. Refresh the data
-  // Note: Ensure your main loading function (e.g. loadJobs()) 
-  // passes 'currentActiveTab' to the API fetch call.
+  // Re-fetch data for the selected tab
+  // Assuming your main load function is called loadJobs()
   if (typeof loadJobs === "function") {
-    loadJobs(currentActiveTab); 
+    loadJobs(tabName);
   }
 }
