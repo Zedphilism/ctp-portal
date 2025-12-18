@@ -1297,6 +1297,23 @@
       "MOHAMAD SHARUL IZAM BIN MOHD HAIZENMAN": "assets/inspectors/INS_A2_12.jpeg"
     };
 
+    // Map full names to the short display format you requested
+    const SHORT_NAMES = {
+      "MOHAMAD ZAIDI BIN ABDULLAH": "SSjn Zaidi",
+      "AMIR SYAIFUDIN BIN ISMAIL": "SSjn Amir Syaifudin",
+      "AMIR AFIZIE BIN DAUD": "SSjn Amir Afizie",
+      "MOHD AIZAT BIN AYOB": "SSjn Aizat",
+      "MOHAMAD SHARUL IZAM BIN MOHD HAIZENMAN": "SSjn Sharul",
+      "MOHAMAD FAZWAN BIN ZAKARIA": "SSjn Fazwan",
+      "MUHAMMAD FAIZAL BIN BATALUMI": "SSjn Faizal",
+      "JAY AZRIN BIN CHE YAHAYA": "SSjn Jay",
+      "NAZIRUL HAFIZ BIN ABD SHUKOR": "Sjn Nazirul",
+      "MUHAMMAD IZZAT BIN ABU ZAHARIN": "Sjn Izzat",
+      // Fallbacks for others found in data
+      "SHAFEE BIN ISHAK": "SSjn Shafee",
+      "NUR FADHILAH BINTI ZULKEPLI": "Kapt Fadhilah"
+    };
+
     function setBadge(mode, text){
       $liveBadge.classList.remove("b-live","b-error","b-loading");
       if(mode === "live") $liveBadge.classList.add("b-live");
@@ -2006,16 +2023,15 @@ function openDrawer(job){
       "#10b981", "#3b82f6"
     ];
 
-    function drawBarChart(canvas, items, allowLongLabels){
+  function drawBarChart(canvas, items, allowLongLabels){
       const ctx = clearCanvas(canvas);
       const w = canvas.width;
       const h = canvas.height;
 
-      // Increase bottom padding to accommodate rotated labels
       const padL = 46;
       const padR = 14;
-      const padT = 20;
-      const padB = 85; // Increased for rotated text
+      const padT = 14;
+      const padB = 36; // Reverted to standard padding (no rotation needed)
 
       const innerW = w - padL - padR;
       const innerH = h - padT - padB;
@@ -2037,7 +2053,7 @@ function openDrawer(job){
       ctx.lineTo(padL + innerW, padT + innerH);
       ctx.stroke();
 
-      // Grid Lines & Y-Axis Labels
+      // Grid Lines & Labels
       ctx.fillStyle = "rgba(231,238,248,.65)";
       ctx.font = "12px Arial";
       const ticks = 4;
@@ -2055,50 +2071,54 @@ function openDrawer(job){
         ctx.fillText(String(val), 10, y + 4);
       }
 
-      // Draw Bars & Labels
       items.forEach((it, i)=>{
         const x = padL + i*(barW + gap);
         const v = it.value || 0;
         const bh = Math.round((v/max) * innerH);
         const y = padT + innerH - bh;
 
-        // Determine Color: Use item's color (TAT chart) or pick from Palette (Inspector chart)
-        const barColor = it.color || PALETTE[i % PALETTE.length];
+        // Color Logic: Use Custom Color (for TAT) OR Default Gradient (for others)
+        if(it.color) {
+            ctx.fillStyle = it.color;
+        } else {
+            const grad = ctx.createLinearGradient(0, y, 0, y + bh);
+            grad.addColorStop(0, "rgba(58,160,255,.55)");
+            grad.addColorStop(1, "rgba(35,194,107,.28)");
+            ctx.fillStyle = grad;
+        }
 
-        // Draw Bar
-        ctx.fillStyle = barColor;
-        roundRect(ctx, x, y, barW, bh, 6);
+        roundRect(ctx, x, y, barW, bh, 8);
         ctx.fill();
 
-        ctx.strokeStyle = "rgba(255,255,255,.15)";
+        ctx.strokeStyle = "rgba(255,255,255,.10)";
         ctx.stroke();
 
-        // Draw Value (Top of Bar)
-        ctx.fillStyle = "rgba(231,238,248,.9)";
-        ctx.font = "bold 11px Arial";
+        // Value on top
+        ctx.fillStyle = "rgba(231,238,248,.82)";
+        ctx.font = "12px Arial";
         const valStr = String(v);
         const textW = ctx.measureText(valStr).width;
         ctx.fillText(valStr, x + (barW - textW)/2, Math.max(14, y - 6));
 
-        // Draw Label (Rotated & Colored)
-        ctx.save();
-        // Translate to the center bottom of the bar position
-        ctx.translate(x + barW/2, padT + innerH + 12); 
-        ctx.rotate(-Math.PI / 4); // Rotate -45 degrees
+        // Label handling (Short Name Lookup)
+        ctx.fillStyle = "rgba(159,176,198,.85)";
+        ctx.font = "11px Arial";
         
-        ctx.fillStyle = barColor; // Text color matches Bar color
-        ctx.font = "bold 11px Arial";
-        ctx.textAlign = "right";
-        ctx.textBaseline = "middle";
+        let lab = String(it.label || "Unknown");
+        // Check if there is a short name mapping, otherwise keep original
+        if(SHORT_NAMES && SHORT_NAMES[lab]) {
+            lab = SHORT_NAMES[lab];
+        }
+
+        // Simple truncation if still too long
+        const short = (lab.length > 15 && !allowLongLabels) ? lab.slice(0,14)+"…" : lab;
         
-        const lab = String(it.label || "Unknown");
-        // Truncate extremely long names
-        const displayLab = lab.length > 25 ? lab.slice(0, 24) + "…" : lab;
-        
-        ctx.fillText(displayLab, 0, 0);
-        ctx.restore();
+        // Center the text
+        const labW = ctx.measureText(short).width;
+        ctx.fillText(short, x + (barW - labW)/2, padT + innerH + 22);
       });
     }
+    
     function renderLegend(el, labels){
       el.innerHTML = (labels || []).slice(0, 12).map(l => `<span class="leg"><span class="swatch"></span>${escapeHtml(l)}</span>`).join("");
       if(!el.innerHTML) el.innerHTML = `<span class="leg"><span class="swatch"></span>None</span>`;
@@ -2392,5 +2412,6 @@ function openDrawer(job){
   </script>
 </body>
 </html>
+
 
 
