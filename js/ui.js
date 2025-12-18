@@ -91,3 +91,17 @@ function getCompetencyUI(subDateStr, jsonStr) {
 
   return `<span class="px-2 py-0.5 rounded text-[10px] font-bold ${cls}">${status} (${diffDays} HARI)</span>`;
 }
+
+// Add this to your ui.js
+function typeChip(jobId) {
+  const id = String(jobId || "").toUpperCase();
+  let cls = "bg-indigo-100 text-indigo-700";
+  let label = "CT&P";
+  
+  if (id.startsWith("WDP")) {
+    cls = "bg-purple-100 text-purple-700";
+    label = "WDP";
+  }
+  
+  return `<span class="px-2 py-0.5 rounded text-[10px] font-bold ${cls}">${label}</span>`;
+}
