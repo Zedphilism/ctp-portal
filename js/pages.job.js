@@ -12,7 +12,6 @@
     return /^https?:\/\//i.test(String(v || "").trim());
   }
 
-  // Helper: Key-Value Renderer
   function kv(k, v) {
     const vv = String(v ?? "").trim();
     const valHtml = isUrl(vv)
@@ -46,10 +45,18 @@
     return;
   }
 
-  el("#title").textContent = "Loading...";
+  el("#title").textContent = "Loading.";
 
   try {
-    const res = await API.getJob(jobId);
+    // ✅ Decide which sheet to query
+    // Priority:
+    // 1) explicit URL param ?tab=wdp
+    // 2) auto-detect from jobId prefix WDP-
+    const urlTab = (qsParam("tab") || "").toLowerCase().trim();
+    const autoTab = String(jobId).toUpperCase().startsWith("WDP-") ? "wdp" : "";
+    const tab = urlTab || autoTab;
+
+    const res = await API.getJob(jobId, tab ? { tab } : {});
 
     if (!res.ok) {
       el("#title").textContent = "Job Not Found";
@@ -65,9 +72,7 @@
     el("#chips").innerHTML = `${chip(j["Status"])}${prioChip(j["Priority"])}`;
     el("#ts").textContent = j["Timestamp"] ? ("Submitted: " + fmtDate(j["Timestamp"])) : "";
 
-    // ===== Documents: clickable request letter =====
-    // Backend key example from your earlier payload:
-    // "Upload Surat Permohonan. Pastikan File Dalam Format Pdf"
+    // Documents: clickable request letter (still works for both tabs)
     const suratKey = findFirstExistingKey(j, [
       "Upload Surat Permohonan. Pastikan File Dalam Format Pdf",
       "Upload Surat Permohonan",
@@ -77,60 +82,48 @@
 
     const suratUrl = suratKey ? String(j[suratKey] || "").trim() : "";
 
-    // If you later add <div id="docs"></div> in job.html, we can render there.
-    // For now: include it inside Key fields as a top item.
     const docsBlock = suratUrl
       ? `
-        <div class="md:col-span-2 p-3 rounded-xl border border-slate-200 bg-slate-50/50">
-          <div class="text-slate-500 text-[10px] uppercase tracking-wider font-bold mb-2">Surat Permohonan</div>
-          <a class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-sm font-semibold"
-             target="_blank" rel="noopener" href="${suratUrl}">
-            Open request letter
-          </a>
-          <div class="mt-2 text-xs text-slate-500 break-words">${safeText(suratUrl)}</div>
+        <div class="md:col-span-2 p-3 rounded-xl border border-slate-200 bg-blue-50">
+          <div class="text-slate-500 text-[10px] uppercase tracking-wider font-bold mb-1">Surat Permohonan</div>
+          <a class="text-blue-700 underline break-words font-semibold" target="_blank" rel="noopener" href="${suratUrl}">${safeText(suratUrl)}</a>
         </div>
       `
-      : `
-        <div class="md:col-span-2 p-3 rounded-xl border border-slate-200 bg-slate-50/50">
-          <div class="text-slate-500 text-[10px] uppercase tracking-wider font-bold mb-1">Surat Permohonan</div>
-          <div class="text-sm text-slate-600">No link provided</div>
-        </div>
-      `;
+      : "";
 
-    // ===== Key fields (clean allowlist) =====
-    // Removed: No Telefon, Bilangan Item, LO values
-    const displayKeys = [
+    // Key fields (curated)
+    const curatedKeys = [
       "Nama Pasukan / Unit",
-      "Rujuk Surat",
-      "Tarikh Surat",
-      "Nama Pemohon",
       "Jenis Pemeriksaan",
       "Daerah",
       "Negeri",
       "Zon",
-      "Syarikat / Pembekal",
-      "No Kontrak",
-      "Catatan Tambahan",
       "Assigned Inspector 1",
       "Assigned Inspector 2",
       "Assigned Date",
-      "End Date",
-      "Dokumen Berkaitan (jika Ada)"
+      "End Date"
     ];
 
-    const keyHtml = displayKeys.map(k => {
-      const exactKey = findKeyInsensitive(j, k);
-      return kv(k, exactKey ? j[exactKey] : "");
-    }).join("");
+    const keyHtml = [];
+    if (docsBlock) keyHtml.push(docsBlock);
 
-    // Docs first, then key fields
-    el("#key").innerHTML = docsBlock + keyHtml;
+    curatedKeys.forEach(k => {
+      const hit = findKeyInsensitive(j, k);
+      if (hit) keyHtml.push(kv(hit, j[hit]));
+    });
 
-    // Optional: If your UI ever renders full dump in job.html, you can redact there too.
-    // This file currently doesn't touch #dump (your older UI may do it elsewhere).
+    // Always show Job ID + Status at top (even if headers differ)
+    keyHtml.unshift(kv("Status", j["Status"] || "-"));
+    keyHtml.unshift(kv("Job ID", j["Job ID"] || jobId));
 
-  } catch (e) {
-    console.error(e);
-    el("#title").textContent = "Connection Error";
+    el("#key").innerHTML = keyHtml.join("");
+
+    // Full row (audit view)
+    const full = Object.keys(j).sort().map(k => kv(k, j[k])).join("");
+    el("#full").innerHTML = full;
+
+  } catch (err) {
+    el("#title").textContent = "Error";
+    el("#key").innerHTML = `<div class="text-rose-600 p-4">Client error: ${safeText(err.message || err)}</div>`;
   }
 })();
