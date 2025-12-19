@@ -1430,77 +1430,19 @@ function mapRowToJob(row){
     async function loadData(){
       setBadge("loading","Loading");
       try{
-        const base = WEB_APP_URL + (WEB_APP_URL.includes("?") ? "&" : "?");
+        const urlJobs = WEB_APP_URL + (WEB_APP_URL.includes("?") ? "&" : "?") + "action=listJobs&t=" + Date.now();
+        const reqJobs = fetch(urlJobs, { method:"GET", cache:"no-store" }).then(r => r.json());
 
-        // 1) fetch CTP (Permohonan)
-        const reqJobsCTP = fetch(
-          base + "action=listJobs&t=" + Date.now(),
-          { method:"GET", cache:"no-store" }
-        ).then(r => r.json());
+        const urlInsp = WEB_APP_URL + (WEB_APP_URL.includes("?") ? "&" : "?") + "action=listInspectors&t=" + Date.now();
+        const reqInsp = fetch(urlInsp, { method:"GET", cache:"no-store" }).then(r => r.json());
 
-        // 2) fetch WDP
-        const reqJobsWDP = fetch(
-          base + "action=listJobs&tab=wdp&t=" + Date.now(),
-          { method:"GET", cache:"no-store" }
-        ).then(r => r.json());
+        const [resJobs, resInsp] = await Promise.all([reqJobs, reqInsp]);
 
-        // 3) inspectors
-        const reqInsp = fetch(
-          base + "action=listInspectors&t=" + Date.now(),
-          { method:"GET", cache:"no-store" }
-        ).then(r => r.json());
-
-        const [resCTP, resWDP, resInsp] = await Promise.all([reqJobsCTP, reqJobsWDP, reqInsp]);
-
-        // merge jobs
-        const ctpJobs = (resCTP && resCTP.ok && Array.isArray(resCTP.jobs)) ? resCTP.jobs : [];
-        const wdpJobs = (resWDP && resWDP.ok && Array.isArray(resWDP.jobs)) ? resWDP.jobs : [];
-
-        if (!ctpJobs.length && !wdpJobs.length) {
-          console.error("Jobs error", { resCTP, resWDP });
-        }
-
-        const allJobs = ctpJobs.concat(wdpJobs);
-
-        JOBS = allJobs
-          .map(mapRowToJob)
-          .filter(j => safe(j.jobId) !== "");
-
-        // inspectors (same as before)
-        if(resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)){
-           INSPECTORS = resInsp.inspectors.map(mapRowToInspector).filter(i => safe(i.name) !== "");
+        if(resJobs && resJobs.ok && Array.isArray(resJobs.jobs)){
+           JOBS = resJobs.jobs.map(mapRowToJob).filter(j => safe(j.jobId) !== "");
         } else {
-           console.error("Inspector error", resInsp);
-           INSPECTORS = [];
+           console.error("Jobs error", resJobs);
         }
-
-        setBadge("live","Live");
-        renderJobs();
-        rebuildDirectory();
-        renderDirectory();
-        renderAnalytics();
-
-        // update timeline + map based on fresh data
-        renderTimeline();
-        if($viewMap.classList.contains("active")) {
-          renderMapView();
-        } else {
-          $mapNote.textContent = "Ready";
-        }
-
-      } catch(err){
-        console.error("loadData error:", err);
-        setBadge("error","Offline");
-        JOBS = [];
-        INSPECTORS = [];
-        renderJobs();
-        rebuildDirectory();
-        renderDirectory();
-        renderAnalytics();
-        renderTimeline();
-        $mapNote.textContent = "Offline";
-      }
-    }
 
         if(resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)){
            INSPECTORS = resInsp.inspectors.map(mapRowToInspector).filter(i => safe(i.name) !== "");
@@ -1578,8 +1520,7 @@ function mapRowToJob(row){
           <td>${escapeHtml(j.unit)}</td>
           <td>${escapeHtml(j.jenis)}</td>
           <td>${escapeHtml(loc)}</td>
-          <td>${escapeHtml(dateDisplay)}</td>
-          <td>
+          <td>${escapeHtml(dateDisplay)}</td> <td>
             <span class="chip ${stClass}">
               <span class="dot"></span>
               ${escapeHtml(j.status || "-")}
@@ -2395,14 +2336,6 @@ function openDrawer(job){
         $mapNote.textContent = "Loading";
         ensureMap();
 
-        const mapEl = document.getElementById("map");
-        // If the tab just opened and the container is still 0x0, delay and retry
-        if(!mapEl || mapEl.clientWidth === 0 || mapEl.clientHeight === 0){
-          $mapNote.textContent = "Ready";
-          setTimeout(renderMapView, 220);
-          return;
-        }
-
         // Leaflet needs a resize after the tab becomes visible
         setTimeout(()=> { try{ MAP.invalidateSize(true); } catch(e){} }, 60);
 
@@ -2412,13 +2345,7 @@ function openDrawer(job){
           HEAT_LAYER = null;
         }
 
-        // If no jobs at all, don't build heat or pins
-        if(!Array.isArray(JOBS) || JOBS.length === 0){
-          $mapNote.textContent = "0 jobs";
-          return;
-        }
-
-        // Heat uses all jobs
+        // Heat uses all jobs (Option 1)
         const locCount = new Map();
         const locKey = (j) => normalizeText(`${safe(j.daerah)}|${safe(j.negeri)}`);
         JOBS.forEach(j=>{
@@ -2439,14 +2366,13 @@ function openDrawer(job){
         const geoHeat = await mapWithConcurrency(uniqueLocs, 2, async (it)=>{
           const pos = await geocodeNominatim(it.query);
           if(!pos) return null;
+          // weight based on frequency
           const w = Math.min(1, 0.25 + Math.log(it.count + 1) / 3);
           return [pos[0], pos[1], w];
         });
 
         const heatPoints = geoHeat.filter(Boolean);
-        if(heatPoints.length){
-          HEAT_LAYER = L.heatLayer(heatPoints, { radius: 28, blur: 22, maxZoom: 9 }).addTo(MAP);
-        }
+        HEAT_LAYER = L.heatLayer(heatPoints, { radius: 28, blur: 22, maxZoom: 9 }).addTo(MAP);
 
         // Pins only for In Progress
         const active = JOBS.filter(j => safe(j.status) === "In Progress" && safe(j.daerah) && safe(j.negeri));
