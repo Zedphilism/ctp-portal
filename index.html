@@ -896,51 +896,34 @@
           <div class="hint">Closed jobs</div>
         </div>
       </div>
+<section class="panel">
+  <div class="controls">
+    <div class="controls-left">
 
-      <section class="panel">
-<div class="controls">
-  <div class="controls-left">
-    <div class="input" title="Search by Job ID, Unit, Location, Inspector">
-      <span style="opacity:.85;">🔎</span>
-      <input id="q" type="text" placeholder="Search Job ID, Unit, Lokasi, Pemeriksa" />
+      <div class="input" title="Search by Job ID, Unit, Location, Inspector">
+        <span style="opacity:.85;">🔎</span>
+        <input
+          id="q"
+          type="text"
+          placeholder="Search Job ID, Unit, Lokasi, Pemeriksa"
+        />
+      </div>
+
+      <select class="select" id="statusFilter" title="Filter by status">
+        <option value="">All Status</option>
+        <option value="Pending">Pending</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Completed">Completed</option>
+        <option value="Cancelled">Cancelled</option>
+      </select>
+
+      <button class="btn" id="refresh">Refresh</button>
+
     </div>
-
-    <select class="select" id="statusFilter" title="Filter by status">
-      <option value="">All Status</option>
-      <option value="Pending">Pending</option>
-      <option value="In Progress">In Progress</option>
-      <option value="Completed">Completed</option>
-      <option value="Cancelled">Cancelled</option>
-    </select>
-
-    <button class="btn" id="refresh">Refresh</button>
   </div>
 
-  <div class="controls-right">
-    <div class="ql-title">Google Form</div>
-
-    <ul class="quick-links">
-      <li>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdHfQWKturVq4XISrKFqgZG6teJxpDAiVcwuC26hoavMBjGLw/viewform"
-           target="_blank" rel="noopener">
-          Penerimaan Alat Ganti ATM
-          <span class="tag">Form</span>
-        </a>
-      </li>
-
-      <li>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSecXMPpkh48CQFVDMaBRVaw9EeBsR2TiGDf9t13tdHYg1THBA/viewform"
-           target="_blank" rel="noopener">
-          Mewujudkan Dokumen
-          <span class="tag">Form</span>
-        </a>
-      </li>
-    </ul>
-  </div>
-</div>
-
-  <div class="flex items-center justify-between mb-6">
-    <h2 class="text-xl font-bold text-white">Inspection Overview</h2>
+  <div class="header-row">
+    <h2>Inspection Overview</h2>
 
     <div class="meta">
       <span>Showing <strong id="count">0</strong> jobs</span>
@@ -951,7 +934,7 @@
     </div>
   </div>
 
-  <div class="table-wrap" style="margin-top:14px;">
+  <div class="table-wrap">
     <table>
       <thead>
         <tr>
@@ -969,6 +952,7 @@
     </table>
   </div>
 </section>
+
 
 
     <section class="view" id="viewDir" role="tabpanel" aria-labelledby="tabDir">
@@ -2458,6 +2442,7 @@ function openDrawer(job){
   </script>
 </body>
 </html>
+
 
 
 
