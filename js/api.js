@@ -1,28 +1,26 @@
-// Update your existing fetch function in api.js
-async function fetchJobs(tab = 'permohonan') {
-    // We append the tab parameter so the Backend knows which sheet to read
-    const url = `${CONFIG.SCRIPT_URL}?action=listJobs&tab=${tab}`;
-    
-    try {
-        const response = await fetch(url);
-        const result = await response.json();
-        
-        if (result.status === 'success') {
-            return result.data;
-        } else {
-            console.error("API Error:", result.message);
-            return [];
-        }
-    } catch (error) {
-        console.error("Network Error:", error);
-        return [];
-    }
-}
-// In your main control file or ui.js
-async function refreshPortalView() {
-    // Uses the global 'currentActiveTab' we defined earlier
-    const jobs = await fetchJobs(currentActiveTab);
-    
-    // Pass to your rendering function
-    renderJobsTable(jobs); 
-}
+const API = {
+  // Internal helper: Standard GET fetch
+  async request(action, params = {}) {
+    const q = new URLSearchParams({ action, ...params });
+    const url = `${window.CTP_API_BASE}?${q.toString()}`;
+
+    const res = await fetch(url, {
+      method: "GET",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+    });
+
+    if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
+    return await res.json();
+  },
+
+  ping: () => API.request("ping"),
+  meta: () => API.request("meta"),
+
+  // allow passing { tab: "wdp" }
+  listJobs: (params) => API.request("listJobs", params),
+
+  // ✅ updated: allow passing { tab: "wdp" }
+  getJob: (jobId, params = {}) => API.request("getJob", { jobId, ...params }),
+
+  listInspectors: (params) => API.request("listInspectors", params),
+};
