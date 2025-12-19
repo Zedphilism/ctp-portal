@@ -1427,58 +1427,76 @@ function mapRowToJob(row){
         };
     }
 
-    async function loadData(){
-      setBadge("loading","Loading");
-      try{
-        const urlJobs = WEB_APP_URL + (WEB_APP_URL.includes("?") ? "&" : "?") + "action=listJobs&t=" + Date.now();
-        const reqJobs = fetch(urlJobs, { method:"GET", cache:"no-store" }).then(r => r.json());
+async function loadData() {
+  setBadge("loading", "Loading");
+  try {
+    const base = WEB_APP_URL + (WEB_APP_URL.includes("?") ? "&" : "?");
 
-        const urlInsp = WEB_APP_URL + (WEB_APP_URL.includes("?") ? "&" : "?") + "action=listInspectors&t=" + Date.now();
-        const reqInsp = fetch(urlInsp, { method:"GET", cache:"no-store" }).then(r => r.json());
+    const reqJobsCTP = fetch(base + "action=listJobs&t=" + Date.now(), {
+      method: "GET",
+      cache: "no-store"
+    }).then(r => r.json());
 
-        const [resJobs, resInsp] = await Promise.all([reqJobs, reqInsp]);
+    const reqJobsWDP = fetch(base + "action=listJobs&tab=wdp&t=" + Date.now(), {
+      method: "GET",
+      cache: "no-store"
+    }).then(r => r.json());
 
-        if(resJobs && resJobs.ok && Array.isArray(resJobs.jobs)){
-           JOBS = resJobs.jobs.map(mapRowToJob).filter(j => safe(j.jobId) !== "");
-        } else {
-           console.error("Jobs error", resJobs);
-        }
+    const reqInsp = fetch(base + "action=listInspectors&t=" + Date.now(), {
+      method: "GET",
+      cache: "no-store"
+    }).then(r => r.json());
 
-        if(resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)){
-           INSPECTORS = resInsp.inspectors.map(mapRowToInspector).filter(i => safe(i.name) !== "");
-        } else {
-           console.error("Inspector error", resInsp);
-           INSPECTORS = [];
-        }
+    const [resCTP, resWDP, resInsp] = await Promise.all([reqJobsCTP, reqJobsWDP, reqInsp]);
 
-        setBadge("live","Live");
-        renderJobs();
-        rebuildDirectory();
-        renderDirectory();
-        renderAnalytics();
+    const ctpJobs = (resCTP && resCTP.ok && Array.isArray(resCTP.jobs)) ? resCTP.jobs : [];
+    const wdpJobs = (resWDP && resWDP.ok && Array.isArray(resWDP.jobs)) ? resWDP.jobs : [];
 
-        // Added: update timeline + map based on fresh data
-        renderTimeline();
-        if($viewMap.classList.contains("active")) {
-          renderMapView();
-        } else {
-          // keep it ready
-          $mapNote.textContent = "Ready";
-        }
-
-      } catch(err){
-        console.error("loadData error:", err);
-        setBadge("error","Offline");
-        JOBS = [];
-        INSPECTORS = [];
-        renderJobs();
-        rebuildDirectory();
-        renderDirectory();
-        renderAnalytics();
-        renderTimeline();
-        $mapNote.textContent = "Offline";
-      }
+    if (!ctpJobs.length && !wdpJobs.length) {
+      console.error("Jobs error", { resCTP, resWDP });
     }
+
+    JOBS = ctpJobs.concat(wdpJobs)
+      .map(mapRowToJob)
+      .filter(j => safe(j.jobId) !== "");
+
+    if (resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)) {
+      INSPECTORS = resInsp.inspectors
+        .map(mapRowToInspector)
+        .filter(i => safe(i.name) !== "");
+    } else {
+      console.error("Inspector error", resInsp);
+      INSPECTORS = [];
+    }
+
+    setBadge("live", "Live");
+    renderJobs();
+    rebuildDirectory();
+    renderDirectory();
+    renderAnalytics();
+
+    renderTimeline();
+    if ($viewMap.classList.contains("active")) {
+      renderMapView();
+    } else {
+      $mapNote.textContent = "Ready";
+    }
+
+  } catch (err) {
+    console.error("loadData error:", err);
+    setBadge("error", "Offline");
+    JOBS = [];
+    INSPECTORS = [];
+    renderJobs();
+    rebuildDirectory();
+    renderDirectory();
+    renderAnalytics();
+    renderTimeline();
+    $mapNote.textContent = "Offline";
+  }
+}
+
+
 
     function matches(job, q){
       const hay = [
@@ -2412,6 +2430,7 @@ function openDrawer(job){
   </script>
 </body>
 </html>
+
 
 
 
