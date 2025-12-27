@@ -159,7 +159,7 @@
     /* #10: typography polish */
     h1{
       margin:8px 0 6px;
-      font-size:21px; /* was 19 */
+      font-size:21px;
       font-weight:900;
       letter-spacing:.35px;
     }
@@ -180,8 +180,8 @@
     .desc{
       font-size:14px;
       color:var(--muted);
-      line-height:1.7; /* slightly more readable */
-      max-width:460px; /* slightly tighter */
+      line-height:1.7;
+      max-width:460px;
       margin:0 auto 26px;
     }
 
@@ -352,7 +352,7 @@
       line-height:1.6;
     }
 
-    /* #8: access notice */
+    /* notice box */
     .notice{
       padding:12px 12px;
       border-radius:12px;
@@ -373,7 +373,7 @@
   <!-- TOP RIGHT MENU -->
   <div class="menu-fab" id="menuFab">
     <div class="menu-label">Menu</div>
-    <button class="hamburger" id="drawerToggle" aria-label="Open menu" aria-expanded="false" type="button">
+    <button class="hamburger" id="drawerToggle" aria-label="Buka menu" aria-expanded="false" type="button">
       <div class="burger" aria-hidden="true">
         <span></span><span></span><span></span>
       </div>
@@ -392,9 +392,8 @@
     <div class="divider"></div>
 
     <p class="desc">
-      Portal berpusat untuk pengurusan data, pemantauan pemeriksaan, dan analisis prestasi. 
-      Klik menu untuk Borang Permohonan Pemeriksaan.
-      Untuk teruskan, sila klik butang di bawah.
+      Portal berpusat untuk pengurusan data, pemantauan pemeriksaan, dan analisis prestasi.
+      Klik menu untuk mengakses Borang Permohonan Pemeriksaan. Untuk teruskan, sila klik butang di bawah.
     </p>
 
     <div class="actions">
@@ -404,7 +403,7 @@
 
     <div class="status">
       <span class="dot"></span>
-      System Online
+      Sistem Dalam Talian
     </div>
   </aside>
 
@@ -412,14 +411,14 @@
 
   <div class="drawer" id="rightDrawer" aria-hidden="true">
     <div class="d-head">
-      <span class="d-title">Menu & Sources</span>
-      <button class="d-close" id="drawerClose" aria-label="Close menu" type="button">&times;</button>
+      <span class="d-title">Menu & Sumber</span>
+      <button class="d-close" id="drawerClose" aria-label="Tutup menu" type="button">&times;</button>
     </div>
 
     <div class="d-body">
 
       <div class="drawer-section">
-        <div class="drawer-label">Online Forms</div>
+        <div class="drawer-label">Borang Dalam Talian</div>
 
         <a class="drawer-link"
            href="https://docs.google.com/forms/d/e/1FAIpQLSdHfQWKturVq4XISrKFqgZG6teJxpDAiVcwuC26hoavMBjGLw/viewform"
@@ -435,20 +434,34 @@
       </div>
 
       <div class="drawer-section">
-        <div class="drawer-label">Support</div>
+        <div class="drawer-label">Pautan Pantas</div>
 
-        <div class="notice">
-          <strong>Restricted access.</strong> This portal is intended for authorized personnel only.
-          Activities may be logged for compliance and audit purposes.
+        <a class="drawer-link" href="about.html">
+          Tentang Kami
+        </a>
+
+        <a class="drawer-link"
+           href="https://wa.me/qr/QPQSVVZHMP22L1"
+           target="_blank" rel="noopener">
+          Hubungi Pentadbir
+        </a>
+
+        <a class="drawer-link" href="guide.html">
+          Garis Panduan
+        </a>
+
+        <div class="notice" style="margin-top:10px;">
+          <strong>Akses terhad.</strong> Portal ini untuk kegunaan pegawai yang dibenarkan sahaja.
+          Aktiviti boleh direkodkan untuk tujuan pematuhan dan audit.
         </div>
       </div>
 
       <div class="drawer-section">
-        <div class="drawer-label">System Info</div>
+        <div class="drawer-label">Maklumat Sistem</div>
         <div class="meta-box">
-          Version: 2.1.0<br/>
-          Last updated: 26 Dec 2025<br/>
-          Environment: Internal Portal
+          Versi: 2.1.0<br/>
+          Kemas kini terakhir: 26 Dis 2025<br/>
+          Persekitaran: Portal Dalaman
         </div>
       </div>
 
@@ -470,7 +483,6 @@
       openBtn.classList.toggle("is-open", open);
       openBtn.setAttribute("aria-expanded", open ? "true" : "false");
 
-      // keep menu visible when drawer open
       if (open) menuFab.classList.remove("hide");
     }
 
@@ -486,28 +498,23 @@
       if (e.key === "Escape") toggle(false);
     });
 
-    // #4: Professional "Opening dashboard..." micro state
+    // Professional "Opening dashboard..." micro state (Malay)
     enterBtn.addEventListener("click", (e) => {
       e.preventDefault();
-
-      // prevent double clicks
       enterBtn.setAttribute("aria-disabled", "true");
-      const original = enterBtn.textContent;
-      enterBtn.textContent = "Opening dashboard...";
-
+      enterBtn.textContent = "Membuka papan pemuka...";
       setTimeout(() => {
         window.location.href = enterBtn.getAttribute("href");
       }, 420);
     });
 
-    // #3: Auto-hide menu on scroll down, show on scroll up
+    // Auto-hide menu on scroll down, show on scroll up
     let lastY = window.scrollY;
     let ticking = false;
 
     function onScroll(){
       const y = window.scrollY;
 
-      // If drawer is open, keep visible
       if (drawer.classList.contains("open")) {
         menuFab.classList.remove("hide");
         lastY = y;
@@ -539,4 +546,3 @@
   </script>
 </body>
 </html>
-
