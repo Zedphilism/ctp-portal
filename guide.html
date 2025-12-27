@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="ms">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Garis Panduan | Sistem Pemantauan Pemeriksaan</title>
+
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --panel:#0f1620;
+      --text:#e7eef8;
+      --muted:#9fb0c6;
+      --line:rgba(255,255,255,.08);
+      --accent:#3aa0ff;
+      --good:#23c26b;
+      --shadow:0 20px 60px rgba(0,0,0,.45);
+      --radius:18px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background:
+        radial-gradient(900px 520px at 20% 10%, rgba(58,160,255,.14), transparent 60%),
+        radial-gradient(820px 520px at 80% 20%, rgba(35,194,107,.10), transparent 55%),
+        var(--bg);
+      color:var(--text);
+      padding:24px;
+      overflow-y:auto;
+      overflow-x:hidden;
+    }
+
+    /* ===== TOP RIGHT MENU ===== */
+    .menu-fab{
+      position:fixed;
+      top:20px;
+      right:20px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      z-index:200;
+      transition: transform .18s ease, opacity .18s ease;
+      will-change: transform, opacity;
+    }
+    .menu-fab.hide{
+      opacity:0;
+      transform:translateY(-10px);
+      pointer-events:none;
+    }
+
+    .menu-label{
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.6px;
+      color:var(--muted);
+      text-transform:uppercase;
+      opacity:.85;
+      user-select:none;
+      display:none;
+    }
+    @media (min-width: 860px){
+      .menu-label{ display:block; }
+    }
+
+    .hamburger{
+      width:46px;
+      height:46px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      transition: transform .18s ease, background .15s ease, border-color .15s ease;
+    }
+    .hamburger:hover{
+      background:rgba(58,160,255,.12);
+      border-color:rgba(58,160,255,.4);
+      transform:translateY(-1px);
+    }
+
+    .burger{
+      width:22px;
+      height:18px;
+      position:relative;
+    }
+    .burger span{
+      position:absolute;
+      left:0;
+      right:0;
+      height:3px;
+      background:currentColor;
+      border-radius:999px;
+      transition: transform .18s ease, top .18s ease, opacity .18s ease;
+    }
+    .burger span:nth-child(1){ top:0; }
+    .burger span:nth-child(2){ top:7.5px; }
+    .burger span:nth-child(3){ top:15px; }
+
+    .hamburger.is-open .burger span:nth-child(1){
+      top:7.5px;
+      transform:rotate(45deg);
+    }
+    .hamburger.is-open .burger span:nth-child(2){
+      opacity:0;
+    }
+    .hamburger.is-open .burger span:nth-child(3){
+      top:7.5px;
+      transform:rotate(-45deg);
+    }
+
+    /* ===== PAGE CARD ===== */
+    .card{
+      width:min(900px,100%);
+      margin:0 auto;
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:26px;
+      position:relative;
+      z-index:1;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding-bottom:14px;
+      border-bottom:1px solid var(--line);
+      margin-bottom:18px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      text-decoration:none;
+      color:inherit;
+    }
+
+    .logos{
+      display:flex;
+      gap:12px;
+    }
+
+    .logo{
+      width:52px;
+      height:52px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .logo img{
+      width:38px;
+      height:38px;
+      object-fit:contain;
+    }
+
+    .brand-text{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+
+    .brand-title{
+      font-size:15px;
+      font-weight:900;
+      letter-spacing:.3px;
+      margin:0;
+    }
+
+    .brand-subtitle{
+      font-size:12px;
+      color:var(--muted);
+      margin:0;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:11px;
+      font-weight:800;
+      color:var(--muted);
+      background: rgba(0,0,0,.3);
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      white-space:nowrap;
+    }
+    .dot{
+      width:6px;
+      height:6px;
+      background:var(--good);
+      border-radius:50%;
+      box-shadow: 0 0 0 2px rgba(35,194,107,.12);
+    }
+
+    h1{
+      margin:6px 0 6px;
+      font-size:22px;
+      font-weight:900;
+      letter-spacing:.3px;
+    }
+    .muted{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.7;
+      margin:0 0 18px;
+      max-width:780px;
+    }
+
+    .section{
+      background: rgba(0,0,0,.18);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:16px;
+      margin:12px 0;
+    }
+
+    .sec-title{
+      margin:0 0 10px;
+      font-size:13px;
+      font-weight:900;
+      color:var(--text);
+      letter-spacing:.6px;
+      text-transform:uppercase;
+      opacity:.9;
+    }
+
+    .para{
+      margin:0 0 10px;
+      color:var(--muted);
+      line-height:1.75;
+      font-size:13px;
+    }
+
+    .list{
+      margin:0;
+      padding-left:18px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+    }
+    .list li{ margin:6px 0; }
+
+    .link{
+      color:var(--accent);
+      font-weight:900;
+      text-decoration:none;
+    }
+    .link:hover{ text-decoration:underline; }
+
+    .footer{
+      margin-top:18px;
+      font-size:12px;
+      color:var(--muted);
+      opacity:.75;
+      letter-spacing:.2px;
+      text-align:center;
+    }
+
+    /* ===== DRAWER ===== */
+    .drawer-backdrop{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.6);
+      z-index:150;
+      opacity:0;
+      pointer-events:none;
+      transition:.2s;
+    }
+    .drawer{
+      position:fixed;
+      top:0;
+      right:0;
+      height:100%;
+      width:360px;
+      max-width:85vw;
+      background:var(--panel);
+      border-left:1px solid var(--line);
+      z-index:180;
+      transform:translateX(100%);
+      transition:.25s cubic-bezier(.2,.8,.2,1);
+      display:flex;
+      flex-direction:column;
+    }
+    .drawer.open{ transform:translateX(0); }
+    .drawer-backdrop.open{ opacity:1; pointer-events:auto; }
+
+    .d-head{
+      padding:20px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .d-title{ font-weight:900; font-size:15px; }
+
+    .d-close{
+      background:none;
+      border:0;
+      color:var(--muted);
+      font-size:22px;
+      cursor:pointer;
+      line-height:1;
+      padding:6px 8px;
+      border-radius:10px;
+    }
+    .d-close:hover{
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+    }
+
+    .d-body{
+      padding:20px;
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.65;
+      overflow:auto;
+    }
+
+    .drawer-section{ margin-bottom:18px; }
+
+    .drawer-label{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      font-weight:900;
+      opacity:.65;
+      margin: 0 0 10px;
+    }
+
+    .drawer-link{
+      display:block;
+      padding:14px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:var(--text);
+      font-weight:800;
+      text-decoration:none;
+      margin-bottom:10px;
+      transition:.15s;
+    }
+
+    .drawer-link:hover{
+      background:rgba(58,160,255,.14);
+      border-color:rgba(58,160,255,.4);
+    }
+
+    .notice{
+      padding:12px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.03);
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.6;
+      margin-top:10px;
+    }
+    .notice strong{
+      color:var(--text);
+      font-weight:900;
+    }
+
+    .meta-box{
+      padding:12px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.22);
+      color:var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:12px;
+      line-height:1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="menu-fab" id="menuFab">
+    <div class="menu-label">Menu</div>
+    <button class="hamburger" id="drawerToggle" aria-label="Buka menu" aria-expanded="false" type="button">
+      <div class="burger" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+    </button>
+  </div>
+
+  <main class="card">
+    <div class="topbar">
+      <a class="brand" href="index.html" aria-label="Kembali ke laman utama">
+        <div class="logos">
+          <div class="logo"><img src="./assets/icon1.png" alt="Logo 1"></div>
+          <div class="logo"><img src="./assets/icon2.png" alt="Logo 2"></div>
+        </div>
+        <div class="brand-text">
+          <p class="brand-title">Sistem Pemantauan Pemeriksaan</p>
+          <p class="brand-subtitle">Sel Teknikal Cawangan Teknik dan Pemeriksaan</p>
+        </div>
+      </a>
+
+      <div class="pill">
+        <span class="dot"></span>
+        Sistem Dalam Talian
+      </div>
+    </div>
+
+    <h1>Garis Panduan Penggunaan Sistem</h1>
+    <p class="muted">
+      Dokumen ini menerangkan panduan penggunaan Sistem Pemantauan Pemeriksaan CT&amp;P bagi urusan permohonan pemeriksaan dan pemantauan status permohonan.
+    </p>
+
+    <section class="section" aria-label="Tujuan">
+      <div class="sec-title">1. Tujuan</div>
+      <p class="para">
+        Garis panduan ini dikeluarkan bagi menerangkan tatacara penggunaan sistem bagi melancarkan urusan pentadbiran, mempercepatkan proses pemeriksaan, serta tujuan pemantauan status permohonan.
+      </p>
+      <p class="para">
+        Garis panduan ini juga bertujuan memastikan maklumat dan dokumen permohonan adalah lengkap, teratur dan mudah disemak bagi mengurangkan kelewatan pemprosesan.
+      </p>
+    </section>
+
+    <section class="section" aria-label="Skop">
+      <div class="sec-title">2. Skop</div>
+      <ul class="list">
+        <li>Permohonan pemeriksaan melalui sistem</li>
+        <li>Pemantauan status permohonan</li>
+        <li>Rujukan dalaman CT&amp;P bagi tujuan penyelarasan tindakan</li>
+      </ul>
+    </section>
+
+    <section class="section" aria-label="Definisi">
+      <div class="sec-title">3. Definisi</div>
+      <ul class="list">
+        <li><strong>Permohonan</strong> ialah permintaan yang dikemukakan melalui sistem bagi tujuan pemeriksaan atau penyelarasan tindakan berkaitan.</li>
+        <li><strong>Borang permohonan</strong> ialah borang permohonan dalam talian yang dihantar melalui sistem bagi tujuan perekodan dan pemantauan.</li>
+        <li><strong>Surat permohonan</strong> ialah surat rasmi yang dikeluarkan oleh pasukan atau unit bagi tujuan permohonan pemeriksaan dan rekod rasmi.</li>
+        <li><strong>Dokumen sokongan</strong> ialah dokumen rasmi yang dikemukakan bersama permohonan bagi tujuan rujukan dan pengesahan.</li>
+        <li><strong>Status permohonan</strong> ialah tahap semasa sesuatu permohonan seperti yang ditetapkan dalam sistem.</li>
+      </ul>
+    </section>
+
+    <section class="section" aria-label="Ketetapan Permohonan">
+      <div class="sec-title">4. Ketetapan Permohonan</div>
+
+      <p class="para">
+        4.1 Permohonan pasukan melalui sistem ini adalah bagi melancarkan urusan pentadbiran, mempercepatkan proses pemeriksaan dan tujuan pemantauan. Walau bagaimanapun, permohonan melalui saluran rasmi masih dipraktikkan seperti biasa bagi tujuan rekod, rujukan rasmi dan pematuhan prosedur semasa.
+      </p>
+
+      <p class="para">
+        4.2 Tarikh permohonan yang dikira sebagai tarikh penerimaan oleh CT&amp;P adalah berdasarkan tarikh borang permohonan dihantar melalui sistem. Tarikh surat rasmi dan tarikh permohonan dalam sistem hendaklah tidak berbeza dengan ketara kecuali bagi sebab sebab tertentu yang boleh dijustifikasikan.
+      </p>
+
+      <p class="para">
+        4.3 Bagi tujuan pelarasan dan keseragaman input, semua maklumat dalam borang permohonan hendaklah diisi menggunakan huruf besar.
+      </p>
+
+      <p class="para">
+        4.4 Bagi permohonan pemeriksaan alat ganti, dokumen BAT L 97 pada seksyen tanggungjawab masing masing hendaklah disemak, ditandatangani dan bertarikh sebelum pihak pemeriksa tiba di lokasi.
+      </p>
+
+      <p class="para">
+        4.5 Pemohon hendaklah memastikan borang permohonan yang digunakan adalah bersesuaian dengan tujuan permohonan pemeriksaan.
+      </p>
+
+      <p class="para">
+        4.6 Pemohon bertanggungjawab sepenuhnya ke atas ketepatan maklumat dan dokumen yang dikemukakan melalui sistem. Maklumat yang tidak tepat atau mengelirukan boleh menjejaskan pemprosesan permohonan.
+      </p>
+    </section>
+
+    <section class="section" aria-label="Kehendak Dokumen dan Format">
+      <div class="sec-title">5. Kehendak Dokumen dan Format</div>
+
+      <ul class="list">
+        <li>Format fail yang digalakkan adalah PDF.</li>
+        <li>Saiz maksimum setiap fail adalah 10MB.</li>
+        <li>Dokumen hendaklah jelas, boleh dibaca dan lengkap.</li>
+      </ul>
+    </section>
+
+    <section class="section" aria-label="Status Permohonan">
+      <div class="sec-title">6. Status Permohonan</div>
+
+      <p class="para">
+        Status permohonan yang diguna pakai dalam sistem adalah seperti berikut.
+      </p>
+
+      <ul class="list">
+        <li><strong>Pending</strong> ialah permohonan telah diterima dalam sistem dan menunggu tindakan selanjutnya.</li>
+        <li><strong>Assigned</strong> ialah permohonan telah ditugaskan kepada anggota pemeriksa.</li>
+        <li><strong>In Progress</strong> ialah pemeriksaan sedang dilaksanakan.</li>
+        <li><strong>Completed</strong> ialah pemeriksaan telah selesai dilaksanakan.</li>
+        <li><strong>Cancelled</strong> ialah permohonan dibatalkan dan tidak diteruskan.</li>
+        <li><strong>Rejected</strong> ialah permohonan ditolak kerana tidak memenuhi keperluan maklumat atau dokumen atau kriteria yang ditetapkan.</li>
+      </ul>
+
+      <div class="notice">
+        <strong>Catatan.</strong> Status Rejected menandakan permohonan tidak boleh diteruskan kecuali permohonan baharu dikemukakan dengan maklumat dan dokumen yang lengkap.
+      </div>
+    </section>
+
+    <section class="section" aria-label="Tindakan Susulan">
+      <div class="sec-title">7. Tindakan Susulan</div>
+
+      <ul class="list">
+        <li>Pemohon bertanggungjawab memantau status permohonan melalui sistem.</li>
+        <li>Pemohon hendaklah memberikan maklum balas atau pembetulan sekiranya diperlukan.</li>
+        <li>Kelewatan pematuhan terhadap keperluan maklumat dan dokumen boleh menjejaskan tempoh pemprosesan.</li>
+      </ul>
+    </section>
+
+    <section class="section" aria-label="Saluran Rujukan">
+      <div class="sec-title">8. Saluran Rujukan</div>
+
+      <p class="para">
+        Sebarang pertanyaan berkaitan penggunaan sistem boleh dirujuk kepada
+        <a class="link" href="https://wa.me/qr/QPQSVVZHMP22L1" target="_blank" rel="noopener">Pentadbir Sistem</a>.
+      </p>
+    </section>
+
+    <section class="section" aria-label="Penafian">
+      <div class="sec-title">9. Penafian</div>
+
+      <p class="para">
+        Garis panduan ini tertakluk kepada pindaan dari semasa ke semasa selaras dengan keperluan operasi dan dasar semasa. CT&amp;P berhak membuat perubahan yang perlu bagi memastikan pelaksanaan sistem kekal teratur dan berkesan.
+      </p>
+    </section>
+
+    <div class="footer">@2026 Sel teknikal CT&amp;P</div>
+  </main>
+
+  <div class="drawer-backdrop" id="backdrop"></div>
+
+  <div class="drawer" id="rightDrawer" aria-hidden="true">
+    <div class="d-head">
+      <span class="d-title">Menu &amp; Sumber</span>
+      <button class="d-close" id="drawerClose" aria-label="Tutup menu" type="button">&times;</button>
+    </div>
+
+    <div class="d-body">
+      <div class="drawer-section">
+        <div class="drawer-label">Borang Dalam Talian</div>
+
+        <a class="drawer-link"
+           href="https://docs.google.com/forms/d/e/1FAIpQLSdHfQWKturVq4XISrKFqgZG6teJxpDAiVcwuC26hoavMBjGLw/viewform"
+           target="_blank" rel="noopener">
+          Permohonan Pemeriksaan Alat Ganti Kenderaan ATM
+        </a>
+
+        <a class="drawer-link"
+           href="https://docs.google.com/forms/d/e/1FAIpQLSecXMPpkh48CQFVDMaBRVaw9EeBsR2TiGDf9t13tdHYg1THBA/viewform"
+           target="_blank" rel="noopener">
+          Permohonan Mewujudkan Dokumen Peralatan ATM
+        </a>
+      </div>
+
+      <div class="drawer-section">
+        <div class="drawer-label">Pautan Pantas</div>
+
+        <a class="drawer-link" href="index.html">Kembali ke Laman Utama</a>
+        <a class="drawer-link" href="about.html">Tentang Kami</a>
+
+        <a class="drawer-link"
+           href="https://wa.me/qr/QPQSVVZHMP22L1"
+           target="_blank" rel="noopener">
+          Hubungi Pentadbir
+        </a>
+
+        <a class="drawer-link" href="guide.html">Garis Panduan</a>
+
+        <div class="notice">
+          <strong>Akses terhad.</strong> Portal ini untuk kegunaan anggota yang dibenarkan sahaja. Aktiviti boleh direkodkan untuk tujuan pematuhan dan audit.
+        </div>
+      </div>
+
+      <div class="drawer-section">
+        <div class="drawer-label">Maklumat Sistem</div>
+        <div class="meta-box">
+          Versi: 2.1.0<br/>
+          Kemas kini terakhir: 26 Dis 2025<br/>
+          Persekitaran: Portal Dalaman
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const drawer = document.getElementById("rightDrawer");
+    const backdrop = document.getElementById("backdrop");
+    const openBtn = document.getElementById("drawerToggle");
+    const closeBtn = document.getElementById("drawerClose");
+    const menuFab = document.getElementById("menuFab");
+
+    function toggle(open){
+      drawer.classList.toggle("open", open);
+      backdrop.classList.toggle("open", open);
+      drawer.setAttribute("aria-hidden", open ? "false" : "true");
+      openBtn.classList.toggle("is-open", open);
+      openBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      if (open) menuFab.classList.remove("hide");
+    }
+
+    openBtn.addEventListener("click", () => {
+      const isOpen = drawer.classList.contains("open");
+      toggle(!isOpen);
+    });
+
+    closeBtn.addEventListener("click", () => toggle(false));
+    backdrop.addEventListener("click", () => toggle(false));
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") toggle(false);
+    });
+
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    function onScroll(){
+      const y = window.scrollY;
+
+      if (drawer.classList.contains("open")) {
+        menuFab.classList.remove("hide");
+        lastY = y;
+        ticking = false;
+        return;
+      }
+
+      const goingDown = y > lastY;
+      const delta = Math.abs(y - lastY);
+
+      if (delta < 6) {
+        ticking = false;
+        return;
+      }
+
+      if (goingDown) menuFab.classList.add("hide");
+      else menuFab.classList.remove("hide");
+
+      lastY = y;
+      ticking = false;
+    }
+
+    window.addEventListener("scroll", () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(onScroll);
+      }
+    }, { passive:true });
+  </script>
+</body>
+</html>
