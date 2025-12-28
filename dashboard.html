@@ -839,46 +839,56 @@
     }
     .leaflet-container a{ color: var(--text); }
 
-    /* =========================================
+   /* =========================================
        MOBILE RESPONSIVENESS FIX
        Paste this at the bottom of your <style>
        ========================================= */
     @media (max-width: 768px) {
+      /* 1. Stack the Logo and Menu vertically */
       .topbar-inner {
-        flex-direction: column; /* Stack logo and nav vertically */
-        align-items: flex-start; /* Align to the left */
-        gap: 16px;
-        padding: 16px 16px 8px; /* Adjust padding */
+        flex-direction: column;       /* Stack items top-to-bottom */
+        align-items: flex-start;      /* Align everything to the left */
+        gap: 12px;                    /* Add space between logo and tabs */
+        padding: 12px 16px;           /* Adjust padding */
       }
 
+      /* 2. Make the Menu (Tabs) scrollable horizontally */
       .top-actions {
-        width: 100%;
-        justify-content: flex-start; /* Start from left */
-        overflow-x: auto; /* Enable horizontal scrolling */
-        white-space: nowrap;
-        padding-bottom: 8px; /* Space for touch scrolling */
+        width: 100%;                  /* Take full width */
+        justify-content: flex-start;  /* Start tabs from the left */
+        flex-wrap: nowrap;            /* CRITICAL: Don't let tabs wrap to next line */
+        overflow-x: auto;             /* Allow left-right scrolling */
+        padding-bottom: 8px;          /* Space for finger to scroll */
         
-        /* Hide scrollbar for cleaner look */
+        /* Smooth scrolling on iOS */
         -webkit-overflow-scrolling: touch;
+        /* Hide scrollbar */
         scrollbar-width: none; 
       }
       
+      /* Hide scrollbar (Chrome/Safari/Edge) */
       .top-actions::-webkit-scrollbar {
         display: none;
       }
 
+      /* 3. Prevent tabs from squishing */
       .tabs {
-        flex-shrink: 0; /* Prevent tabs from shrinking */
+        flex-shrink: 0;
       }
       
-      /* Optional: Adjust stats grid for mobile too */
+      /* Optional: Make stats cards readable on mobile (2 per row instead of 4) */
       .stats {
-        grid-template-columns: 1fr 1fr; /* 2 columns instead of 4 */
+        grid-template-columns: 1fr 1fr; 
         gap: 8px;
       }
       
+      .stat .value {
+        font-size: 20px; /* Slightly smaller text for stats */
+      }
+      
+      /* Adjust main container padding */
       .wrap {
-        padding: 10px 12px 80px; /* Reduce side padding on mobile */
+        padding: 10px 12px 80px; 
       }
     }
   </style>
@@ -2473,6 +2483,7 @@ function openDrawer(job){
   </script>
 </body>
 </html>
+
 
 
 
