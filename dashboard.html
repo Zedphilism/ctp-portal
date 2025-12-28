@@ -838,6 +838,49 @@
       box-shadow: 0 20px 60px rgba(0,0,0,.45);
     }
     .leaflet-container a{ color: var(--text); }
+
+    /* =========================================
+       MOBILE RESPONSIVENESS FIX
+       Paste this at the bottom of your <style>
+       ========================================= */
+    @media (max-width: 768px) {
+      .topbar-inner {
+        flex-direction: column; /* Stack logo and nav vertically */
+        align-items: flex-start; /* Align to the left */
+        gap: 16px;
+        padding: 16px 16px 8px; /* Adjust padding */
+      }
+
+      .top-actions {
+        width: 100%;
+        justify-content: flex-start; /* Start from left */
+        overflow-x: auto; /* Enable horizontal scrolling */
+        white-space: nowrap;
+        padding-bottom: 8px; /* Space for touch scrolling */
+        
+        /* Hide scrollbar for cleaner look */
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; 
+      }
+      
+      .top-actions::-webkit-scrollbar {
+        display: none;
+      }
+
+      .tabs {
+        flex-shrink: 0; /* Prevent tabs from shrinking */
+      }
+      
+      /* Optional: Adjust stats grid for mobile too */
+      .stats {
+        grid-template-columns: 1fr 1fr; /* 2 columns instead of 4 */
+        gap: 8px;
+      }
+      
+      .wrap {
+        padding: 10px 12px 80px; /* Reduce side padding on mobile */
+      }
+    }
   </style>
 </head>
 
@@ -2430,6 +2473,7 @@ function openDrawer(job){
   </script>
 </body>
 </html>
+
 
 
 
