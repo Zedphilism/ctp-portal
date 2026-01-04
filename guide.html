@@ -32,6 +32,7 @@
       padding:24px;
       overflow-y:auto;
       overflow-x:hidden;
+      scroll-behavior: smooth;
     }
 
     /* ===== TOP RIGHT MENU ===== */
@@ -222,12 +223,111 @@
       max-width:780px;
     }
 
+    /* ===== SUBNAV (NEW) ===== */
+    .subnav-container {
+      position: sticky;
+      top: 0;
+      /* Matches page bg to hide content behind */
+      background: rgba(11, 15, 20, 0.95);
+      margin: 0 -26px 20px -26px; /* Negate card padding */
+      padding: 10px 26px;
+      z-index: 10;
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(8px);
+    }
+    
+    .subnav {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 4px; /* Space for scrollbar */
+      scrollbar-width: none; /* Hide scrollbar Firefox */
+    }
+    .subnav::-webkit-scrollbar { display: none; } /* Hide scrollbar Chrome */
+
+    .subnav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 99px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .subnav a:hover, .subnav a.active {
+      background: rgba(58,160,255,0.15);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ===== ACCORDION STYLE (NEW) ===== */
+    details.acc-item {
+      background: rgba(0,0,0,.18);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+
+    details.acc-item[open] {
+      background: rgba(58,160,255,0.04);
+      border-color: rgba(58,160,255,0.3);
+    }
+
+    summary.acc-header {
+      padding: 14px 16px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      list-style: none;
+      user-select: none;
+    }
+    
+    summary.acc-header::-webkit-details-marker { display: none; }
+
+    summary.acc-header::after {
+      content: '+';
+      font-size: 16px;
+      color: var(--muted);
+      font-weight: 300;
+      transition: transform 0.2s;
+    }
+
+    details[open] summary.acc-header::after {
+      transform: rotate(45deg);
+      color: var(--accent);
+    }
+
+    .acc-content {
+      padding: 0 16px 16px 16px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      border-top: 1px solid transparent;
+    }
+    
+    details[open] .acc-content {
+      border-top-color: rgba(58,160,255,0.1);
+      padding-top: 12px;
+    }
+
     .section{
       background: rgba(0,0,0,.18);
       border:1px solid var(--line);
       border-radius:16px;
       padding:16px;
       margin:12px 0;
+      /* Scroll Margin for sticky header offset */
+      scroll-margin-top: 80px; 
     }
 
     .sec-title{
@@ -423,7 +523,18 @@
       Dokumen ini menerangkan panduan penggunaan Sistem Pemantauan Pemeriksaan CT&amp;P bagi urusan permohonan pemeriksaan dan pemantauan status permohonan.
     </p>
 
-    <section class="section" aria-label="Tujuan">
+    <div class="subnav-container">
+      <nav class="subnav">
+        <a href="#tujuan">Tujuan</a>
+        <a href="#skop">Skop</a>
+        <a href="#ketetapan">Ketetapan</a>
+        <a href="#dokumen">Dokumen</a>
+        <a href="#status">Status</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </div>
+
+    <section id="tujuan" class="section" aria-label="Tujuan">
       <div class="sec-title">1. Tujuan</div>
       <p class="para">
         Garis panduan ini dikeluarkan bagi menerangkan tatacara penggunaan sistem bagi melancarkan urusan pentadbiran, mempercepatkan proses pemeriksaan, serta tujuan pemantauan status permohonan.
@@ -433,7 +544,7 @@
       </p>
     </section>
 
-    <section class="section" aria-label="Skop">
+    <section id="skop" class="section" aria-label="Skop">
       <div class="sec-title">2. Skop</div>
       <ul class="list">
         <li>Permohonan pemeriksaan melalui sistem</li>
@@ -442,7 +553,7 @@
       </ul>
     </section>
 
-    <section class="section" aria-label="Definisi">
+    <section id="definisi" class="section" aria-label="Definisi">
       <div class="sec-title">3. Definisi</div>
       <ul class="list">
         <li><strong>Permohonan</strong> ialah permintaan yang dikemukakan melalui sistem bagi tujuan pemeriksaan atau penyelarasan tindakan berkaitan.</li>
@@ -453,7 +564,7 @@
       </ul>
     </section>
 
-    <section class="section" aria-label="Ketetapan Permohonan">
+    <section id="ketetapan" class="section" aria-label="Ketetapan Permohonan">
       <div class="sec-title">4. Ketetapan Permohonan</div>
 
       <p class="para">
@@ -481,7 +592,7 @@
       </p>
     </section>
 
-    <section class="section" aria-label="Kehendak Dokumen dan Format">
+    <section id="dokumen" class="section" aria-label="Kehendak Dokumen dan Format">
       <div class="sec-title">5. Kehendak Dokumen dan Format</div>
 
       <ul class="list">
@@ -491,7 +602,7 @@
       </ul>
     </section>
 
-    <section class="section" aria-label="Status Permohonan">
+    <section id="status" class="section" aria-label="Status Permohonan">
       <div class="sec-title">6. Status Permohonan</div>
 
       <p class="para">
@@ -512,7 +623,7 @@
       </div>
     </section>
 
-    <section class="section" aria-label="Tindakan Susulan">
+    <section id="tindakan" class="section" aria-label="Tindakan Susulan">
       <div class="sec-title">7. Tindakan Susulan</div>
 
       <ul class="list">
@@ -522,7 +633,7 @@
       </ul>
     </section>
 
-    <section class="section" aria-label="Saluran Rujukan">
+    <section id="rujukan" class="section" aria-label="Saluran Rujukan">
       <div class="sec-title">8. Saluran Rujukan</div>
 
       <p class="para">
@@ -531,12 +642,45 @@
       </p>
     </section>
 
-    <section class="section" aria-label="Penafian">
+    <section id="penafian" class="section" aria-label="Penafian">
       <div class="sec-title">9. Penafian</div>
 
       <p class="para">
         Garis panduan ini tertakluk kepada pindaan dari semasa ke semasa selaras dengan keperluan operasi dan dasar semasa. CT&amp;P berhak membuat perubahan yang perlu bagi memastikan pelaksanaan sistem kekal teratur dan berkesan.
       </p>
+    </section>
+
+    <section id="faq" class="section" style="border:none; background:transparent; padding:0;">
+      <div class="sec-title" style="margin-bottom:14px; color:var(--accent);">Soalan Lazim (FAQ)</div>
+
+      <details class="acc-item">
+        <summary class="acc-header">Saya tersilap isi maklumat dalam borang permohonan.</summary>
+        <div class="acc-content">
+          Sila hubungi Pentadbir Sistem dengan segera untuk pembetulan manual. Jangan hantar permohonan baharu bagi mengelakkan pertindihan data dalam sistem.
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary class="acc-header">Kenapa status permohonan saya masih "Pending"?</summary>
+        <div class="acc-content">
+          Status "Pending" bermaksud permohonan telah diterima tetapi belum ditugaskan kepada pemeriksa. Proses agihan tugas biasanya mengambil masa 1-2 hari bekerja bergantung kepada beban tugas semasa.
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary class="acc-header">Sistem/Dashboard tidak memaparkan data terkini.</summary>
+        <div class="acc-content">
+          Sistem menggunakan "cache" untuk kelancaran. Sila tekan butang "Refresh" pada pelayar anda atau tunggu selama 30 saat untuk data disegerakkan sepenuhnya dari pangkalan data.
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary class="acc-header">Bolehkah saya menggunakan telefon pintar untuk melayari portal ini?</summary>
+        <div class="acc-content">
+          Ya, anda boleh mengakses portal ini melalui telefon pintar. Walau bagaimanapun, untuk akses dan paparan yang lebih optimum, anda boleh menggunakan mod "Dekstop Site".
+        </div>
+      </details>
+      
     </section>
 
     <div class="footer">@2026 Sel teknikal CT&amp;P</div>
@@ -631,6 +775,26 @@
     function onScroll(){
       const y = window.scrollY;
 
+      // ScrollSpy Logic
+      const sections = document.querySelectorAll('section[id]');
+      const navLinks = document.querySelectorAll('.subnav a');
+      
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (y >= (sectionTop - 150)) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (current && link.getAttribute('href').includes(current)) {
+          link.classList.add('active');
+        }
+      });
+      // End ScrollSpy
+
       if (drawer.classList.contains("open")) {
         menuFab.classList.remove("hide");
         lastY = y;
@@ -662,4 +826,3 @@
   </script>
 </body>
 </html>
-
