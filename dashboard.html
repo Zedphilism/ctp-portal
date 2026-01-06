@@ -1647,6 +1647,12 @@ async function loadData() {
       return `<div class="k">${escapeHtml(k)}</div><div class="v">${escapeHtml(safe(v) || "-")}</div>`;
     }
 
+    // --- ADD THIS NEW FUNCTION ---
+    function kvRowHtml(k, v){
+      // This version does NOT escape the value 'v', so the link works
+      return `<div class="k">${escapeHtml(k)}</div><div class="v">${safe(v) || "-"}</div>`;
+    }
+
     function docRow(name, note, link){
       const has = !!safe(link);
       const href = has ? link : "#";
@@ -1801,8 +1807,8 @@ function openDrawer(job){
       }
 
       $kvIns.innerHTML = [
-        kvRow("Inspector 1", renderInsLink(job.assigned1)),
-        kvRow("Inspector 2", renderInsLink(job.assigned2))
+        kvRowHtml("Inspector 1", renderInsLink(job.assigned1)), // CHANGED TO kvRowHtml
+        kvRowHtml("Inspector 2", renderInsLink(job.assigned2))  // CHANGED TO kvRowHtml
       ].join("");
 
       // 4. HASIL PEMERIKSAAN (Structured Data)
@@ -2584,3 +2590,4 @@ function openDrawer(job){
   </script>
 </body>
 </html>
+
