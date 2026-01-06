@@ -1511,31 +1511,43 @@ async function loadData() {
   try {
     const base = WEB_APP_URL + (WEB_APP_URL.includes("?") ? "&" : "?");
 
+    // 1. Fetch CTP (Permohonan) Jobs
     const reqJobsCTP = fetch(base + "action=listJobs&t=" + Date.now(), {
       method: "GET",
       cache: "no-store"
     }).then(r => r.json());
 
+    // 2. Fetch WDP Jobs
     const reqJobsWDP = fetch(base + "action=listJobs&tab=wdp&t=" + Date.now(), {
       method: "GET",
       cache: "no-store"
     }).then(r => r.json());
 
+    // 3. Fetch FAT Jobs (NEW)
+    const reqJobsFAT = fetch(base + "action=listJobs&tab=fat&t=" + Date.now(), {
+      method: "GET",
+      cache: "no-store"
+    }).then(r => r.json());
+
+    // 4. Fetch Inspectors
     const reqInsp = fetch(base + "action=listInspectors&t=" + Date.now(), {
       method: "GET",
       cache: "no-store"
     }).then(r => r.json());
 
-    const [resCTP, resWDP, resInsp] = await Promise.all([reqJobsCTP, reqJobsWDP, reqInsp]);
+    // Wait for all 4 requests
+    const [resCTP, resWDP, resFAT, resInsp] = await Promise.all([reqJobsCTP, reqJobsWDP, reqJobsFAT, reqInsp]);
 
     const ctpJobs = (resCTP && resCTP.ok && Array.isArray(resCTP.jobs)) ? resCTP.jobs : [];
     const wdpJobs = (resWDP && resWDP.ok && Array.isArray(resWDP.jobs)) ? resWDP.jobs : [];
+    const fatJobs = (resFAT && resFAT.ok && Array.isArray(resFAT.jobs)) ? resFAT.jobs : []; // <--- Handle FAT results
 
-    if (!ctpJobs.length && !wdpJobs.length) {
-      console.error("Jobs error", { resCTP, resWDP });
+    if (!ctpJobs.length && !wdpJobs.length && !fatJobs.length) {
+      console.warn("No jobs found across all tabs.");
     }
 
-    JOBS = ctpJobs.concat(wdpJobs)
+    // Combine all three lists
+    JOBS = ctpJobs.concat(wdpJobs).concat(fatJobs)
       .map(mapRowToJob)
       .filter(j => safe(j.jobId) !== "");
 
@@ -1574,7 +1586,6 @@ async function loadData() {
     $mapNote.textContent = "Offline";
   }
 }
-
 
 
     function matches(job, q){
@@ -2590,4 +2601,5 @@ function openDrawer(job){
   </script>
 </body>
 </html>
+
 
