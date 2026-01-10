@@ -36,6 +36,36 @@
       padding:24px;
       overflow:hidden;
     }
+    /* ===== subtle vignette to pull focus to center ===== */
+body::before{
+  content:"";
+  position:fixed;
+  inset:-40px;
+  pointer-events:none;
+  z-index:0;
+  background:radial-gradient(closest-side at 50% 45%,
+    rgba(0,0,0,0) 55%,
+    rgba(0,0,0,.28) 100%
+  );
+}
+
+/* ===== ultra subtle noise/grain overlay ===== */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  opacity:.035;
+  background-image:
+    repeating-linear-gradient(0deg,
+      rgba(255,255,255,.06) 0px,
+      rgba(255,255,255,.06) 1px,
+      rgba(0,0,0,0) 2px,
+      rgba(0,0,0,0) 4px
+    );
+  mix-blend-mode:overlay;
+}
 
     /* ===== TOP RIGHT MENU (label + button) ===== */
     .menu-fab{
@@ -121,13 +151,60 @@
 
     /* ===== MAIN CARD ===== */
     .card{
-      width:min(820px,100%);
+      width:min(720px,100%);
       background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
       border:1px solid var(--line);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
-      padding:28px;
+      padding:24px;
       text-align:center;
+      position:relative;
+      z-index:1;
+      overflow:hidden;
+    }
+/* ===== calm hover acknowledgement (no layout shift) ===== */
+.card{
+  transition: background .18s ease, border-color .18s ease;
+}
+.card:hover{
+  border-color:rgba(58,160,255,.18);
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
+}
+
+
+    /* ===== inner highlight for premium glass feel ===== */
+.card::after{
+  content:"";
+  position:absolute;
+  inset:1px;
+  border-radius:calc(var(--radius) - 1px);
+  pointer-events:none;
+  background:linear-gradient(
+    180deg,
+    rgba(255,255,255,.10),
+    rgba(255,255,255,0) 38%
+  );
+  opacity:.35;
+}
+
+    /* calm diagonal */
+    .card::before{
+      content:"";
+      position:absolute;
+      top:-40%;
+      right:-50%;
+      width:140%;
+      height:70%;
+      background:linear-gradient(
+        135deg,
+        rgba(58,160,255,.10),
+        rgba(58,160,255,.04),
+        transparent
+      );
+      transform:rotate(-6deg);
+      pointer-events:none;
+    }
+    .card > *{
       position:relative;
       z-index:1;
     }
@@ -192,7 +269,9 @@
       gap:14px;
     }
 
+    /* ===== BUTTON: FIXED LIQUID FILL (dark blue, fills whole button) ===== */
     .btn-primary{
+      position:relative;
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -205,11 +284,33 @@
       text-decoration:none;
       transition:.15s ease;
       min-width: 180px;
+      overflow:hidden;
+    }
+
+    .btn-primary::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:#0f2a44;
+      transform:scaleY(0);
+      transform-origin:bottom;
+      transition: transform .32s cubic-bezier(.2,.8,.2,1);
+      z-index:0;
+    }
+
+    .btn-primary span{
+      position:relative;
+      z-index:1;
     }
 
     .btn-primary:hover{
       transform:translateY(-1px);
       box-shadow:0 4px 12px rgba(255,255,255,.15);
+      color:#fff;
+    }
+
+    .btn-primary:hover::before{
+      transform:scaleY(1);
     }
 
     .btn-primary[aria-disabled="true"]{
@@ -217,6 +318,9 @@
       pointer-events:none;
       transform:none;
       box-shadow:none;
+    }
+    .btn-primary[aria-disabled="true"]::before{
+      transform:scaleY(0);
     }
 
     .footer{
@@ -250,6 +354,14 @@
       border-radius:50%;
       box-shadow: 0 0 0 2px rgba(35,194,107,.12);
     }
+    /* ===== rare reassurance pulse, not distracting ===== */
+.dot{
+  animation: dotPulse 9s ease-in-out infinite;
+}
+@keyframes dotPulse{
+  0%, 92%, 100%{ box-shadow: 0 0 0 2px rgba(35,194,107,.12); opacity:1; }
+  96%{ box-shadow: 0 0 0 6px rgba(35,194,107,.10); opacity:.92; }
+}
 
     /* ===== DRAWER ===== */
     .drawer-backdrop{
@@ -366,6 +478,100 @@
       color:var(--text);
       font-weight:900;
     }
+
+    /* ===== Easter egg: 40s cinematic fade to black then back ===== */
+body.eegg-fade{
+  animation: eeggFadeCycle 40s linear forwards;
+}
+
+@keyframes eeggFadeCycle{
+  /* start normal */
+  0%   { filter: grayscale(0) brightness(1); }
+
+  /* gradually desaturate + dim */
+  40%  { filter: grayscale(.75) brightness(.55); }
+
+  /* reach fully black (keep grayscale max) */
+  50%  { filter: grayscale(1) brightness(0); }
+
+  /* stay black briefly so it feels intentional */
+  55%  { filter: grayscale(1) brightness(0); }
+
+  /* recover */
+  100% { filter: grayscale(0) brightness(1); }
+}
+
+/* ===== Easter egg overlay (ZAIDI) ===== */
+.eegg-overlay{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:rgba(0,0,0,.55);
+  backdrop-filter: blur(8px);
+  opacity:0;
+  transition: opacity .22s ease;
+}
+
+.eegg-overlay.show{ opacity:1; }
+
+.eegg-card{
+  width:min(560px, 92vw);
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(15,22,32,.88);
+  box-shadow: 0 24px 80px rgba(0,0,0,.55);
+  overflow:hidden;
+  transform: translateY(10px);
+  opacity:0;
+  transition: transform .22s ease, opacity .22s ease;
+}
+
+.eegg-overlay.show .eegg-card{
+  transform: translateY(0);
+  opacity:1;
+}
+
+.eegg-body{
+  padding:18px 18px 14px;
+  color:#e7eef8;
+}
+
+.eegg-title{
+  font-weight:900;
+  letter-spacing:.4px;
+  font-size:12px;
+  text-transform:uppercase;
+  color:rgba(231,238,248,.85);
+  margin:0 0 10px;
+}
+
+.eegg-mono{
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size:13px;
+  line-height:1.65;
+  color:rgba(231,238,248,.92);
+  margin:0;
+  white-space:pre-line;
+}
+
+.eegg-photo{
+  width:100%;
+  height:240px;
+  object-fit:cover;
+  display:block;
+  filter: none;
+}
+
+.eegg-fadeout{
+  opacity:0 !important;
+  pointer-events:none;
+}
+
+
   </style>
 </head>
 <body>
@@ -381,8 +587,8 @@
 
   <aside class="card">
     <div class="logos">
-      <div class="logo"><img src="./assets/icon1.png" alt="PDRM"></div>
-      <div class="logo"><img src="./assets/icon2.png" alt="CTP"></div>
+      <div class="logo"><img src="./assets/icon1.png" alt="JATA"></div>
+      <div class="logo"><img src="./assets/icon2.png" alt="MINDEF"></div>
     </div>
 
     <h1>Sistem Pemantauan Pemeriksaan</h1>
@@ -392,11 +598,13 @@
 
     <p class="desc">
       Portal berpusat untuk pengurusan data, pemantauan pemeriksaan, dan analisis prestasi.
-      Klik menu untuk mengakses Borang Permohonan Pemeriksaan. Untuk teruskan, sila klik butang di bawah.
+Menu menyediakan akses kepada Borang Permohonan Pemeriksaan dan pautan berkaitan.
+Untuk meneruskan, sila klik butang di bawah.
+
     </p>
 
     <div class="actions">
-      <a href="dashboard.html" class="btn-primary" id="enterBtn">Masuk Portal</a>
+      <a href="dashboard.html" class="btn-primary" id="enterBtn"><span>Masuk Portal</span></a>
       <div class="footer">@2026 Sel teknikal CT&P</div>
     </div>
 
@@ -507,7 +715,8 @@
     enterBtn.addEventListener("click", (e) => {
       e.preventDefault();
       enterBtn.setAttribute("aria-disabled", "true");
-      enterBtn.textContent = "Membuka papan pemuka...";
+      const label = enterBtn.querySelector("span");
+      if (label) label.textContent = "Membuka papan pemuka...";
       setTimeout(() => {
         window.location.href = enterBtn.getAttribute("href");
       }, 420);
@@ -548,7 +757,231 @@
         requestAnimationFrame(onScroll);
       }
     }, { passive:true });
+
+    // ===== Easter egg: sound + grayscale dim fade (no structure changes) =====
+(function(){
+  const AUDIO_SRC = "./assets/easter-egg.mp3"; // change filename if needed
+  let audio = null;
+  let audioUnlocked = false;
+
+  function unlockAudioOnce(){
+    if (audioUnlocked) return;
+    audioUnlocked = true;
+
+    // Create audio on first real user interaction
+    audio = new Audio(AUDIO_SRC);
+    audio.preload = "auto";
+    audio.volume = 0.9;
+
+    // Try a silent play and pause to unlock on some browsers
+    audio.play().then(() => {
+      audio.pause();
+      audio.currentTime = 0;
+    }).catch(() => {
+      // If it fails, we still keep audio object and will try again on trigger
+    });
+
+    document.removeEventListener("pointerdown", unlockAudioOnce, { capture:true });
+    document.removeEventListener("keydown", unlockAudioOnce, { capture:true });
+  }
+
+  // Unlock sound as early as possible using user gesture
+  document.addEventListener("pointerdown", unlockAudioOnce, { capture:true, once:true });
+  document.addEventListener("keydown", unlockAudioOnce, { capture:true, once:true });
+
+  function startEasterEgg(){
+    // Toggle effect on and off
+    const on = !document.body.classList.contains("eegg-fade");
+    document.body.classList.toggle("eegg-fade", on);
+
+    // Play or stop audio
+    if (on) {
+      if (!audio) audio = new Audio(AUDIO_SRC);
+      audio.currentTime = 0;
+
+      audio.play().catch(() => {
+        // If blocked, user can click once and it will work next time
+        // No DOM changes, so we do nothing noisy here
+      });
+    } else {
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+    }
+  }
+
+  // Hook this to your existing easter egg trigger
+  // If you already have a Konami trigger, call startEasterEgg() there.
+  // For example, if your trigger currently does: toast("Mode Inspektor: Aktif ✔");
+  // Add: startEasterEgg();
+
+  // If you want a quick trigger for testing right now:
+  // Press Shift + E
+  document.addEventListener("keydown", (e) => {
+    if (e.shiftKey && (e.key === "E" || e.key === "e")) startEasterEgg();
+  });
+
+  // Expose function if you want to call it from elsewhere
+  window.__startEasterEgg = startEasterEgg;
+})();
+
+    // ===== Easter egg: 40s fade to black then back, re-triggerable =====
+(function(){
+  const DURATION_MS = 40000;
+
+  function startFadeCycle(){
+    // restart animation cleanly
+    document.body.classList.remove("eegg-fade");
+    void document.body.offsetWidth; // reflow to restart animation
+    document.body.classList.add("eegg-fade");
+
+    // remove class after animation so it can be triggered again
+    setTimeout(() => {
+      document.body.classList.remove("eegg-fade");
+    }, DURATION_MS + 50);
+  }
+
+  // expose for your easter egg trigger (Konami, secret click, etc.)
+  window.__startFadeCycle = startFadeCycle;
+})();
+
+// ===== Easter egg: type "ZAIDI" to trigger deletion joke + dev note + photo =====
+(function(){
+  const TRIGGER = "zaidi";
+  const PHOTO_SRC = "./assets/zaidi.jpg"; // change if needed
+  const AUTO_DISMISS_MS = 10000;          // 10s after reveal appears
+  const STEP_MS = 650;                    // countdown pace
+  const PAUSE_MS = 750;                   // pause after 0
+  const ELLIPSIS_MS = 450;                // pause after "…"
+
+  let buffer = "";
+  let active = false;
+
+  function isTypingIntoField(){
+    const el = document.activeElement;
+    if (!el) return false;
+    const tag = (el.tagName || "").toLowerCase();
+    return tag === "input" || tag === "textarea" || el.isContentEditable;
+  }
+
+  function safeRemove(node){
+    if (!node) return;
+    node.classList.add("eegg-fadeout");
+    setTimeout(() => node.remove(), 240);
+  }
+
+  function runEasterEgg(){
+    if (active) return;
+    active = true;
+
+    // build overlay (no changes to your existing DOM structure)
+    const overlay = document.createElement("div");
+    overlay.className = "eegg-overlay";
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-label", "Developer note");
+
+    const card = document.createElement("div");
+    card.className = "eegg-card";
+
+    const body = document.createElement("div");
+    body.className = "eegg-body";
+
+    const title = document.createElement("div");
+    title.className = "eegg-title";
+    title.textContent = "SYSTEM";
+
+    const text = document.createElement("p");
+    text.className = "eegg-mono";
+    text.textContent = "SYSTEM DELETION";
+
+    body.appendChild(title);
+    body.appendChild(text);
+    card.appendChild(body);
+    overlay.appendChild(card);
+    document.body.appendChild(overlay);
+
+    // show
+    requestAnimationFrame(() => overlay.classList.add("show"));
+
+    // phase timings
+    const countdown = ["5", "4", "3", "2", "1", "0"];
+    let idx = 0;
+
+    function showDevNoteAndPhoto(){
+      // text
+      title.textContent = "DEVELOPER NOTE";
+      text.textContent =
+        "Developer note:\n" +
+        "You can relax.\n" +
+        "I don’t delete things lightly.";
+
+      // photo (color, candid)
+      const img = document.createElement("img");
+      img.className = "eegg-photo";
+      img.src = PHOTO_SRC;
+      img.alt = "Developer photo";
+      img.loading = "eager";
+
+      // put photo under the note, same moment
+      card.appendChild(img);
+
+      // auto dismiss after 10s
+      setTimeout(() => {
+        safeRemove(overlay);
+        active = false;
+      }, AUTO_DISMISS_MS);
+    }
+
+    // countdown sequence
+    const t1 = setInterval(() => {
+      // switch to single-line mechanical countdown with dot separators
+      if (idx === 0) {
+        title.textContent = "SYSTEM";
+      }
+      const left = countdown.slice(idx).join(" · ");
+      text.textContent = left;
+      idx++;
+
+      if (idx > countdown.length) {
+        clearInterval(t1);
+
+        // pause
+        setTimeout(() => {
+          text.textContent = "…";
+
+          // ellipsis beat
+          setTimeout(() => {
+            showDevNoteAndPhoto();
+          }, ELLIPSIS_MS);
+
+        }, PAUSE_MS);
+      }
+    }, STEP_MS);
+
+    // allow click to dismiss early (optional but harmless)
+    overlay.addEventListener("click", () => {
+      clearInterval(t1);
+      safeRemove(overlay);
+      active = false;
+    }, { once:true });
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (active) return;
+    if (isTypingIntoField()) return;
+
+    const k = e.key;
+    if (k.length !== 1) return;
+
+    buffer = (buffer + k.toLowerCase()).slice(-TRIGGER.length);
+    if (buffer === TRIGGER) {
+      buffer = "";
+      runEasterEgg();
+    }
+  });
+})();
+
   </script>
 </body>
 </html>
-
