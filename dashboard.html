@@ -6,6 +6,7 @@
   <title>CT&P Portal</title>
   <meta name="description" content="CT&P Portal for inspection job tracking and coordination." />
 
+  <!-- ===== Map libs (added, does not touch your UI) ===== -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
@@ -837,82 +838,6 @@
       box-shadow: 0 20px 60px rgba(0,0,0,.45);
     }
     .leaflet-container a{ color: var(--text); }
-
-   /* =========================================
-       MOBILE RESPONSIVENESS FIX
-       ========================================= */
-    @media (max-width: 768px) {
-      .topbar-inner {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-        padding: 12px 16px;
-      }
-      .top-actions {
-        width: 100%;
-        justify-content: flex-start;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        padding-bottom: 8px;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-      }
-      .top-actions::-webkit-scrollbar { display: none; }
-      .tabs { flex-shrink: 0; }
-      .stats { grid-template-columns: 1fr 1fr; gap: 8px; }
-      .stat .value { font-size: 20px; }
-      .wrap { padding: 10px 12px 80px; }
-    }
-
-    /* ===== Profile Modal Styles (Added) ===== */
-    .link-profile {
-      color: var(--accent);
-      cursor: pointer;
-      font-weight: 700;
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
-    .link-profile:hover { color: #60b5ff; }
-
-    .modal-wrap {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.95);
-      background: #0f1620;
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 16px;
-      padding: 0;
-      width: min(400px, 90vw);
-      box-shadow: 0 40px 80px rgba(0,0,0,.6);
-      z-index: 100;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.2s ease;
-      overflow: hidden;
-    }
-    .modal-wrap.open {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translate(-50%, -50%) scale(1);
-    }
-    .modal-wrap .person { border: none; background: transparent; border-radius: 0; }
-    .modal-close {
-      position: absolute;
-      top: 10px; right: 10px;
-      width: 30px; height: 30px;
-      background: rgba(0,0,0,.4);
-      color: white;
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 50%;
-      cursor: pointer;
-      z-index: 10;
-      display: grid;
-      place-items: center;
-      font-weight: bold;
-    }
-    .modal-close:hover { background: rgba(255,255,255,.1); }
-
   </style>
 </head>
 
@@ -937,6 +862,7 @@
           <button class="tab active" id="tabJobs" role="tab" aria-selected="true" aria-controls="viewJobs">Jobs</button>
           <button class="tab" id="tabDir" role="tab" aria-selected="false" aria-controls="viewDir">Inspector Directory</button>
           <button class="tab" id="tabAna" role="tab" aria-selected="false" aria-controls="viewAna">Analytics</button>
+          <!-- Added tabs only -->
           <button class="tab" id="tabTime" role="tab" aria-selected="false" aria-controls="viewTime">Timeline</button>
           <button class="tab" id="tabMap" role="tab" aria-selected="false" aria-controls="viewMap">Map</button>
         </div>
@@ -1039,7 +965,9 @@
                 <select class="select" id="dirSpec" title="Filter by specialization">
                   <option value="">All Specialization</option>
                   <option value="Automotive">Automotive</option>
+                  <option value="Documentation">Documentation</option>
                   <option value="General">General</option>
+                  <option value="Sabah/Sarawak Ops">Sabah/Sarawak Ops</option>
                   <option value="Weapon">Weapon</option>
                   <option value="Electronic">Electronic</option>
                 </select>
@@ -1165,6 +1093,7 @@
       </section>
     </section>
 
+    <!-- ===== Added view: Timeline (new, no impact on existing views) ===== -->
     <section class="view" id="viewTime" role="tabpanel" aria-labelledby="tabTime">
       <section class="panel">
         <div class="panel-title">
@@ -1198,6 +1127,7 @@
       </section>
     </section>
 
+    <!-- ===== Added view: Map (new, no impact on existing views) ===== -->
     <section class="view" id="viewMap" role="tabpanel" aria-labelledby="tabMap">
       <section class="panel">
         <div class="panel-title">
@@ -1248,7 +1178,10 @@
       <div class="section">
         <h3>Inspectors</h3>
         <div class="kv" id="kvIns"></div>
+        <div style="margin-top:10px; color:var(--muted); font-size:12px;">
+          Clickable inspector profiles will be added later.
         </div>
+      </div>
 
       <div class="section">
         <h3>Documents</h3>
@@ -1256,11 +1189,6 @@
       </div>
     </div>
   </aside>
-
-  <div class="modal-wrap" id="profileModal">
-    <button class="modal-close" id="closeProfileModal">✕</button>
-    <div id="profileContent"></div>
-  </div>
 
   <script>
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzyCi-6stLedx0-un55ldx_qOuPgRUrP5A_7nu6uCAINOZvQJatVIzfdowW6Vo02Dby/exec";
@@ -1344,11 +1272,6 @@
     // Map refs (added)
     const $mapNote = $("#mapNote");
 
-    // Profile Modal refs (Added)
-    const $profileModal = $("#profileModal");
-    const $profileContent = $("#profileContent");
-    const $closeProfileModal = $("#closeProfileModal");
-
     function safe(v){ return (v ?? "").toString().trim(); }
     function normalizeText(s){ return safe(s).toLowerCase().replace(/\s+/g," ").trim(); }
     function escapeHtml(s){
@@ -1419,6 +1342,39 @@
       if(isNaN(d.getTime())) return safe(raw);
       return d.toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric" });
     }
+    function parseDateSmart(raw){
+  const s = safe(raw);
+  if(!s) return null;
+
+  // If it's already a Date object
+  if(raw instanceof Date) return isNaN(raw.getTime()) ? null : raw;
+
+  // dd/mm/yyyy or dd-mm-yyyy
+  const m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if(m){
+    const dd = parseInt(m[1], 10);
+    const mm = parseInt(m[2], 10);
+    const yyyy = parseInt(m[3], 10);
+
+    // Basic sanity
+    if(mm < 1 || mm > 12 || dd < 1 || dd > 31) return null;
+
+    // Construct as local date (midday avoids DST edge weirdness)
+    const d = new Date(yyyy, mm - 1, dd, 12, 0, 0, 0);
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  // ISO or "Jan 5 2026" etc, let JS try
+  const d = new Date(s);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function formatDate(raw){
+  const d = parseDateSmart(raw);
+  if(!d) return "-";
+  return d.toLocaleDateString("en-GB", { day:"2-digit", month:"2-digit", year:"numeric" });
+}
+
 
     function pick(obj, keys){
       for(const k of keys){
@@ -1467,8 +1423,8 @@ function mapRowToJob(row){
         negeri: safe(negeri),
         zon: safe(zon),
         tarikhTugasan: safe(tarikhTugasan),
-        endDate: safe(endDate),       // <--- NEW
-        timestamp: safe(timestamp),   // <--- NEW
+        endDate: safe(endDate),      // <--- NEW
+        timestamp: safe(timestamp),  // <--- NEW
         status: safe(status),
         priority: safe(priority),
         assigned1: safe(assigned1),
@@ -1509,58 +1465,42 @@ async function loadData() {
   try {
     const base = WEB_APP_URL + (WEB_APP_URL.includes("?") ? "&" : "?");
 
-    // 1. Fetch CTP (Permohonan) Jobs
     const reqJobsCTP = fetch(base + "action=listJobs&t=" + Date.now(), {
       method: "GET",
       cache: "no-store"
     }).then(r => r.json());
 
-    // 2. Fetch WDP Jobs
     const reqJobsWDP = fetch(base + "action=listJobs&tab=wdp&t=" + Date.now(), {
       method: "GET",
       cache: "no-store"
     }).then(r => r.json());
 
-    // 3. Fetch FAT Jobs (NEW)
-    const reqJobsFAT = fetch(base + "action=listJobs&tab=fat&t=" + Date.now(), {
-      method: "GET",
-      cache: "no-store"
-    }).then(r => r.json());
-
-    // 4. Fetch Inspectors
     const reqInsp = fetch(base + "action=listInspectors&t=" + Date.now(), {
       method: "GET",
       cache: "no-store"
     }).then(r => r.json());
 
-    // Wait for all 4 requests
-    const [resCTP, resWDP, resFAT, resInsp] = await Promise.all([reqJobsCTP, reqJobsWDP, reqJobsFAT, reqInsp]);
+    const [resCTP, resWDP, resInsp] = await Promise.all([reqJobsCTP, reqJobsWDP, reqInsp]);
 
     const ctpJobs = (resCTP && resCTP.ok && Array.isArray(resCTP.jobs)) ? resCTP.jobs : [];
     const wdpJobs = (resWDP && resWDP.ok && Array.isArray(resWDP.jobs)) ? resWDP.jobs : [];
-    const fatJobs = (resFAT && resFAT.ok && Array.isArray(resFAT.jobs)) ? resFAT.jobs : []; // <--- Handle FAT results
 
-    if (!ctpJobs.length && !wdpJobs.length && !fatJobs.length) {
-      console.warn("No jobs found across all tabs.");
+    if (!ctpJobs.length && !wdpJobs.length) {
+      console.error("Jobs error", { resCTP, resWDP });
     }
 
-    // Combine all three lists
-    JOBS = ctpJobs.concat(wdpJobs).concat(fatJobs)
+    JOBS = ctpJobs.concat(wdpJobs)
       .map(mapRowToJob)
       .filter(j => safe(j.jobId) !== "");
 
-if (resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)) {
-  INSPECTORS = resInsp.inspectors
-    .map((row, idx) => {
-      const p = mapRowToInspector(row);
-      p._idx = idx; // preserve sheet order
-      return p;
-    })
-    .filter(i => safe(i.name) !== "");
-} else {
-  console.error("Inspector error", resInsp);
-  INSPECTORS = [];
-}
+    if (resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)) {
+      INSPECTORS = resInsp.inspectors
+        .map(mapRowToInspector)
+        .filter(i => safe(i.name) !== "");
+    } else {
+      console.error("Inspector error", resInsp);
+      INSPECTORS = [];
+    }
 
     setBadge("live", "Live");
     renderJobs();
@@ -1588,6 +1528,7 @@ if (resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)) {
     $mapNote.textContent = "Offline";
   }
 }
+
 
 
     function matches(job, q){
@@ -1620,9 +1561,14 @@ if (resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)) {
       const stClass = statusClass(j.status);
       
       // Logic for Date Range
-      const start = formatDate(j.tarikhTugasan);
-      const end = formatDate(j.endDate);
-      const dateDisplay = (start && end) ? `${start} - ${end}` : (start || "-");
+      const startRaw = safe(j.tarikhTugasan);
+const endRaw = safe(j.endDate);
+
+const start = startRaw ? formatDate(startRaw) : "";
+const end = endRaw ? formatDate(endRaw) : "";
+
+const dateDisplay = (start && end) ? `${start} - ${end}` : (start || end || "-");
+
 
       return `
         <tr>
@@ -1660,12 +1606,6 @@ if (resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)) {
       return `<div class="k">${escapeHtml(k)}</div><div class="v">${escapeHtml(safe(v) || "-")}</div>`;
     }
 
-    // --- ADD THIS NEW FUNCTION ---
-    function kvRowHtml(k, v){
-      // This version does NOT escape the value 'v', so the link works
-      return `<div class="k">${escapeHtml(k)}</div><div class="v">${safe(v) || "-"}</div>`;
-    }
-
     function docRow(name, note, link){
       const has = !!safe(link);
       const href = has ? link : "#";
@@ -1681,69 +1621,6 @@ if (resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)) {
         </div>
       `;
     }
-
-// --- NEW: Inspector Profile Logic ---
-    function openProfile(name) {
-      if (!name || name === "Unassigned") return;
-
-      // 1. Find the inspector object in your global INSPECTORS array
-      const p = INSPECTORS.find(i => 
-        i.name === name || normalizeText(i.name) === normalizeText(name)
-      );
-
-      if (!p) {
-        alert("Profile details not found for: " + name);
-        return;
-      }
-
-      // 2. Build the HTML (Reusing the exact design from Directory tab)
-      const imgSrc = p.photo ? escapeHtml(p.photo) : "";
-      
-      // Determine status color
-      let stStyle = "background: rgba(255,255,255,.03); color:var(--muted);";
-      if(p.status.toLowerCase().includes("aktif") || p.status.toLowerCase() === "active") {
-         stStyle = "background: rgba(35,194,107,.15); color:#4ade80;";
-      } else if (p.status.toLowerCase().includes("cuti")){
-         stStyle = "background: rgba(255,176,32,.15); color:#fbbf24;";
-      }
-
-      // Generate Card HTML
-      const html = `
-        <div class="person" style="border:none;">
-          <div class="photo-wrap" style="width:120px; min-width:120px;">
-             <img src="${imgSrc}" alt="${escapeHtml(p.name)}" 
-             style="width:90px; height:110px;"
-             onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22150%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22rgba(255,255,255,.06)%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22rgba(231,238,248,.55)%22 font-family=%22Arial%22 font-size=%2212%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22>PHOTO</text></svg>'; this.style.opacity=0.5;" />
-          </div>
-          <div class="body">
-            <div class="top">
-              <div style="padding-right:30px;">
-                <h3 style="font-size:15px; white-space:normal;">${escapeHtml(p.name)}</h3>
-                <div style="font-size:12px; color:var(--muted); margin-top:4px;">${escapeHtml(p.rank)} • ${escapeHtml(p.role)}</div>
-              </div>
-            </div>
-            
-            <div class="tags" style="margin-top:10px;">
-              <span class="tag" style="${stStyle}"><b>${escapeHtml(p.status)}</b></span>
-              <span class="tag">Spec: <b>${escapeHtml(p.specialization)}</b></span>
-              <span class="tag">Zone: <b>${escapeHtml(p.zone)}</b></span>
-            </div>
-
-            <div style="margin-top:12px; font-size:13px; color:var(--text); opacity:.9;">
-               ${p.phone ? `<div>📞 <a href="tel:${p.phone}" style="color:inherit;">${escapeHtml(p.phone)}</a></div>` : ""}
-               ${p.email ? `<div style="font-size:12px; opacity:.7; margin-top:4px;">✉️ ${escapeHtml(p.email)}</div>` : ""}
-            </div>
-          </div>
-        </div>
-      `;
-
-      $profileContent.innerHTML = html;
-      
-      // 3. Show Modal
-      $profileModal.classList.add("open");
-    }
-
-
 function openDrawer(job){
       $dTitle.textContent = job.jobId || "JOB";
       $dSub.textContent = `${job.unit} | ${job.jenis}`.replace(/^\s*\|\s*|\s*\|\s*$/g, "");
@@ -1765,8 +1642,15 @@ function openDrawer(job){
 
              // 2. Calculate TAT (Inspection Date - Application Date)
              if(job.timestamp){
-                const appDate = new Date(job.timestamp); // Tarikh Permohonan
-                const inspDate = new Date(data[dateKey]); // Tarikh Pemeriksaan
+                const appDate = parseDateSmart(job.timestamp);
+const inspDate = parseDateSmart(data[dateKey]);
+
+if(appDate && inspDate){
+  const diffTime = inspDate.getTime() - appDate.getTime();
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  tatDisplay = `${diffDays} days`;
+}
+
                 
                 if(!isNaN(appDate) && !isNaN(inspDate)){
                     // Calculate difference in milliseconds
@@ -1807,21 +1691,10 @@ function openDrawer(job){
         kvRow("Zon", job.zon)
       ].join("");
 
-      // 3. Inspectors (UPDATED to use Links)
-      function renderInsLink(name) {
-        if (!name || name === "Unassigned") return `<span style="opacity:0.5;">Unassigned</span>`;
-        // Only make it clickable if we actually have data for this person
-        const exists = INSPECTORS.some(i => normalizeText(i.name) === normalizeText(name));
-        if (exists) {
-          // Use onclick to trigger the modal
-          return `<span class="link-profile" onclick="openProfile('${escapeHtml(name)}')">${escapeHtml(name)}</span>`;
-        }
-        return escapeHtml(name); // Text only if not found in directory
-      }
-
+      // 3. Inspectors
       $kvIns.innerHTML = [
-        kvRowHtml("Inspector 1", renderInsLink(job.assigned1)), // CHANGED TO kvRowHtml
-        kvRowHtml("Inspector 2", renderInsLink(job.assigned2))  // CHANGED TO kvRowHtml
+        kvRow("Inspector 1", job.assigned1),
+        kvRow("Inspector 2", job.assigned2)
       ].join("");
 
       // 4. HASIL PEMERIKSAAN (Structured Data)
@@ -1975,7 +1848,7 @@ function openDrawer(job){
          p.loadVisible = load;
       });
 
-      INSPECTORS.sort((a,b) => (a._idx ?? 0) - (b._idx ?? 0));
+      INSPECTORS.sort((a,b) => a.name.localeCompare(b.name));
     }
 
     function inspectorMatches(p, q){
@@ -2109,7 +1982,7 @@ function openDrawer(job){
       visible.forEach(j => {
           // 1. Get Application Date
           if(!j.timestamp) return;
-          const appDate = new Date(j.timestamp);
+          const appDate = parseDateSmart(j.timestamp);
           
           // 2. Get Inspection Date from JSON
           let inspDate = null;
@@ -2117,7 +1990,7 @@ function openDrawer(job){
               try {
                   const data = JSON.parse(j.inspectorData);
                   const k = Object.keys(data).find(key => key.toLowerCase().includes("tarikh"));
-                  if(k && data[k]) inspDate = new Date(data[k]);
+                  if(k && data[k]) if(k && data[k]) inspDate = parseDateSmart(data[k]);
               } catch(e){}
           }
           
@@ -2135,7 +2008,7 @@ function openDrawer(job){
 
       // Prepare Data with Colors
       const tatItems = [
-          { label: "Compliant (≤3 days)", value: good, color: "#23c26b" },      // Green
+          { label: "Compliant (≤3 days)", value: good, color: "#23c26b" },     // Green
           { label: "Marginal (4-7 days)", value: normal, color: "#ffb020" }, // Orange
           { label: "Non-Compliant (>7 days)", value: bad, color: "#ff4d4d" }        // Red
       ];
@@ -2318,7 +2191,6 @@ function openDrawer(job){
     $q.addEventListener("input", () => { renderJobs(); rebuildDirectory(); renderTimeline(); });
     $status.addEventListener("change", () => { renderJobs(); rebuildDirectory(); renderTimeline(); });
     $refresh.addEventListener("click", loadData);
-    $closeProfileModal.addEventListener("click", () => { $profileModal.classList.remove("open"); });
 
     $grid.addEventListener("click", (e) => {
       const btn = e.target.closest("button[data-id]");
@@ -2350,11 +2222,12 @@ function openDrawer(job){
       if(q) list = list.filter(j => tlMatches(j, q));
 
       list.sort((a,b)=>{
-        const da = new Date(a.tarikhTugasan);
-        const db = new Date(b.tarikhTugasan);
-        const ta = isNaN(da.getTime()) ? 0 : da.getTime();
-        const tb = isNaN(db.getTime()) ? 0 : db.getTime();
-        return tb - ta;
+        const da = parseDateSmart(a.tarikhTugasan);
+const db = parseDateSmart(b.tarikhTugasan);
+const ta = da ? da.getTime() : 0;
+const tb = db ? db.getTime() : 0;
+return tb - ta;
+
       });
 
       return list;
@@ -2489,9 +2362,14 @@ function openDrawer(job){
       const p2 = PHOTO_MAP[job.assigned2] || "";
 
       // Logic for Date Range
-      const start = formatDate(job.tarikhTugasan);
-      const end = formatDate(job.endDate);
-      const dateDisplay = (start && end) ? `${start} - ${end}` : (start || "-");
+      const startRaw = safe(j.tarikhTugasan);
+const endRaw = safe(j.endDate);
+
+const start = startRaw ? formatDate(startRaw) : "";
+const end = endRaw ? formatDate(endRaw) : "";
+
+const dateDisplay = (start && end) ? `${start} - ${end}` : (start || end || "-");
+
 
       const img = (src, name) => `
         <img src="${escapeHtml(src)}" alt="${escapeHtml(name)}" 
@@ -2603,6 +2481,8 @@ function openDrawer(job){
   </script>
 </body>
 </html>
+
+
 
 
 
