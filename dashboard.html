@@ -1039,9 +1039,7 @@
                 <select class="select" id="dirSpec" title="Filter by specialization">
                   <option value="">All Specialization</option>
                   <option value="Automotive">Automotive</option>
-                  <option value="Documentation">Documentation</option>
                   <option value="General">General</option>
-                  <option value="Sabah/Sarawak Ops">Sabah/Sarawak Ops</option>
                   <option value="Weapon">Weapon</option>
                   <option value="Electronic">Electronic</option>
                 </select>
@@ -1551,14 +1549,18 @@ async function loadData() {
       .map(mapRowToJob)
       .filter(j => safe(j.jobId) !== "");
 
-    if (resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)) {
-      INSPECTORS = resInsp.inspectors
-        .map(mapRowToInspector)
-        .filter(i => safe(i.name) !== "");
-    } else {
-      console.error("Inspector error", resInsp);
-      INSPECTORS = [];
-    }
+if (resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)) {
+  INSPECTORS = resInsp.inspectors
+    .map((row, idx) => {
+      const p = mapRowToInspector(row);
+      p._idx = idx; // preserve sheet order
+      return p;
+    })
+    .filter(i => safe(i.name) !== "");
+} else {
+  console.error("Inspector error", resInsp);
+  INSPECTORS = [];
+}
 
     setBadge("live", "Live");
     renderJobs();
@@ -1973,7 +1975,7 @@ function openDrawer(job){
          p.loadVisible = load;
       });
 
-      INSPECTORS.sort((a,b) => a.name.localeCompare(b.name));
+      INSPECTORS.sort((a,b) => (a._idx ?? 0) - (b._idx ?? 0));
     }
 
     function inspectorMatches(p, q){
@@ -2601,5 +2603,6 @@ function openDrawer(job){
   </script>
 </body>
 </html>
+
 
 
