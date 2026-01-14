@@ -1265,8 +1265,10 @@
   <script>
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzyCi-6stLedx0-un55ldx_qOuPgRUrP5A_7nu6uCAINOZvQJatVIzfdowW6Vo02Dby/exec";
 
-    let JOBS = [];
-    let INSPECTORS = [];
+  let JOBS = [];                 // All tabs (for Jobs table, timeline, map, etc.)
+  let JOBS_PERMOHONAN = [];      // Permohonan only (for Analytics + TAT)
+  let INSPECTORS = [];
+
 
     const $ = (sel) => document.querySelector(sel);
 
@@ -1472,7 +1474,7 @@ function formatDate(raw){
       return safe(raw);
     }
 
-function mapRowToJob(row){
+function mapRowToJob(row, sourceTab){
       const jobId = pick(row, ["Job ID","JobID","jobId","JOB ID","ID"]);
       const unit = pick(row, ["Nama pasukan / unit","Nama Pasukan / Unit","Unit","Pasukan","Nama Unit","nama unit"]);
       const jenis = pick(row, ["Jenis pemeriksaan","Jenis Pemeriksaan","jenis","Type","Jenis"]);
@@ -1494,6 +1496,7 @@ function mapRowToJob(row){
       const structRaw = pick(row, ["Inspector Structured Data", "Structured Data", "json", "Data Pemeriksaan"]);
 
       return {
+        sourceTab: safe(sourceTab || ""),
         jobId: safe(jobId),
         unit: safe(unit),
         jenis: safe(jenis),
@@ -1579,9 +1582,25 @@ async function loadData() {
     }
 
     // Combine all three lists
-    JOBS = ctpJobs.concat(wdpJobs).concat(fatJobs)
-      .map(mapRowToJob)
-      .filter(j => safe(j.jobId) !== "");
+// Map each tab separately (so we can filter analytics correctly)
+const ctpMapped = ctpJobs
+  .map(r => mapRowToJob(r, "Permohonan"))
+  .filter(j => safe(j.jobId) !== "");
+
+const wdpMapped = wdpJobs
+  .map(r => mapRowToJob(r, "WDP"))
+  .filter(j => safe(j.jobId) !== "");
+
+const fatMapped = fatJobs
+  .map(r => mapRowToJob(r, "FAT"))
+  .filter(j => safe(j.jobId) !== "");
+
+// JOBS = everything (for Jobs view)
+JOBS = ctpMapped.concat(wdpMapped).concat(fatMapped);
+
+// ✅ Analytics/TAT only from Permohonan
+JOBS_PERMOHONAN = ctpMapped;
+
 
 if (resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)) {
   INSPECTORS = resInsp.inspectors
@@ -1642,6 +1661,17 @@ if (resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)) {
       if(q) list = list.filter(j => matches(j, q));
       return list;
     }
+
+    function getVisiblePermohonanJobs(){
+  const q = safe($q.value);
+  const st = safe($status.value);
+
+  let list = [...JOBS_PERMOHONAN];
+  if(st) list = list.filter(j => safe(j.status) === st);
+  if(q) list = list.filter(j => matches(j, q));
+  return list;
+}
+
 
     function renderStats(list){
       $statTotal.textContent = list.length;
@@ -2119,7 +2149,8 @@ function openDrawer(job){
     }
 
    function renderAnalytics(){
-      const visible = getVisibleJobs();
+      const visible = getVisiblePermohonanJobs();
+
 
       // Existing Top Stats
       $aTotal.textContent = visible.length;
