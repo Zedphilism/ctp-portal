@@ -1765,7 +1765,7 @@ const dateDisplay = (start && end) ? `${start} - ${end}` : (start || end || "-")
             
             <div class="tags" style="margin-top:10px;">
               <span class="tag" style="${stStyle}"><b>${escapeHtml(p.status)}</b></span>
-              <span class="tag">Spec: <b>${escapeHtml(p.specialization)}</b></span>
+              <span class="tag">Specialization: <b>${escapeHtml(p.specialization)}</b></span>
               <span class="tag">Zone: <b>${escapeHtml(p.zone)}</b></span>
             </div>
 
@@ -2071,7 +2071,7 @@ function openDrawer(job){
                   <span class="tag" style="${stStyle}"><b>${escapeHtml(p.status)}</b></span>
                 </div>
                 <div class="tags" style="margin-top:6px;">
-                  <span class="tag">Spec: <b>${escapeHtml(p.specialization)}</b></span>
+                  <span class="tag">Specialization: <b>${escapeHtml(p.specialization)}</b></span>
                   <span class="tag">Zone: <b>${escapeHtml(p.zone)}</b></span>
                   <span class="tag">Load: <b>${escapeHtml(String(p.loadVisible))}</b></span>
                 </div>
@@ -2652,6 +2652,3 @@ return tb - ta;
   </script>
 </body>
 </html>
-
-
-
