@@ -1662,6 +1662,10 @@ if (resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)) {
       return list;
     }
 
+    function getPermohonanJobsOnly(){
+  return [...JOBS_PERMOHONAN];
+}
+
     function getVisiblePermohonanJobs(){
   const q = safe($q.value);
   const st = safe($status.value);
@@ -1845,11 +1849,11 @@ function openDrawer(job){
             }
 
                 
-                if(!isNaN(appDate) && !isNaN(inspDate)){
+                if(appDate && inspDate){
                     // Calculate difference in milliseconds
                     const diffTime = inspDate - appDate; 
                     // Convert to days (rounded down)
-                    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                    const diff = Math.floor((inspDate.getTime() - appDate.getTime()) / 86400000);
                     tatDisplay = `${diffDays} days`;
                 }
              }
@@ -2149,7 +2153,7 @@ function openDrawer(job){
     }
 
    function renderAnalytics(){
-      const visible = getVisiblePermohonanJobs();
+      const visible = getVisibleJobs();
 
 
       // Existing Top Stats
@@ -2181,42 +2185,47 @@ function openDrawer(job){
       drawBarChart($aLoadChart, load.slice(0, 12).map(([k,v]) => ({ label:k, value:v })), true);
       renderLegend($aLoadLegend, load.slice(0, 12).map(x => x[0]));
 
-      // --- NEW: TAT COMPLIANCE CHART LOGIC ---
-      let good = 0, normal = 0, bad = 0;
-      
-      visible.forEach(j => {
-          // 1. Get Application Date
-          if(!j.timestamp) return;
-          const appDate = parseDateSmart(j.timestamp);
-          
-          // 2. Get Inspection Date from JSON
-          let inspDate = null;
-          if (j.inspectorData && j.inspectorData.trim() !== "{}" && j.inspectorData.trim() !== "") {
-              try {
-                  const data = JSON.parse(j.inspectorData);
-                  const k = Object.keys(data).find(key => key.toLowerCase().includes("tarikh"));
-                  if(k && data[k]) if(k && data[k]) inspDate = parseDateSmart(data[k]);
-              } catch(e){}
-          }
-          
-          if(!inspDate) return; // Skip if not inspected yet
+// --- TAT COMPLIANCE CHART LOGIC (4 BUCKETS) ---
+let performing = 0, compliant = 0, marginal = 0, nonCompliant = 0;
 
-          // 3. Calc Diff
-          if(!isNaN(appDate) && !isNaN(inspDate)){
-             const diff = Math.floor((inspDate - appDate) / (1000 * 60 * 60 * 24));
-             
-             if(diff <= 3) good++;
-             else if(diff <= 7) normal++;
-             else bad++;
-          }
-      });
+const tatJobs = getPermohonanJobsOnly();
+console.log("TAT Permohonan jobs:", tatJobs.length, tatJobs.slice(0,3));
 
-      // Prepare Data with Colors
-      const tatItems = [
-          { label: "Compliant (≤3 days)", value: good, color: "#23c26b" },      // Green
-          { label: "Marginal (4-7 days)", value: normal, color: "#ffb020" }, // Orange
-          { label: "Non-Compliant (>7 days)", value: bad, color: "#ff4d4d" }        // Red
-      ];
+
+tatJobs.forEach(j => {
+
+  if(!j.timestamp) return;
+  const appDate = parseDateSmart(j.timestamp);
+
+  let inspDate = null;
+  if (j.inspectorData && j.inspectorData.trim() !== "{}" && j.inspectorData.trim() !== "") {
+    try {
+      const data = JSON.parse(j.inspectorData);
+      const k = Object.keys(data).find(key => key.toLowerCase().includes("tarikh"));
+      if(k && data[k]) inspDate = parseDateSmart(data[k]);
+    } catch(e){}
+  }
+
+  if(!inspDate) return;
+
+if(appDate && inspDate){
+  const diff = Math.floor((inspDate.getTime() - appDate.getTime()) / 86400000);
+
+  if(diff <= 3) performing++;
+  else if(diff <= 7) compliant++;
+  else if(diff <= 10) marginal++;
+  else nonCompliant++;
+}
+});
+
+// --- Chart data ---
+const tatItems = [
+  { label: "Performing (≤3 days)", value: performing, color: "#3b82f6" },   // ✅ Blue
+  { label: "Compliant (4-7 days)", value: compliant, color: "#23c26b" },    // Green
+  { label: "Marginal (8-10 days)", value: marginal, color: "#ffb020" },     // Orange
+  { label: "Non-Compliant (>10 days)", value: nonCompliant, color: "#ff4d4d" } // Red
+];
+
 
       // Draw Chart
       const $aTatChart = $("#aTatChart");
