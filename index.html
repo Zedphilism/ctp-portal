@@ -571,6 +571,95 @@ body.eegg-fade{
   pointer-events:none;
 }
 
+/* ===== ANNOUNCEMENT TICKER (no card resize) ===== */
+.ticker{
+  position:fixed;
+  top:78px;                 /* sits below your top-right menu */
+  left:50%;
+  transform:translateX(-50%);
+  width:min(720px,100%);    /* match card width */
+  z-index:120;              /* above card, below drawer/backdrop */
+  pointer-events:none;      /* doesn't block clicks */
+}
+
+.ticker-inner{
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.22);
+  backdrop-filter: blur(10px);
+  overflow:hidden;
+  box-shadow: 0 18px 55px rgba(0,0,0,.35);
+}
+
+.ticker-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 10px;
+}
+
+.ticker-tag{
+  flex:0 0 auto;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.9px;
+  text-transform:uppercase;
+  color:var(--muted);
+  opacity:.9;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.03);
+}
+
+.ticker-viewport{
+  position:relative;
+  overflow:hidden;
+  flex:1;
+  height:18px;
+}
+
+.ticker-track{
+  display:inline-flex;
+  align-items:center;
+  white-space:nowrap;
+  will-change: transform;
+  animation: tickerMove 55s linear infinite;
+  animation-delay: 1.5s;
+}
+
+.ticker-text{
+  font-size:12px;
+  font-weight:800;
+  color:rgba(231,238,248,.92);
+  padding-right:40px; /* gap between repeats */
+}
+
+.ticker-dot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--accent);
+  box-shadow: 0 0 0 3px rgba(58,160,255,.10);
+  margin:0 12px;
+  flex:0 0 auto;
+}
+
+@keyframes tickerMove{
+  0%   { transform: translateX(0); }      /* visible immediately */
+  100% { transform: translateX(-100%); }
+}
+
+
+/* pause on hover (only if you want it clickable later) */
+.ticker-inner:hover .ticker-track{
+  animation-play-state: paused;
+}
+
+/* Hide ticker on very small heights */
+@media (max-height: 520px){
+  .ticker{ display:none; }
+}
 
   </style>
 </head>
@@ -584,6 +673,22 @@ body.eegg-fade{
       </div>
     </button>
   </div>
+
+  <div class="ticker" id="ticker" aria-hidden="false">
+  <div class="ticker-inner">
+    <div class="ticker-row">
+      <div class="ticker-tag">Pengumuman</div>
+      <div class="ticker-viewport">
+        <div class="ticker-track" id="tickerTrack">
+          <span class="ticker-text" id="tickerText"></span>
+          <span class="ticker-dot"></span>
+          <span class="ticker-text" id="tickerText2"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
   <aside class="card">
     <div class="logos">
@@ -688,6 +793,23 @@ Untuk meneruskan, sila klik butang di bawah.
     const closeBtn = document.getElementById("drawerClose");
     const menuFab = document.getElementById("menuFab");
     const enterBtn = document.getElementById("enterBtn");
+
+    // ===== Announcement ticker =====
+const ANNOUNCEMENTS = [
+  "Sila pastikan borang permohonan pemeriksaan yang digunakan adalah betul mengikut keperluan pemeriksaan anda.",
+  "Klik pada menu di sebelah kanan untuk mengakses borang permohonan pemeriksaan.",
+  "Sebarang pertanyaan boleh berhubung terus dengan pentadbir sistem SSjn Zaidi."
+];
+const ANNOUNCEMENT = ANNOUNCEMENTS.join("   •   ");
+
+
+const t1 = document.getElementById("tickerText");
+const t2 = document.getElementById("tickerText2");
+if (t1 && t2) {
+  t1.textContent = ANNOUNCEMENT;
+  t2.textContent = ANNOUNCEMENT; // repeat for seamless loop
+}
+
 
     function toggle(open){
       drawer.classList.toggle("open", open);
