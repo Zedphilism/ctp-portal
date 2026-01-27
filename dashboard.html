@@ -1547,7 +1547,7 @@ async function loadData() {
     const base = WEB_APP_URL + (WEB_APP_URL.includes("?") ? "&" : "?");
 
     // 1. Fetch CTP (Permohonan) Jobs
-    const reqJobsCTP = fetch(base + "action=listJobs&t=" + Date.now(), {
+    const reqJobsCTP = fetch(base + "action=listJobs&tab=permohonan&t=" + Date.now(), {
       method: "GET",
       cache: "no-store"
     }).then(r => r.json());
@@ -1581,6 +1581,8 @@ async function loadData() {
       console.warn("No jobs found across all tabs.");
     }
 
+
+
     // Combine all three lists
 // Map each tab separately (so we can filter analytics correctly)
 const ctpMapped = ctpJobs
@@ -1596,10 +1598,10 @@ const fatMapped = fatJobs
   .filter(j => safe(j.jobId) !== "");
 
 // JOBS = everything (for Jobs view)
-JOBS = ctpMapped.concat(wdpMapped).concat(fatMapped);
+JOBS = dedupeByJobId(ctpMapped.concat(wdpMapped).concat(fatMapped));
 
 // ✅ Analytics/TAT only from Permohonan
-JOBS_PERMOHONAN = ctpMapped;
+JOBS_PERMOHONAN = dedupeByJobId(ctpMapped);
 
 
 if (resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)) {
@@ -1722,6 +1724,22 @@ const dateDisplay = (start && end) ? `${start} - ${end}` : (start || end || "-")
         </tr>
       `;
     }
+
+
+function dedupeByJobId(list){
+  const seen = new Set();
+  const out = [];
+  for(const j of list){
+    const id = safe(j.jobId);
+    if(!id) continue;
+    if(seen.has(id)) continue;
+    seen.add(id);
+    out.push(j);
+  }
+  return out;
+}
+
+
 
     function renderJobs(){
       const list = getVisibleJobs();
