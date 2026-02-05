@@ -383,6 +383,30 @@
       font-size:12px;
       line-height:1.6;
     }
+
+    .actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin:10px 0 18px;
+    }
+    .btn-link{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      font-weight:900;
+      letter-spacing:.2px;
+      text-decoration:none;
+      transition: transform .08s ease, background .12s ease;
+    }
+    .btn-link:hover{ background: rgba(58,160,255,.12); }
+    .btn-link:active{ transform: translateY(1px); }
   </style>
 </head>
 <body>
@@ -413,6 +437,10 @@
         <span class="dot"></span>
         Sistem Dalam Talian
       </div>
+    </div>
+
+    <div class="actions">
+      <a class="btn-link" href="dashboard.html">Kembali ke portal</a>
     </div>
 
     <h1>Maklumat Cawangan Teknik dan Pemeriksaan (CT&amp;P)</h1>
