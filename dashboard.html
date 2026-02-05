@@ -24,7 +24,11 @@
       --bad:#ff4d4d;
       --shadow:0 20px 60px rgba(0,0,0,.45);
       --radius:16px;
+      --bg-grad-1: rgba(58,160,255,.18);
+      --bg-grad-2: rgba(35,194,107,.12);
+      --topbar-bg: rgba(11,15,20,.72);
     }
+
 
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
@@ -32,8 +36,8 @@
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background:
-        radial-gradient(1200px 500px at 15% -10%, rgba(58,160,255,.18), transparent 55%),
-        radial-gradient(900px 500px at 95% 10%, rgba(35,194,107,.12), transparent 50%),
+        radial-gradient(1200px 500px at 15% -10%, var(--bg-grad-1), transparent 55%),
+        radial-gradient(900px 500px at 95% 10%, var(--bg-grad-2), transparent 50%),
         var(--bg);
       color:var(--text);
     }
@@ -52,7 +56,7 @@
       top:0;
       z-index:20;
       backdrop-filter: blur(10px);
-      background: rgba(11,15,20,.72);
+      background: var(--topbar-bg);
       border-bottom:1px solid var(--line);
     }
 
@@ -128,6 +132,7 @@
     }
 
     .pill strong{ color:var(--text); font-weight:800; }
+
 
     /* Tabs */
     .tabs{
@@ -286,6 +291,64 @@
       text-align:right;
     }
 
+    .ticker{
+      margin-top:10px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.22);
+      overflow:hidden;
+    }
+
+    .ticker-label{
+      font-size:12px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.6px;
+      white-space:nowrap;
+      font-weight:700;
+    }
+
+    .ticker-track{
+      position:relative;
+      flex:1;
+      overflow:hidden;
+      min-height:18px;
+    }
+
+    .ticker-text{
+      display:inline-block;
+      white-space:nowrap;
+      padding-left:100%;
+      animation: ticker-move 22s linear infinite;
+      font-weight:600;
+      color:var(--text);
+    }
+
+    .ticker.is-new .ticker-text{
+      animation-duration: 18s;
+      color:#bfe4ff;
+    }
+
+    .ticker:hover .ticker-text{
+      animation-play-state: paused;
+    }
+
+    @keyframes ticker-move{
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .ticker-text{
+        animation: none;
+        padding-left:0;
+      }
+    }
+
     .badge{
       display:inline-flex;
       align-items:center;
@@ -306,6 +369,7 @@
     .b-live .dot{ background: var(--good); }
     .b-error .dot{ background: var(--bad); }
     .b-loading .dot{ background: var(--warn); }
+    .b-new .dot{ background: var(--warn); }
 
     .table-wrap{
       margin-top:12px;
@@ -683,6 +747,29 @@
       padding-right:12px;
     }
 
+    .load-bar{
+      margin-top:8px;
+      height:8px;
+      width:100%;
+      background: rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      border-radius:999px;
+      overflow:hidden;
+      padding-right:12px;
+    }
+    .load-fill{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      transition: width .2s ease;
+    }
+    .load-label{
+      margin-top:6px;
+      font-size:11px;
+      color:var(--muted);
+      padding-right:12px;
+    }
+
     .person p{
       margin:0;
       color: rgba(231,238,248,.92);
@@ -797,6 +884,31 @@
       gap:10px;
       margin-top:12px;
     }
+    .tl-now{
+      position:relative;
+      margin:4px 0 8px;
+    }
+    .tl-now::before{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      top:50%;
+      height:1px;
+      background: rgba(255,176,32,.6);
+    }
+    .tl-now span{
+      position:relative;
+      display:inline-block;
+      padding:4px 10px;
+      border-radius:999px;
+      background: rgba(255,176,32,.12);
+      color:#ffd28a;
+      border:1px solid rgba(255,176,32,.35);
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.3px;
+    }
     .tl-item{
       padding:12px;
       border:1px solid var(--line);
@@ -806,6 +918,22 @@
       flex-direction:column;
       gap:8px;
     }
+    .tl-extra{
+      max-height:0;
+      opacity:0;
+      overflow:hidden;
+      transition: max-height .2s ease, opacity .2s ease;
+    }
+    .tl-item:hover .tl-extra{
+      max-height:120px;
+      opacity:1;
+    }
+    .tl.compact .tl-item{
+      padding:8px 10px;
+      gap:6px;
+    }
+    .tl.compact .tl-sub{ font-size:11px; }
+    .tl.compact .tl-meta{ display:none; }
     .tl-top{
       display:flex;
       align-items:flex-start;
@@ -919,13 +1047,13 @@
 <body>
   <header class="topbar">
     <div class="topbar-inner">
-      <div class="brand">
+      <a class="brand" href="index.html">
         <img src="assets/icon1.png" alt="Jata Negara" />
         <div class="brand-title">
           <h1>Sistem Pemeriksaan Sel Teknikal</h1>
           <p>Cawangan Teknik & Pemeriksaan</p>
         </div>
-      </div>
+      </a>
 
       <div class="top-actions">
         <span class="pill">
@@ -940,7 +1068,6 @@
           <button class="tab" id="tabTime" role="tab" aria-selected="false" aria-controls="viewTime">Timeline</button>
           <button class="tab" id="tabMap" role="tab" aria-selected="false" aria-controls="viewMap">Map</button>
         </div>
-
         <span class="pill"><strong id="today"></strong></span>
       </div>
     </div>
@@ -987,12 +1114,36 @@
               <option value="Cancelled">Cancelled</option>
             </select>
 
+            <select class="select" id="monthFilter" title="Filter by month">
+              <option value="">All Months</option>
+              <option value="0">January</option>
+              <option value="1">February</option>
+              <option value="2">March</option>
+              <option value="3">April</option>
+              <option value="4">May</option>
+              <option value="5">June</option>
+              <option value="6">July</option>
+              <option value="7">August</option>
+              <option value="8">September</option>
+              <option value="9">October</option>
+              <option value="10">November</option>
+              <option value="11">December</option>
+            </select>
+
             <button class="btn" id="refresh">Refresh</button>
           </div>
 
           <div class="meta">
             <span>Showing <strong id="count">0</strong> jobs</span>
             <span class="badge b-loading" id="liveBadge"><span class="dot"></span><span id="liveText">Loading</span></span>
+            <span class="badge b-new" id="newJobBadge" style="display:none;"><span class="dot"></span><span id="newJobText">New: 0</span></span>
+          </div>
+        </div>
+
+        <div class="ticker" id="jobsTicker" aria-live="polite">
+          <span class="ticker-label">Latest New Job</span>
+          <div class="ticker-track">
+            <span class="ticker-text" id="jobsTickerText">Waiting for updates...</span>
           </div>
         </div>
 
@@ -1024,6 +1175,7 @@
             <p>Directory data pulled from 'Pemeriksa' sheet. Load metrics calculated from Jobs.</p>
           </div>
           <div class="meta" style="justify-content:flex-end;">
+            <a class="btn" href="about.html">Mengenai Kami</a>
             <span class="badge b-live"><span class="dot"></span><span>Active</span></span>
           </div>
         </div>
@@ -1190,6 +1342,7 @@
               <option value="Completed">Completed</option>
               <option value="Cancelled">Cancelled</option>
             </select>
+            <button class="btn" id="tlCompact" type="button" title="Toggle compact timeline">Compact</button>
           </div>
         </div>
 
@@ -1268,6 +1421,7 @@
   let JOBS = [];                 // All tabs (for Jobs table, timeline, map, etc.)
   let JOBS_PERMOHONAN = [];      // Permohonan only (for Analytics + TAT)
   let INSPECTORS = [];
+  let LAST_JOB_IDS = new Set();
 
 
     const $ = (sel) => document.querySelector(sel);
@@ -1276,6 +1430,7 @@
     const $count = $("#count");
     const $q = $("#q");
     const $status = $("#statusFilter");
+    const $month = $("#monthFilter");
     const $refresh = $("#refresh");
 
     const $drawer = $("#drawer");
@@ -1286,6 +1441,8 @@
     const $statPending = $("#statPending");
     const $statProgress = $("#statProgress");
     const $statDone = $("#statDone");
+    const $jobsTicker = $("#jobsTicker");
+    const $jobsTickerText = $("#jobsTickerText");
 
     const $dTitle = $("#dTitle");
     const $dSub = $("#dSub");
@@ -1296,6 +1453,8 @@
 
     const $liveBadge = $("#liveBadge");
     const $liveText = $("#liveText");
+    const $newJobBadge = $("#newJobBadge");
+    const $newJobText = $("#newJobText");
 
     const $tabJobs = $("#tabJobs");
     const $tabDir = $("#tabDir");
@@ -1342,6 +1501,7 @@
     const $tlStatus = $("#tlStatus");
     const $tlCount = $("#tlCount");
     const $tlEmpty = $("#tlEmpty");
+    const $tlCompact = $("#tlCompact");
 
     // Map refs (added)
     const $mapNote = $("#mapNote");
@@ -1407,6 +1567,7 @@
       $("#today").textContent = d.toLocaleDateString(undefined, opt);
     }
 
+
     function statusClass(st){
       if(st === "Pending") return "s-pending";
       if(st === "In Progress") return "s-progress";
@@ -1454,6 +1615,64 @@ function formatDate(raw){
   if(!d) return "-";
   return d.toLocaleDateString("en-GB", { day:"2-digit", month:"2-digit", year:"numeric" });
 }
+
+    function jobDisplayDate(job){
+      const ts = parseDateSmart(job.timestamp);
+      if(ts) return formatDate(ts);
+      const assign = parseDateSmart(job.tarikhTugasan);
+      if(assign) return formatDate(assign);
+      const end = parseDateSmart(job.endDate);
+      if(end) return formatDate(end);
+      return "-";
+    }
+
+    function pickLatestByDate(list){
+      let best = null;
+      let bestTime = -Infinity;
+      for(const j of list){
+        const d = parseDateSmart(j.timestamp) || parseDateSmart(j.tarikhTugasan) || parseDateSmart(j.endDate);
+        const t = d ? d.getTime() : -Infinity;
+        if(t > bestTime){
+          bestTime = t;
+          best = j;
+        } else if(!best && !d){
+          best = j;
+        }
+      }
+      return best || list[0];
+    }
+
+    function updateLatestJobTicker(list){
+      if(!$jobsTicker || !$jobsTickerText) return;
+      if(!Array.isArray(list) || list.length === 0){
+        $jobsTickerText.textContent = "No jobs available";
+        $jobsTicker.classList.remove("is-new");
+        if($newJobBadge) $newJobBadge.style.display = "none";
+        LAST_JOB_IDS = new Set();
+        return;
+      }
+
+      const hadPrev = LAST_JOB_IDS.size > 0;
+      const newOnes = hadPrev ? list.filter(j => !LAST_JOB_IDS.has(safe(j.jobId))) : [];
+      const chosen = pickLatestByDate(newOnes.length ? newOnes : list);
+      const loc = `${safe(chosen.daerah)}, ${safe(chosen.negeri)}`.replace(/^,\s*|,\s*$/g, "");
+      const dateText = jobDisplayDate(chosen);
+      const label = newOnes.length ? "Latest new job" : "Latest job";
+      const line = `${label}: ${safe(chosen.jobId) || "JOB"} • ${safe(chosen.unit) || "-"} • ${safe(chosen.jenis) || "-"} • ${loc || "-"} • ${dateText}`;
+
+      $jobsTickerText.textContent = line;
+      $jobsTicker.classList.toggle("is-new", newOnes.length > 0);
+      if($newJobBadge && $newJobText){
+        if(newOnes.length > 0){
+          $newJobText.textContent = `New: ${newOnes.length}`;
+          $newJobBadge.style.display = "inline-flex";
+        } else {
+          $newJobBadge.style.display = "none";
+        }
+      }
+
+      LAST_JOB_IDS = new Set(list.map(j => safe(j.jobId)).filter(Boolean));
+    }
 
 
     function pick(obj, keys){
@@ -1620,6 +1839,7 @@ if (resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)) {
 
     setBadge("live", "Live");
     renderJobs();
+    updateLatestJobTicker(JOBS);
     rebuildDirectory();
     renderDirectory();
     renderAnalytics();
@@ -1637,6 +1857,7 @@ if (resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)) {
     JOBS = [];
     INSPECTORS = [];
     renderJobs();
+    updateLatestJobTicker(JOBS);
     rebuildDirectory();
     renderDirectory();
     renderAnalytics();
@@ -1657,10 +1878,18 @@ if (resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)) {
     function getVisibleJobs(){
       const q = safe($q.value);
       const st = safe($status.value);
+      const m = safe($month ? $month.value : "");
 
       let list = [...JOBS];
       if(st) list = list.filter(j => safe(j.status) === st);
       if(q) list = list.filter(j => matches(j, q));
+      if(m !== ""){
+        const mi = parseInt(m, 10);
+        list = list.filter(j => {
+          const d = parseDateSmart(j.tarikhTugasan) || parseDateSmart(j.timestamp) || parseDateSmart(j.endDate);
+          return d ? d.getMonth() === mi : false;
+        });
+      }
       return list;
     }
 
@@ -2091,6 +2320,7 @@ function openDrawer(job){
       if(q) list = list.filter(p => inspectorMatches(p, q));
 
       $dirCount.textContent = list.length;
+      const maxLoad = Math.max(1, ...list.map(p => p.loadVisible || 0));
 
       if(!list.length){
         $dirGrid.innerHTML = "";
@@ -2111,6 +2341,11 @@ function openDrawer(job){
              stStyle = "background: rgba(255,176,32,.15); color:#fbbf24;";
           }
 
+          const load = p.loadVisible || 0;
+          const pct = Math.round((load / maxLoad) * 100);
+          const ratio = maxLoad ? (load / maxLoad) : 0;
+          const loadColor = ratio >= 0.7 ? "var(--bad)" : (ratio >= 0.4 ? "var(--warn)" : "var(--good)");
+
           return `
             <div class="person">
               <div class="photo-wrap">${imgTag}</div>
@@ -2127,6 +2362,10 @@ function openDrawer(job){
                   <span class="tag">Zone: <b>${escapeHtml(p.zone)}</b></span>
                   <span class="tag">Load: <b>${escapeHtml(String(p.loadVisible))}</b></span>
                 </div>
+                <div class="load-bar" aria-label="Inspector load ${escapeHtml(String(load))}">
+                  <div class="load-fill" style="width:${pct}%; background:${loadColor};"></div>
+                </div>
+                <div class="load-label">Load level</div>
                 <div style="margin-top:8px; font-size:13px; color:var(--text); opacity:.9;">
                    ${p.phone ? `<div>📞 ${escapeHtml(p.phone)}</div>` : ""}
                    ${p.email ? `<div style="font-size:12px; opacity:.7;">✉️ ${escapeHtml(p.email)}</div>` : ""}
@@ -2422,6 +2661,7 @@ const tatItems = [
     // ===== Events =====
     $q.addEventListener("input", () => { renderJobs(); rebuildDirectory(); renderTimeline(); });
     $status.addEventListener("change", () => { renderJobs(); rebuildDirectory(); renderTimeline(); });
+    if($month) $month.addEventListener("change", () => { renderJobs(); rebuildDirectory(); renderTimeline(); });
     $refresh.addEventListener("click", loadData);
     $closeProfileModal.addEventListener("click", () => { $profileModal.classList.remove("open"); });
 
@@ -2438,6 +2678,12 @@ const tatItems = [
     window.addEventListener("keydown", (e) => { if(e.key === "Escape") closeDrawer(); });
 
     // ===== Timeline (added) =====
+    function nowMarkerHtml(){
+      const d = new Date();
+      const label = d.toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" });
+      return `<div class="tl-now"><span>Today • ${escapeHtml(label)}</span></div>`;
+    }
+
     function tlMatches(j, q){
       const hay = [
         j.jobId, j.unit, j.jenis, j.daerah, j.negeri, j.zon,
@@ -2467,7 +2713,7 @@ return tb - ta;
       return list;
     }
 
-    function renderTimeline(){
+            function renderTimeline(){
       const list = timelineList();
       $tlCount.textContent = `${list.length} items`;
 
@@ -2478,7 +2724,7 @@ return tb - ta;
       }
       $tlEmpty.style.display = "none";
 
-      $tlList.innerHTML = list.map(j=>{
+      const html = nowMarkerHtml() + list.map(j=>{
         const loc = `${safe(j.daerah)}, ${safe(j.negeri)}`.replace(/^,\s*|,\s*$/g, "");
         const stClass = statusClass(j.status);
         return `
@@ -2499,13 +2745,25 @@ return tb - ta;
             <div class="tl-sub">
               <b>Pemeriksa:</b> ${escapeHtml(j.assigned1 || "Unassigned")} , ${escapeHtml(j.assigned2 || "Unassigned")}
             </div>
+            <div class="tl-extra">
+              <div class="tl-sub"><b>Priority:</b> ${escapeHtml(j.priority || "-")}</div>
+              <div class="tl-sub"><b>Tarikh Permohonan:</b> ${escapeHtml(formatDate(j.timestamp))}</div>
+            </div>
           </div>
         `;
       }).join("");
+
+      $tlList.innerHTML = html;
     }
 
     $tlQ.addEventListener("input", renderTimeline);
     $tlStatus.addEventListener("change", renderTimeline);
+    if($tlCompact){
+      $tlCompact.addEventListener("click", () => {
+        const on = $tlList.classList.toggle("compact");
+        $tlCompact.textContent = on ? "Comfort" : "Compact";
+      });
+    }
 
     // ===== Map (added) =====
     let MAP = null;
