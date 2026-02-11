@@ -382,140 +382,111 @@
 
     .theme-track{
       position:relative;
-      width:104px;
-      height:44px;
+      width:86px;
+      height:40px;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,.22);
-      box-shadow: inset 0 3px 8px rgba(0,0,0,.25);
-      overflow:hidden;
       display:block;
-      transition: background .28s ease, border-color .28s ease;
-      background: linear-gradient(145deg, #68caee 0%, #3b99be 100%);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.12);
+      background: linear-gradient(165deg, #7d848e 0%, #4c525d 100%);
+      box-shadow:
+        inset 0 2px 2px rgba(255,255,255,.14),
+        inset 0 -6px 12px rgba(0,0,0,.35),
+        0 7px 14px rgba(0,0,0,.25);
+      transition: background .28s ease, border-color .28s ease, box-shadow .28s ease;
     }
 
-    .theme-knob{
-      position:absolute;
-      top:3px;
-      left:4px;
-      width:36px;
-      height:36px;
-      border-radius:50%;
-      background:#ffd500;
-      box-shadow: 0 0 0 3px rgba(255,213,0,.2), 0 6px 14px rgba(0,0,0,.3);
-      transition: left .28s ease, background .28s ease, box-shadow .28s ease;
-      z-index:4;
-    }
-
-    .theme-cloud{
-      position:absolute;
-      border-radius:999px;
-      background: rgba(255,255,255,.72);
-      transition: opacity .24s ease, transform .24s ease;
-      z-index:2;
-    }
-
-    .theme-cloud::before,
-    .theme-cloud::after{
+    .theme-track::before{
       content:"";
       position:absolute;
-      border-radius:50%;
-      background: inherit;
-    }
-
-    .theme-cloud-1{
-      width:30px;
-      height:9px;
-      left:44px;
-      top:13px;
-    }
-    .theme-cloud-1::before{
-      width:12px;
-      height:12px;
-      left:4px;
-      top:-5px;
-    }
-    .theme-cloud-1::after{
-      width:14px;
-      height:14px;
-      right:3px;
-      top:-6px;
-    }
-
-    .theme-cloud-2{
-      width:34px;
-      height:10px;
-      left:57px;
-      top:24px;
-    }
-    .theme-cloud-2::before{
-      width:14px;
-      height:14px;
-      left:4px;
-      top:-7px;
-    }
-    .theme-cloud-2::after{
-      width:14px;
-      height:14px;
-      right:5px;
-      top:-7px;
-    }
-
-    .theme-stars{
-      position:absolute;
-      inset:0;
-      opacity:0;
-      transition: opacity .24s ease;
+      inset:3px;
+      border-radius:999px;
+      background: linear-gradient(180deg, #757d88 0%, #5a616d 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.16), inset 0 -3px 6px rgba(0,0,0,.24);
       z-index:1;
-      background-image:
-        radial-gradient(circle at 18% 36%, rgba(255,255,255,.9) 1px, transparent 2px),
-        radial-gradient(circle at 35% 22%, rgba(255,255,255,.8) 1px, transparent 2px),
-        radial-gradient(circle at 44% 64%, rgba(255,255,255,.75) 1px, transparent 2px),
-        radial-gradient(circle at 57% 35%, rgba(255,255,255,.9) 1px, transparent 2px),
-        radial-gradient(circle at 73% 59%, rgba(255,255,255,.82) 1px, transparent 2px);
     }
 
-    .theme-knob .crater{
+    .theme-thumb{
       position:absolute;
-      background: rgba(164,170,179,.6);
-      border-radius:50%;
-      opacity:0;
-      transition: opacity .2s ease;
+      top:4px;
+      left:4px;
+      width:37px;
+      height:32px;
+      border-radius:999px;
+      z-index:2;
+      background: linear-gradient(180deg, #8b929d 0%, #5c6470 100%);
+      box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.25),
+        inset 0 -2px 5px rgba(0,0,0,.28),
+        0 4px 8px rgba(0,0,0,.3);
+      transition: left .28s ease, background .28s ease, box-shadow .28s ease;
     }
-    .theme-knob .c1{ width:8px; height:8px; top:8px; left:8px; }
-    .theme-knob .c2{ width:6px; height:6px; top:17px; left:18px; }
-    .theme-knob .c3{ width:5px; height:5px; top:11px; left:23px; }
+
+    .theme-icon{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      width:16px;
+      height:16px;
+      color:rgba(255,255,255,.5);
+      z-index:3;
+      transition: color .28s ease, filter .28s ease, opacity .28s ease;
+      pointer-events:none;
+    }
+    .theme-icon svg{
+      width:100%;
+      height:100%;
+      display:block;
+      fill:currentColor;
+    }
+    .theme-icon-sun{ left:12px; }
+    .theme-icon-moon{ right:12px; }
+
+    body.theme-light .theme-thumb{
+      left:4px;
+      background: linear-gradient(180deg, #9097a1 0%, #656d79 100%);
+      box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.24),
+        inset 0 -2px 5px rgba(0,0,0,.27),
+        0 4px 8px rgba(0,0,0,.3);
+    }
+    body.theme-light .theme-icon-sun{
+      color:#ffffff;
+      filter: drop-shadow(0 0 6px rgba(255,255,255,.9)) drop-shadow(0 0 12px rgba(255,255,255,.5));
+      opacity:1;
+    }
+    body.theme-light .theme-icon-moon{
+      color:rgba(201,220,255,.55);
+      filter:none;
+      opacity:.6;
+    }
 
     body.theme-dark .theme-track{
-      background: linear-gradient(145deg, #001533 0%, #001024 100%);
-      border-color: rgba(58,160,255,.2);
+      border-color: rgba(76,140,255,.3);
+      background: linear-gradient(165deg, #7a818d 0%, #49505d 100%);
+      box-shadow:
+        inset 0 2px 2px rgba(255,255,255,.12),
+        inset 0 -6px 12px rgba(0,0,0,.36),
+        0 7px 14px rgba(0,0,0,.28);
     }
-    body.theme-dark .theme-knob{
-      left:63px;
-      background:#f2eedf;
-      box-shadow: 0 0 14px rgba(255,255,255,.55), 0 6px 14px rgba(0,0,0,.4);
+    body.theme-dark .theme-thumb{
+      left:45px;
+      background: linear-gradient(180deg, #7f8691 0%, #58606c 100%);
+      box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.22),
+        inset 0 -2px 6px rgba(0,0,0,.3),
+        0 4px 8px rgba(0,0,0,.32);
     }
-    body.theme-dark .theme-stars{ opacity:1; }
-    body.theme-dark .theme-cloud{
-      opacity:0;
-      transform: translateX(-8px);
+    body.theme-dark .theme-icon-sun{
+      color:rgba(255,255,255,.45);
+      filter:none;
+      opacity:.55;
     }
-    body.theme-dark .theme-knob .crater{ opacity:1; }
-
-    body.theme-light .theme-track{
-      background: linear-gradient(145deg, #68caee 0%, #3b99be 100%);
-      border-color: rgba(15,23,42,.2);
-    }
-    body.theme-light .theme-knob{
-      left:4px;
-      background:#ffd500;
-      box-shadow: 0 0 0 3px rgba(255,213,0,.2), 0 6px 14px rgba(0,0,0,.3);
-    }
-    body.theme-light .theme-stars{ opacity:0; }
-    body.theme-light .theme-cloud{
+    body.theme-dark .theme-icon-moon{
+      color:#d8e9ff;
+      filter: drop-shadow(0 0 6px rgba(92,164,255,.95)) drop-shadow(0 0 14px rgba(92,164,255,.7));
       opacity:1;
-      transform: none;
     }
-    body.theme-light .theme-knob .crater{ opacity:0; }
 
     .theme-switch:focus-visible .theme-track{
       outline:2px solid var(--accent);
@@ -730,6 +701,11 @@
       letter-spacing:.15px;
       line-height:1.2;
       white-space:nowrap;
+    }
+    .ticker-sep{
+      color:var(--muted);
+      margin:0 8px;
+      opacity:.9;
     }
 
     .ticker.is-new .ticker-text{
@@ -1560,13 +1536,16 @@
       <div class="top-actions">
         <button class="theme-switch" id="themeSwitch" type="button" aria-label="Toggle light and dark theme" title="Switch theme">
           <span class="theme-track">
-            <span class="theme-stars"></span>
-            <span class="theme-cloud theme-cloud-1"></span>
-            <span class="theme-cloud theme-cloud-2"></span>
-            <span class="theme-knob">
-              <span class="crater c1"></span>
-              <span class="crater c2"></span>
-              <span class="crater c3"></span>
+            <span class="theme-thumb"></span>
+            <span class="theme-icon theme-icon-sun" aria-hidden="true">
+              <svg viewBox="0 0 24 24" role="presentation">
+                <path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0-5a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1zm10-6a1 1 0 0 1-1 1h-2a1 1 0 1 1 0-2h2a1 1 0 0 1 1 1zM7 12a1 1 0 0 1-1 1H4a1 1 0 1 1 0-2h2a1 1 0 0 1 1 1zm11.07-6.66a1 1 0 0 1 0 1.42l-1.41 1.41a1 1 0 1 1-1.42-1.41l1.42-1.42a1 1 0 0 1 1.41 0zM8.76 15.24a1 1 0 0 1 0 1.41l-1.42 1.42a1 1 0 0 1-1.41-1.42l1.41-1.41a1 1 0 0 1 1.42 0zm0-8.48a1 1 0 0 1-1.42 0L5.93 5.34a1 1 0 0 1 1.41-1.41l1.42 1.41a1 1 0 0 1 0 1.42zm8.49 8.48 1.41 1.41a1 1 0 1 1-1.41 1.42l-1.42-1.42a1 1 0 1 1 1.42-1.41z"></path>
+              </svg>
+            </span>
+            <span class="theme-icon theme-icon-moon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" role="presentation">
+                <path d="M20.71 14.29A9 9 0 0 1 9.71 3.29a1 1 0 0 0-1.24-1.24A11 11 0 1 0 22 15.53a1 1 0 0 0-1.29-1.24z"></path>
+              </svg>
             </span>
           </span>
         </button>
@@ -1716,7 +1695,7 @@
         </div>
 
         <div class="ticker" id="jobsTicker" aria-live="polite">
-          <span class="ticker-label">Latest New Job</span>
+          <span class="ticker-label">Latest Jobs</span>
           <div class="ticker-track">
             <span class="ticker-text" id="jobsTickerText">Waiting for updates...</span>
           </div>
@@ -2255,20 +2234,15 @@ function formatDate(raw){
       return "-";
     }
 
-    function pickLatestByDate(list){
-      let best = null;
-      let bestTime = -Infinity;
-      for(const j of list){
-        const d = parseDateSmart(j.timestamp) || parseDateSmart(j.tarikhTugasan) || parseDateSmart(j.endDate);
-        const t = d ? d.getTime() : -Infinity;
-        if(t > bestTime){
-          bestTime = t;
-          best = j;
-        } else if(!best && !d){
-          best = j;
-        }
-      }
-      return best || list[0];
+    function latestJobsByDate(list, count){
+      if(!Array.isArray(list) || list.length === 0) return [];
+      return [...list]
+        .sort((a, b) => {
+          const aTime = (parseDateSmart(a.timestamp) || parseDateSmart(a.tarikhTugasan) || parseDateSmart(a.endDate) || new Date(0)).getTime();
+          const bTime = (parseDateSmart(b.timestamp) || parseDateSmart(b.tarikhTugasan) || parseDateSmart(b.endDate) || new Date(0)).getTime();
+          return bTime - aTime;
+        })
+        .slice(0, count);
     }
 
     function updateLatestJobTicker(list){
@@ -2283,13 +2257,18 @@ function formatDate(raw){
 
       const hadPrev = LAST_JOB_IDS.size > 0;
       const newOnes = hadPrev ? list.filter(j => !LAST_JOB_IDS.has(safe(j.jobId))) : [];
-      const chosen = pickLatestByDate(newOnes.length ? newOnes : list);
-      const loc = `${safe(chosen.daerah)}, ${safe(chosen.negeri)}`.replace(/^,\s*|,\s*$/g, "");
-      const dateText = jobDisplayDate(chosen);
-      const label = newOnes.length ? "Latest new job" : "Latest job";
-      const line = `${label}: ${safe(chosen.jobId) || "JOB"} • ${safe(chosen.unit) || "-"} • ${safe(chosen.jenis) || "-"} • ${loc || "-"} • ${dateText}`;
+      const chosen = latestJobsByDate(newOnes.length ? newOnes : list, 3);
+      const label = newOnes.length ? "Latest new jobs" : "Latest jobs";
 
-      $jobsTickerText.innerHTML = `<span class="ticker-pill">${escapeHtml(line)}</span>`;
+      const items = chosen.map(j => {
+        const loc = `${safe(j.daerah)}, ${safe(j.negeri)}`.replace(/^,\s*|,\s*$/g, "");
+        const dateText = jobDisplayDate(j);
+        const line = `${safe(j.jobId) || "JOB"} | ${safe(j.unit) || "-"} | ${safe(j.jenis) || "-"} | ${loc || "-"} | ${dateText}`;
+        return `<span class="ticker-pill">${escapeHtml(line)}</span>`;
+      });
+      const prefix = `<span class="ticker-pill">${escapeHtml(label)}</span>`;
+      $jobsTickerText.innerHTML = [prefix, ...items].join('<span class="ticker-sep">|</span>');
+
       $jobsTicker.classList.toggle("is-new", newOnes.length > 0);
       if($newJobBadge && $newJobText){
         if(newOnes.length > 0){
