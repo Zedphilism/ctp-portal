@@ -36,6 +36,32 @@
       padding:24px;
       overflow:hidden;
     }
+    body.theme-light{
+      --bg:#e8eef6;
+      --panel:#f3f7fc;
+      --panel2:#e9eff8;
+      --text:#17212f;
+      --muted:#5a6a7f;
+      --line:rgba(9,28,54,.14);
+      --accent:#2f87dc;
+      --good:#1ea45c;
+      --shadow:0 18px 40px rgba(8,28,54,.18);
+      background:
+        radial-gradient(880px 520px at 20% 8%, rgba(74,156,235,.20), transparent 62%),
+        radial-gradient(760px 520px at 82% 18%, rgba(42,170,104,.14), transparent 58%),
+        var(--bg);
+    }
+    body.theme-dark{
+      --bg:#0b0f14;
+      --panel:#0f1620;
+      --panel2:#0c121a;
+      --text:#e7eef8;
+      --muted:#9fb0c6;
+      --line:rgba(255,255,255,.08);
+      --accent:#3aa0ff;
+      --good:#23c26b;
+      --shadow:0 20px 60px rgba(0,0,0,.45);
+    }
     /* ===== subtle vignette to pull focus to center ===== */
 body::before{
   content:"";
@@ -46,6 +72,12 @@ body::before{
   background:radial-gradient(closest-side at 50% 45%,
     rgba(0,0,0,0) 55%,
     rgba(0,0,0,.28) 100%
+  );
+}
+body.theme-light::before{
+  background:radial-gradient(closest-side at 50% 45%,
+    rgba(255,255,255,0) 62%,
+    rgba(17,36,58,.10) 100%
   );
 }
 
@@ -78,6 +110,127 @@ body::after{
       z-index:200;
       transition: transform .18s ease, opacity .18s ease;
       will-change: transform, opacity;
+    }
+    .theme-fab{
+      position:fixed;
+      top:20px;
+      left:20px;
+      z-index:210;
+      display:flex;
+      align-items:center;
+    }
+    .theme-switch{
+      border:0;
+      padding:0;
+      background:transparent;
+      cursor:pointer;
+      line-height:0;
+    }
+    .theme-track{
+      position:relative;
+      width:86px;
+      height:40px;
+      border-radius:999px;
+      display:block;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.12);
+      background: linear-gradient(165deg, #7d848e 0%, #4c525d 100%);
+      box-shadow:
+        inset 0 2px 2px rgba(255,255,255,.14),
+        inset 0 -6px 12px rgba(0,0,0,.35),
+        0 7px 14px rgba(0,0,0,.25);
+      transition: background .28s ease, border-color .28s ease, box-shadow .28s ease;
+    }
+    .theme-track::before{
+      content:"";
+      position:absolute;
+      inset:3px;
+      border-radius:999px;
+      background: linear-gradient(180deg, #757d88 0%, #5a616d 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.16), inset 0 -3px 6px rgba(0,0,0,.24);
+      z-index:1;
+    }
+    .theme-thumb{
+      position:absolute;
+      top:4px;
+      left:4px;
+      width:37px;
+      height:32px;
+      border-radius:999px;
+      z-index:2;
+      background: linear-gradient(180deg, #8b929d 0%, #5c6470 100%);
+      box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.25),
+        inset 0 -2px 5px rgba(0,0,0,.28),
+        0 4px 8px rgba(0,0,0,.3);
+      transition: left .28s ease, background .28s ease, box-shadow .28s ease;
+    }
+    .theme-icon{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      width:16px;
+      height:16px;
+      color:rgba(255,255,255,.5);
+      z-index:3;
+      transition: color .28s ease, filter .28s ease, opacity .28s ease;
+      pointer-events:none;
+    }
+    .theme-icon svg{
+      width:100%;
+      height:100%;
+      display:block;
+      fill:currentColor;
+    }
+    .theme-icon-sun{ left:12px; }
+    .theme-icon-moon{ right:12px; }
+    body.theme-light .theme-thumb{
+      left:4px;
+      background: linear-gradient(180deg, #9097a1 0%, #656d79 100%);
+      box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.24),
+        inset 0 -2px 5px rgba(0,0,0,.27),
+        0 4px 8px rgba(0,0,0,.3);
+    }
+    body.theme-light .theme-icon-sun{
+      color:#ffffff;
+      filter: drop-shadow(0 0 6px rgba(255,255,255,.9)) drop-shadow(0 0 12px rgba(255,255,255,.5));
+      opacity:1;
+    }
+    body.theme-light .theme-icon-moon{
+      color:rgba(201,220,255,.55);
+      filter:none;
+      opacity:.6;
+    }
+    body.theme-dark .theme-track{
+      border-color: rgba(76,140,255,.3);
+      background: linear-gradient(165deg, #7a818d 0%, #49505d 100%);
+      box-shadow:
+        inset 0 2px 2px rgba(255,255,255,.12),
+        inset 0 -6px 12px rgba(0,0,0,.36),
+        0 7px 14px rgba(0,0,0,.28);
+    }
+    body.theme-dark .theme-thumb{
+      left:45px;
+      background: linear-gradient(180deg, #7f8691 0%, #58606c 100%);
+      box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.22),
+        inset 0 -2px 6px rgba(0,0,0,.3),
+        0 4px 8px rgba(0,0,0,.32);
+    }
+    body.theme-dark .theme-icon-sun{
+      color:rgba(255,255,255,.45);
+      filter:none;
+      opacity:.55;
+    }
+    body.theme-dark .theme-icon-moon{
+      color:#d8e9ff;
+      filter: drop-shadow(0 0 6px rgba(92,164,255,.95)) drop-shadow(0 0 14px rgba(92,164,255,.7));
+      opacity:1;
+    }
+    .theme-switch:focus-visible .theme-track{
+      outline:2px solid var(--accent);
+      outline-offset:2px;
     }
     .menu-fab.hide{
       opacity:0;
@@ -269,33 +422,56 @@ body::after{
       gap:14px;
     }
 
-    /* ===== BUTTON: FIXED LIQUID FILL (dark blue, fills whole button) ===== */
+    /* ===== BUTTON: fluid liquid motion ===== */
     .btn-primary{
       position:relative;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      background: var(--text);
-      color: #000;
+      background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(235,242,250,.9));
+      color: #06111f;
       padding:12px 24px;
       border-radius:12px;
       font-weight:900;
       font-size:14px;
       text-decoration:none;
-      transition:.15s ease;
+      border:1px solid rgba(255,255,255,.5);
+      transition: transform .25s ease, box-shadow .25s ease, color .25s ease, border-color .25s ease;
       min-width: 180px;
       overflow:hidden;
+      isolation:isolate;
     }
 
     .btn-primary::before{
       content:"";
       position:absolute;
-      inset:0;
-      background:#0f2a44;
-      transform:scaleY(0);
-      transform-origin:bottom;
-      transition: transform .32s cubic-bezier(.2,.8,.2,1);
+      width:205%;
+      height:255%;
+      left:-52%;
+      top:56%;
+      border-radius:42%;
+      background:
+        radial-gradient(circle at 50% 55%, rgba(54,162,255,.98) 0 52%, rgba(11,45,82,.96) 86%);
+      transform:translateY(62%) rotate(0deg);
+      transition: transform .75s cubic-bezier(.22,.8,.2,1);
+      animation: liquid-idle 7s ease-in-out infinite;
       z-index:0;
+    }
+    .btn-primary::after{
+      content:"";
+      position:absolute;
+      width:188%;
+      height:235%;
+      left:-44%;
+      top:60%;
+      border-radius:40%;
+      background: radial-gradient(circle at 50% 42%, rgba(140,212,255,.85) 0 42%, rgba(53,143,224,.36) 74%, transparent 90%);
+      transform:translateY(76%) rotate(0deg);
+      transition: transform .88s cubic-bezier(.22,.82,.2,1), opacity .38s ease;
+      animation: liquid-idle 5.8s ease-in-out infinite reverse;
+      opacity:.92;
+      z-index:0;
+      mix-blend-mode:screen;
     }
 
     .btn-primary span{
@@ -305,12 +481,22 @@ body::after{
 
     .btn-primary:hover{
       transform:translateY(-1px);
-      box-shadow:0 4px 12px rgba(255,255,255,.15);
+      box-shadow:0 10px 26px rgba(58,160,255,.36);
       color:#fff;
+      border-color:rgba(147,207,255,.78);
     }
 
     .btn-primary:hover::before{
-      transform:scaleY(1);
+      transform:translateY(-36%) rotate(-8deg);
+      animation-duration: 2.4s;
+    }
+    .btn-primary:hover::after{
+      transform:translateY(-28%) rotate(9deg);
+      animation-duration: 2s;
+      opacity:1;
+    }
+    .btn-primary:active{
+      transform:translateY(0);
     }
 
     .btn-primary[aria-disabled="true"]{
@@ -319,8 +505,53 @@ body::after{
       transform:none;
       box-shadow:none;
     }
-    .btn-primary[aria-disabled="true"]::before{
-      transform:scaleY(0);
+    .btn-primary.is-routing{
+      pointer-events:none;
+      color:#fff;
+      border-color:rgba(151,214,255,.92);
+      box-shadow:0 12px 34px rgba(58,160,255,.42), 0 0 0 1px rgba(151,214,255,.22) inset;
+    }
+    .btn-primary.is-routing::before{
+      transform:translateY(-14%) rotate(-10deg);
+      animation: liquid-fast .85s linear infinite;
+    }
+    .btn-primary.is-routing::after{
+      transform:translateY(-8%) rotate(12deg);
+      animation: liquid-fast 1s linear infinite reverse;
+      opacity:1;
+    }
+    @keyframes liquid-idle{
+      0%, 100%{ border-radius:41% 59% 48% 52%/57% 45% 55% 43%; }
+      50%{ border-radius:58% 42% 51% 49%/43% 55% 45% 57%; }
+    }
+    @keyframes liquid-fast{
+      0%{ border-radius:40% 60% 49% 51%/56% 44% 56% 44%; }
+      50%{ border-radius:60% 40% 53% 47%/44% 56% 44% 56%; }
+      100%{ border-radius:40% 60% 49% 51%/56% 44% 56% 44%; }
+    }
+    .route-overlay{
+      position:fixed;
+      inset:0;
+      z-index:260;
+      pointer-events:none;
+      opacity:0;
+      background:
+        radial-gradient(circle at center, rgba(24,54,92,.7) 0%, rgba(8,16,28,.94) 58%, rgba(5,9,16,.985) 100%);
+      clip-path: circle(0px at 50% 50%);
+      transition: clip-path .9s cubic-bezier(.2,.88,.24,1), opacity .25s ease;
+    }
+    body.route-out .route-overlay{
+      opacity:1;
+      clip-path: circle(160vmax at var(--iris-x, 50%) var(--iris-y, 50%));
+    }
+    body.route-out .card,
+    body.route-out .ticker,
+    body.route-out .menu-fab,
+    body.route-out .theme-fab{
+      filter: blur(3px);
+      transform: scale(.965);
+      opacity:0;
+      transition: transform .62s cubic-bezier(.2,.88,.24,1), opacity .45s ease, filter .55s ease;
     }
 
     .footer{
@@ -634,6 +865,19 @@ body.eegg-fade{
   color:rgba(231,238,248,.92);
   padding-right:40px; /* gap between repeats */
 }
+body.theme-light .ticker-inner{
+  border-color:rgba(18,42,70,.14);
+  background:rgba(255,255,255,.72);
+  box-shadow: 0 16px 40px rgba(22,43,66,.14);
+}
+body.theme-light .ticker-text{ color:var(--text); }
+body.theme-light .ticker-tag{ background:rgba(255,255,255,.62); }
+body.theme-light .status{ background: rgba(255,255,255,.68); }
+body.theme-light .meta-box{ background: rgba(255,255,255,.62); }
+body.theme-light .notice{
+  border-color:rgba(11,31,54,.12);
+  background:rgba(255,255,255,.56);
+}
 
 .ticker-dot{
   width:6px;
@@ -663,7 +907,25 @@ body.eegg-fade{
 
   </style>
 </head>
-<body>
+<body class="theme-dark">
+
+  <div class="theme-fab">
+    <button class="theme-switch" id="themeSwitch" type="button" aria-label="Toggle light and dark theme" title="Switch theme">
+      <span class="theme-track">
+        <span class="theme-thumb"></span>
+        <span class="theme-icon theme-icon-sun" aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="presentation">
+            <path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0-5a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1zm10-6a1 1 0 0 1-1 1h-2a1 1 0 1 1 0-2h2a1 1 0 0 1 1 1zM7 12a1 1 0 0 1-1 1H4a1 1 0 1 1 0-2h2a1 1 0 0 1 1 1zm11.07-6.66a1 1 0 0 1 0 1.42l-1.41 1.41a1 1 0 1 1-1.42-1.41l1.42-1.42a1 1 0 0 1 1.41 0zM8.76 15.24a1 1 0 0 1 0 1.41l-1.42 1.42a1 1 0 0 1-1.41-1.42l1.41-1.41a1 1 0 0 1 1.42 0zm0-8.48a1 1 0 0 1-1.42 0L5.93 5.34a1 1 0 0 1 1.41-1.41l1.42 1.41a1 1 0 0 1 0 1.42zm8.49 8.48 1.41 1.41a1 1 0 1 1-1.41 1.42l-1.42-1.42a1 1 0 1 1 1.42-1.41z"></path>
+          </svg>
+        </span>
+        <span class="theme-icon theme-icon-moon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="presentation">
+            <path d="M20.71 14.29A9 9 0 0 1 9.71 3.29a1 1 0 0 0-1.24-1.24A11 11 0 1 0 22 15.53a1 1 0 0 0-1.29-1.24z"></path>
+          </svg>
+        </span>
+      </span>
+    </button>
+  </div>
 
   <div class="menu-fab" id="menuFab">
     <div class="menu-label">Menu</div>
@@ -785,6 +1047,7 @@ Untuk meneruskan, sila klik butang di bawah.
 
     </div>
   </div>
+  <div class="route-overlay" id="routeOverlay" aria-hidden="true"></div>
 
   <script>
     const drawer = document.getElementById("rightDrawer");
@@ -793,6 +1056,9 @@ Untuk meneruskan, sila klik butang di bawah.
     const closeBtn = document.getElementById("drawerClose");
     const menuFab = document.getElementById("menuFab");
     const enterBtn = document.getElementById("enterBtn");
+    const themeSwitch = document.getElementById("themeSwitch");
+    const routeOverlay = document.getElementById("routeOverlay");
+    const THEME_KEY = "ctp_theme";
 
     // ===== Announcement ticker =====
 const ANNOUNCEMENTS = [
@@ -810,6 +1076,33 @@ if (t1 && t2) {
   t1.textContent = ANNOUNCEMENT;
   t2.textContent = ANNOUNCEMENT; // repeat for seamless loop
 }
+
+    function applyTheme(theme){
+      const mode = theme === "light" ? "light" : "dark";
+      document.body.classList.toggle("theme-light", mode === "light");
+      document.body.classList.toggle("theme-dark", mode === "dark");
+      if(themeSwitch){
+        themeSwitch.setAttribute("aria-pressed", mode === "dark" ? "true" : "false");
+      }
+      return mode;
+    }
+
+    function initTheme(){
+      let stored = "";
+      try{
+        stored = localStorage.getItem(THEME_KEY) || "";
+      }catch(e){}
+      applyTheme(stored || "dark");
+      if(themeSwitch){
+        themeSwitch.addEventListener("click", () => {
+          const isDark = document.body.classList.contains("theme-dark");
+          const next = isDark ? "light" : "dark";
+          applyTheme(next);
+          try{ localStorage.setItem(THEME_KEY, next); }catch(e){}
+        });
+      }
+    }
+    initTheme();
 
 
     function toggle(open){
@@ -834,15 +1127,23 @@ if (t1 && t2) {
       if (e.key === "Escape") toggle(false);
     });
 
-    // Professional "Opening dashboard..." micro state (Malay)
+    // Cinematic route-out: fluid surge + iris close before dashboard redirect
     enterBtn.addEventListener("click", (e) => {
       e.preventDefault();
       enterBtn.setAttribute("aria-disabled", "true");
+      enterBtn.classList.add("is-routing");
       const label = enterBtn.querySelector("span");
       if (label) label.textContent = "Membuka papan pemuka...";
+      const rect = enterBtn.getBoundingClientRect();
+      const x = `${rect.left + (rect.width / 2)}px`;
+      const y = `${rect.top + (rect.height / 2)}px`;
+      document.body.style.setProperty("--iris-x", x);
+      document.body.style.setProperty("--iris-y", y);
+      if(routeOverlay) routeOverlay.setAttribute("aria-hidden", "false");
+      document.body.classList.add("route-out");
       setTimeout(() => {
         window.location.href = enterBtn.getAttribute("href");
-      }, 420);
+      }, 880);
     });
 
     // Auto-hide menu on scroll down, show on scroll up
