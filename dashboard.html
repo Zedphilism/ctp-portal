@@ -819,6 +819,7 @@
       background: var(--muted);
       box-shadow: 0 0 0 3px rgba(255,255,255,.04);
     }
+    .s-assigned .dot{ background: #f59e0b; }
     .s-pending .dot{ background: var(--warn); }
     .s-progress .dot{ background: var(--accent); }
     .s-done .dot{ background: var(--good); }
@@ -1302,7 +1303,7 @@
       }
     }
 
-    /* ===== Added: Map + Timeline only (does not change existing UI) ===== */
+    /* ===== Added: Map + Schedule only (does not change existing UI) ===== */
     .map-wrap{
       margin-top:12px;
       overflow:hidden;
@@ -1396,82 +1397,257 @@
       width:100%;
       height:540px;
     }
-    .tl{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
+    .sch-wrap{
       margin-top:12px;
+      display:grid;
+      grid-template-columns: 1.25fr .95fr;
+      gap:12px;
     }
-    .tl-now{
-      position:relative;
-      margin:4px 0 8px;
-    }
-    .tl-now::before{
-      content:"";
-      position:absolute;
-      left:0;
-      right:0;
-      top:50%;
-      height:1px;
-      background: rgba(255,176,32,.6);
-    }
-    .tl-now span{
-      position:relative;
-      display:inline-block;
-      padding:4px 10px;
-      border-radius:999px;
-      background: rgba(255,176,32,.12);
-      color:var(--warn);
-      border:1px solid rgba(255,176,32,.35);
-      font-size:11px;
-      font-weight:800;
-      letter-spacing:.3px;
-    }
-    .tl-item{
-      padding:12px;
+    .sch-calendar{
       border:1px solid var(--line);
       border-radius: var(--radius);
       background: var(--surface-elev);
-      display:flex;
-      flex-direction:column;
-      gap:8px;
+      padding:10px;
     }
-    .tl-extra{
-      max-height:0;
-      opacity:0;
-      overflow:hidden;
-      transition: max-height .2s ease, opacity .2s ease;
+    .sch-weekdays{
+      display:grid;
+      grid-template-columns:repeat(7, minmax(0, 1fr));
+      gap:6px;
+      margin-bottom:6px;
     }
-    .tl-item:hover .tl-extra{
-      max-height:120px;
-      opacity:1;
+    .sch-weekdays div{
+      text-align:center;
+      font-size:11px;
+      color:var(--muted);
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.45px;
+      padding:4px 2px;
     }
-    .tl.compact .tl-item{
-      padding:8px 10px;
+    .sch-days{
+      display:grid;
+      grid-template-columns:repeat(7, minmax(0, 1fr));
       gap:6px;
     }
-    .tl.compact .tl-sub{ font-size:11px; }
-    .tl.compact .tl-meta{ display:none; }
-    .tl-top{
+    .sch-day{
+      min-height:82px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:var(--surface-mid);
+      padding:8px;
+      text-align:left;
+      color:var(--text);
+      cursor:pointer;
+      transition: border-color .12s ease, transform .08s ease, background .12s ease;
       display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
+      flex-direction:column;
+      gap:6px;
     }
-    .tl-title{
+    .sch-day:hover{
+      border-color:rgba(58,160,255,.35);
+      background:var(--surface-hover);
+    }
+    .sch-day:active{ transform:translateY(1px); }
+    .sch-day.out{
+      opacity:.35;
+      cursor:default;
+      pointer-events:none;
+    }
+    .sch-day.today{
+      box-shadow: inset 0 0 0 1px rgba(58,160,255,.45);
+    }
+    .sch-day.selected{
+      border-color:rgba(58,160,255,.55);
+      box-shadow: 0 0 0 1px rgba(58,160,255,.35) inset, 0 8px 22px rgba(58,160,255,.18);
+    }
+    .sch-day.has-jobs{
+      background: color-mix(in srgb, var(--surface-mid) 80%, var(--accent-soft) 20%);
+    }
+    .sch-num{
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.2px;
+    }
+    .sch-markers{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:4px;
+      margin-top:auto;
+    }
+    .sch-dot{
+      width:7px;
+      height:7px;
+      border-radius:999px;
+      display:inline-block;
+      box-shadow:0 0 0 2px rgba(255,255,255,.04);
+    }
+    .sch-dot-assigned{ background:#f59e0b; }
+    .sch-dot-progress{ background:#3aa0ff; }
+    .sch-dot-completed{ background:#22c55e; }
+    .sch-dot-holiday{ background:#ef4444; }
+    .sch-dot-salary{ background:#a855f7; }
+    .sch-count{
+      margin-left:auto;
+      font-size:10px;
+      color:var(--muted);
+      font-weight:900;
+      letter-spacing:.3px;
+    }
+    .sch-flags{
+      display:flex;
+      flex-wrap:wrap;
+      gap:4px;
+      margin-top:2px;
+    }
+    .sch-flag{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      padding:2px 6px;
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:.3px;
+      border:1px solid transparent;
+      white-space:nowrap;
+    }
+    .sch-flag-h{
+      color:#fecaca;
+      background:rgba(239,68,68,.14);
+      border-color:rgba(239,68,68,.35);
+    }
+    .sch-flag-s{
+      color:#e9d5ff;
+      background:rgba(168,85,247,.16);
+      border-color:rgba(168,85,247,.35);
+    }
+    .sch-side{
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-elev);
+      padding:10px;
+      min-height: 100%;
+    }
+    .sch-day-title{
+      margin:0;
+      font-size:14px;
       font-weight:1000;
       letter-spacing:.2px;
     }
-    .tl-sub{
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.35;
-    }
-    .tl-meta{
+    .sch-card-list{
+      margin-top:10px;
       display:flex;
+      flex-direction:column;
+      gap:8px;
+      max-height:520px;
+      overflow:auto;
+      padding-right:2px;
+    }
+    .sch-card{
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:var(--surface-mid);
+      padding:10px;
+    }
+    .sch-card-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
       gap:8px;
       flex-wrap:wrap;
+    }
+    .sch-card-id{
+      font-weight:1000;
+      letter-spacing:.25px;
+      font-size:12px;
+    }
+    .sch-card-unit{
+      color:var(--text);
+      font-size:13px;
+      font-weight:800;
+      margin-top:4px;
+    }
+    .sch-card-sub{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.4;
+      margin-top:4px;
+    }
+    .sch-special-card{
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:var(--surface-soft);
+      padding:10px;
+      margin-bottom:8px;
+    }
+    .sch-special-title{
+      margin:0 0 6px;
+      font-size:12px;
+      font-weight:1000;
+      text-transform:uppercase;
+      letter-spacing:.35px;
+      color:var(--muted);
+    }
+    .sch-special-row{
+      font-size:12px;
+      color:var(--text);
+      margin-top:4px;
+      line-height:1.35;
+    }
+    .sch-ins-link{
+      border:0;
+      padding:0;
+      margin:0;
+      background:none;
+      color:var(--accent);
+      cursor:pointer;
+      font-weight:800;
+      text-decoration:underline;
+      text-underline-offset:2px;
+      font-size:12px;
+    }
+    .sch-ins-link:hover{ opacity:.85; }
+    .sch-mini-legend{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:10px;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+    }
+    .sch-mini-legend span{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+    }
+    .sch-month-line{
+      color:var(--muted);
+      font-size:12px;
+      font-weight:900;
+    }
+
+    @media (max-width: 980px){
+      .sch-wrap{
+        grid-template-columns:1fr;
+      }
+      .sch-card-list{
+        max-height:none;
+      }
+    }
+    @media (max-width: 520px){
+      .sch-day{
+        min-height:72px;
+        padding:7px;
+      }
+      .sch-num{
+        font-size:11px;
+      }
+      .sch-weekdays div{
+        font-size:10px;
+      }
     }
 
     /* Leaflet popup to match your dark UI */
@@ -1618,7 +1794,7 @@
           <button class="tab active" id="tabJobs" role="tab" aria-selected="true" aria-controls="viewJobs">Jobs</button>
           <button class="tab" id="tabDir" role="tab" aria-selected="false" aria-controls="viewDir">Inspector Directory</button>
           <button class="tab" id="tabAna" role="tab" aria-selected="false" aria-controls="viewAna">Analytics</button>
-          <button class="tab" id="tabTime" role="tab" aria-selected="false" aria-controls="viewTime">Timeline</button>
+          <button class="tab" id="tabTime" role="tab" aria-selected="false" aria-controls="viewTime">Schedule</button>
           <button class="tab" id="tabMap" role="tab" aria-selected="false" aria-controls="viewMap">Map</button>
         </div>
         <span class="pill"><strong id="today"></strong></span>
@@ -1720,7 +1896,7 @@
         <div class="controls">
           <div class="controls-left">
             <div class="input" title="Search by Job ID, Unit, Location, Inspector">
-              <span style="opacity:.85;">🔎</span>
+              <span style="opacity:.85;">ðŸ”Ž</span>
               <input id="q" type="text" placeholder="Search Job ID, Unit, Lokasi, Pemeriksa" />
             </div>
 
@@ -1803,7 +1979,7 @@
             <div class="controls" style="margin-top:12px;">
               <div class="controls-left" style="width:100%;">
                 <div class="input" title="Search inspector name">
-                  <span style="opacity:.85;">🔎</span>
+                  <span style="opacity:.85;">ðŸ”Ž</span>
                   <input id="dirQ" type="text" placeholder="Search inspector name / specialization / zone" />
                 </div>
                 <select class="select" id="dirSpec" title="Filter by specialization">
@@ -1857,7 +2033,7 @@
         <div class="card stat">
           <div class="label">Completion Rate</div>
           <div class="value" id="aRate">0%</div>
-          <div class="hint">Completed ÷ visible</div>
+          <div class="hint">Completed Ã· visible</div>
         </div>
         <div class="card stat">
           <div class="label">Top Negeri</div>
@@ -1939,33 +2115,53 @@
       <section class="panel">
         <div class="panel-title">
           <div>
-            <h2>Timeline</h2>
-            <p>Chronological record built from all jobs. Sorted by Tarikh Tugasan (latest first).</p>
+            <h2>Schedule</h2>
+            <p>Kalendar tugasan berdasarkan job berstatus Assigned, In Progress, dan Completed.</p>
           </div>
           <div class="meta">
-            <span class="badge"><span class="dot"></span><span id="tlCount">0 items</span></span>
+            <span class="badge"><span class="dot"></span><span id="schCount">0 job(s)</span></span>
           </div>
         </div>
 
         <div class="controls" style="margin-top:12px;">
           <div class="controls-left" style="width:100%;">
-            <div class="input" title="Search timeline by Job ID, Unit, Location, Inspector">
-              <span style="opacity:.85;">🔎</span>
-              <input id="tlQ" type="text" placeholder="Search timeline (Job ID, Unit, Lokasi, Pemeriksa)" />
-            </div>
-            <select class="select" id="tlStatus" title="Filter timeline by status">
-              <option value="">All Status</option>
-              <option value="Pending">Pending</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Completed">Completed</option>
-              <option value="Cancelled">Cancelled</option>
-            </select>
-            <button class="btn" id="tlCompact" type="button" title="Toggle compact timeline">Compact</button>
+            <label for="schMonth" class="mini-note" style="margin:0;">Bulan</label>
+            <select class="select" id="schMonth" title="Pilih bulan kalendar"></select>
+            <button class="btn" id="schCurrentMonth" type="button" title="Kembali ke bulan semasa">Current Month</button>
+          </div>
+          <div class="meta">
+            <span id="schMonthInfo" class="sch-month-line">-</span>
           </div>
         </div>
 
-        <div class="tl" id="tlList"></div>
-        <div class="mini-note" id="tlEmpty" style="display:none;">No timeline items match your filter.</div>
+        <div class="sch-wrap">
+          <div class="sch-calendar">
+            <div class="sch-weekdays">
+              <div>Isn</div><div>Sel</div><div>Rab</div><div>Kha</div><div>Jum</div><div>Sab</div><div>Aha</div>
+            </div>
+            <div id="schGrid" class="sch-days"></div>
+            <div class="sch-mini-legend">
+              <span><i class="sch-dot sch-dot-assigned"></i>Assigned</span>
+              <span><i class="sch-dot sch-dot-progress"></i>In Progress</span>
+              <span><i class="sch-dot sch-dot-completed"></i>Completed</span>
+              <span><i class="sch-dot sch-dot-holiday"></i>Cuti</span>
+              <span><i class="sch-dot sch-dot-salary"></i>Gaji</span>
+            </div>
+          </div>
+
+          <aside class="sch-side">
+            <h3 id="schDayTitle" class="sch-day-title">Pilih satu tarikh</h3>
+            <div id="schDayCards" class="sch-card-list">
+              <div class="mini-note">Klik mana-mana tarikh bertanda untuk melihat tugasan.</div>
+            </div>
+          </aside>
+        </div>
+
+        <div class="mini-note">
+          Tarikh ditanda jika job mempunyai pemeriksa yang ditugaskan dan status adalah Assigned, In Progress, atau Completed.
+          Penanda CUTI dan GAJI dipaparkan mengikut data hari cuti Malaysia dan jadual gaji 2026.
+          Jika job mempunyai julat tarikh, semua tarikh dalam julat akan ditanda.
+        </div>
       </section>
     </section>
 
@@ -1986,8 +2182,8 @@
         </div>
 
         <div class="mini-note">
-          🔵 Pins: In Progress only. Click to view details.<br>
-          🔥 Heat: workload density based on all jobs (Pending, In Progress, Completed, Cancelled).
+          ðŸ”µ Pins: In Progress only. Click to view details.<br>
+          ðŸ”¥ Heat: workload density based on all jobs (Pending, In Progress, Completed, Cancelled).
         </div>
 
         <section class="map-completed">
@@ -2007,7 +2203,7 @@
         <h2 id="dTitle">JOB</h2>
         <p id="dSub">Select a job to view details</p>
       </div>
-      <button class="icon-btn" id="closeDrawer" title="Close">✕</button>
+      <button class="icon-btn" id="closeDrawer" title="Close">âœ•</button>
     </div>
 
     <div class="drawer-body">
@@ -2034,17 +2230,75 @@
   </aside>
 
   <div class="modal-wrap" id="profileModal">
-    <button class="modal-close" id="closeProfileModal">✕</button>
+    <button class="modal-close" id="closeProfileModal">âœ•</button>
     <div id="profileContent"></div>
   </div>
 
   <script>
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzyCi-6stLedx0-un55ldx_qOuPgRUrP5A_7nu6uCAINOZvQJatVIzfdowW6Vo02Dby/exec";
 
-  let JOBS = [];                 // All tabs (for Jobs table, timeline, map, etc.)
+  let JOBS = [];                 // All tabs (for Jobs table, schedule, map, etc.)
   let JOBS_PERMOHONAN = [];      // Permohonan only (for Analytics + TAT)
   let INSPECTORS = [];
   let LAST_JOB_IDS = new Set();
+  let SCH_MONTH_KEY = "";
+  let SCH_SELECTED_DAY = "";
+  let SCH_DAY_MAP = new Map();
+  const SALARY_DATES_2026 = {
+    "2026-01-22": { title: "Tarikh Gaji (Januari)", day: "Khamis", note: "" },
+    "2026-02-12": { title: "Tarikh Gaji (Februari)", day: "Khamis", note: "Nota SPANM: Tahun Baharu Cina 17 & 18 Februari 2026 (Selasa & Rabu)." },
+    "2026-03-16": { title: "Tarikh Gaji (Mac)", day: "Isnin", note: "Nota SPANM: Hari Raya Puasa 21 & 22 Mac 2026 (Sabtu & Ahad)." },
+    "2026-04-20": { title: "Tarikh Gaji (April)", day: "Isnin", note: "" },
+    "2026-05-21": { title: "Tarikh Gaji (Mei)", day: "Khamis", note: "Nota SPANM: Hari Raya Haji 27 & 28 Mei 2026 (Rabu & Khamis)." },
+    "2026-06-25": { title: "Tarikh Gaji (Jun)", day: "Khamis", note: "" },
+    "2026-07-23": { title: "Tarikh Gaji (Julai)", day: "Khamis", note: "" },
+    "2026-08-24": { title: "Tarikh Gaji (Ogos)", day: "Isnin", note: "" },
+    "2026-09-24": { title: "Tarikh Gaji (September)", day: "Khamis", note: "" },
+    "2026-10-22": { title: "Tarikh Gaji (Oktober)", day: "Khamis", note: "" },
+    "2026-11-25": { title: "Tarikh Gaji (November)", day: "Rabu", note: "Nota SPANM: Hari Deepavali 8 November 2026 (Ahad)." },
+    "2026-12-21": { title: "Tarikh Gaji (Disember)", day: "Isnin", note: "Nota SPANM: Hari Krismas 25 Disember 2026 (Jumaat)." }
+  };
+  const MALAYSIA_HOLIDAYS_2026 = {
+    "2026-01-01": [{ name: "New Year's Day (regional holiday)", note: "Malacca, Negeri Sembilan, Pahang, Penang, Perak, Selangor, Sabah, Sarawak, Kuala Lumpur, Labuan, Putrajaya" }],
+    "2026-01-17": [{ name: "Isra and Mi'raj (regional holiday)", note: "Kedah, Negeri Sembilan, Perlis, Terengganu" }],
+    "2026-02-01": [
+      { name: "Federal Territory Day (regional holiday)", note: "Kuala Lumpur, Labuan, Putrajaya" },
+      { name: "Thaipusam (regional holiday)", note: "Johor, Kedah, Negeri Sembilan, Penang, Perak, Selangor, Kuala Lumpur, Putrajaya" }
+    ],
+    "2026-02-02": [
+      { name: "Day off for Thaipusam (regional holiday)", note: "Johor, Kedah, Negeri Sembilan, Penang, Perak, Selangor, Kuala Lumpur, Putrajaya" },
+      { name: "Federal Territory Day observed (regional holiday)", note: "Kuala Lumpur, Labuan, Putrajaya" }
+    ],
+    "2026-02-17": [{ name: "Chinese New Year's Day", note: "Public holiday" }],
+    "2026-02-18": [
+      { name: "Chinese New Year Holiday (regional holiday)", note: "Kelantan, Terengganu" },
+      { name: "Second Day of Chinese New Year (regional holiday)", note: "Johor, Kedah, Malacca, Negeri Sembilan, Pahang, Penang, Perak, Perlis, Selangor, Sabah, Sarawak, Kuala Lumpur, Labuan, Putrajaya" }
+    ],
+    "2026-02-19": [{ name: "First Day of Ramadan (regional holiday) (tentative)", note: "Johor, Kedah, Malacca" }],
+    "2026-03-07": [{ name: "Nuzul Al-Quran (regional holiday)", note: "Kelantan, Pahang, Penang, Perak, Perlis, Selangor, Terengganu, Kuala Lumpur, Labuan, Putrajaya" }],
+    "2026-03-20": [{ name: "Hari Raya Puasa (tentative)", note: "Public holiday" }],
+    "2026-03-21": [{ name: "Hari Raya Puasa Day 2 (tentative)", note: "Public holiday" }],
+    "2026-04-03": [{ name: "Good Friday (regional holiday)", note: "Sabah, Sarawak" }],
+    "2026-05-01": [{ name: "Labour Day", note: "Public holiday" }],
+    "2026-05-26": [{ name: "Day of Arafat (regional holiday) (tentative)", note: "Kelantan, Terengganu" }],
+    "2026-05-27": [{ name: "Hari Raya Haji (tentative)", note: "Public holiday" }],
+    "2026-05-28": [{ name: "Hari Raya Haji (Day 2) (regional holiday) (tentative)", note: "Kelantan, Terengganu" }],
+    "2026-05-30": [{ name: "Harvest Festival (regional holiday)", note: "Sabah, Labuan" }],
+    "2026-05-31": [
+      { name: "Second Day of Harvest Festival (regional holiday)", note: "Sabah, Labuan" },
+      { name: "Wesak Day", note: "Public holiday" }
+    ],
+    "2026-06-01": [
+      { name: "Second Day of Harvest Festival observed (regional holiday)", note: "Sabah, Labuan" },
+      { name: "The Yang di-Pertuan Agong's Birthday", note: "Public holiday" }
+    ],
+    "2026-06-17": [{ name: "Muharram (tentative)", note: "Public holiday" }],
+    "2026-08-25": [{ name: "The Prophet Muhammad's Birthday (tentative)", note: "Public holiday" }],
+    "2026-08-31": [{ name: "Malaysia's National Day", note: "Public holiday" }],
+    "2026-09-16": [{ name: "Malaysia Day", note: "Public holiday" }],
+    "2026-11-08": [{ name: "Diwali (regional holiday)", note: "Johor, Kedah, Kelantan, Malacca, Negeri Sembilan, Pahang, Penang, Perak, Perlis, Sabah, Selangor, Terengganu, Kuala Lumpur, Labuan, Putrajaya" }],
+    "2026-12-25": [{ name: "Christmas Day", note: "Public holiday" }]
+  };
 
 
     const $ = (sel) => document.querySelector(sel);
@@ -2123,13 +2377,14 @@
     const $aLoadChart = $("#aLoadChart");
     const $aLoadLegend = $("#aLoadLegend");
 
-    // Timeline refs (added)
-    const $tlList = $("#tlList");
-    const $tlQ = $("#tlQ");
-    const $tlStatus = $("#tlStatus");
-    const $tlCount = $("#tlCount");
-    const $tlEmpty = $("#tlEmpty");
-    const $tlCompact = $("#tlCompact");
+    // Schedule refs
+    const $schMonth = $("#schMonth");
+    const $schCurrentMonth = $("#schCurrentMonth");
+    const $schMonthInfo = $("#schMonthInfo");
+    const $schGrid = $("#schGrid");
+    const $schCount = $("#schCount");
+    const $schDayTitle = $("#schDayTitle");
+    const $schDayCards = $("#schDayCards");
 
     // Map refs (added)
     const $mapNote = $("#mapNote");
@@ -2166,7 +2421,7 @@
           if($viewJobs.classList.contains("active")) renderJobs();
           if($viewDir.classList.contains("active")){ rebuildDirectory(); renderDirectory(); }
           if($viewAna.classList.contains("active")) renderAnalytics();
-          if($viewTime.classList.contains("active")) renderTimeline();
+          if($viewTime.classList.contains("active")) renderSchedule();
           if($viewMap.classList.contains("active") && MAP_READY){
             setTimeout(()=> { try{ MAP.invalidateSize(true); } catch(e){} }, 60);
           }
@@ -2241,6 +2496,7 @@
 
 
     function statusClass(st){
+      if(st === "Assigned") return "s-assigned";
       if(st === "Pending") return "s-pending";
       if(st === "In Progress") return "s-progress";
       if(st === "Completed") return "s-done";
@@ -2491,7 +2747,7 @@ const fatMapped = fatJobs
 // JOBS = everything (for Jobs view)
 JOBS = dedupeByJobId(ctpMapped.concat(wdpMapped).concat(fatMapped));
 
-// ✅ Analytics/TAT only from Permohonan
+// âœ… Analytics/TAT only from Permohonan
 JOBS_PERMOHONAN = dedupeByJobId(ctpMapped);
 
 
@@ -2517,7 +2773,7 @@ if (resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)) {
     renderAnalytics();
     renderCompletedByNegeri();
 
-    renderTimeline();
+    renderSchedule(true);
     if ($viewMap.classList.contains("active")) {
       renderMapView();
     } else {
@@ -2534,7 +2790,7 @@ if (resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)) {
     rebuildDirectory();
     renderDirectory();
     renderAnalytics();
-    renderTimeline();
+    renderSchedule(true);
     $mapNote.textContent = "Offline";
     renderCompletedByNegeri();
   }
@@ -2714,7 +2970,7 @@ function dedupeByJobId(list){
             <div class="top">
               <div style="padding-right:30px;">
                 <h3 style="font-size:15px; white-space:normal;">${escapeHtml(p.name)}</h3>
-                <div style="font-size:12px; color:var(--muted); margin-top:4px;">${escapeHtml(p.rank)} • ${escapeHtml(p.role)}</div>
+                <div style="font-size:12px; color:var(--muted); margin-top:4px;">${escapeHtml(p.rank)} â€¢ ${escapeHtml(p.role)}</div>
               </div>
             </div>
             
@@ -2725,8 +2981,8 @@ function dedupeByJobId(list){
             </div>
 
             <div style="margin-top:12px; font-size:13px; color:var(--text); opacity:.9;">
-               ${p.phone ? `<div>📞 <a href="tel:${p.phone}" style="color:inherit;">${escapeHtml(p.phone)}</a></div>` : ""}
-               ${p.email ? `<div style="font-size:12px; opacity:.7; margin-top:4px;">✉️ ${escapeHtml(p.email)}</div>` : ""}
+               ${p.phone ? `<div>ðŸ“ž <a href="tel:${p.phone}" style="color:inherit;">${escapeHtml(p.phone)}</a></div>` : ""}
+               ${p.email ? `<div style="font-size:12px; opacity:.7; margin-top:4px;">âœ‰ï¸ ${escapeHtml(p.email)}</div>` : ""}
             </div>
           </div>
         </div>
@@ -2914,7 +3170,7 @@ function openDrawer(job){
         renderAnalytics();
       }
       if(isTime){
-        renderTimeline();
+        renderSchedule();
       }
       if(isMap){
         renderMapView();
@@ -3027,7 +3283,7 @@ function openDrawer(job){
                 <div class="top">
                   <div>
                     <h3 title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</h3>
-                    <div style="font-size:11px; color:var(--muted); margin-top:2px;">${escapeHtml(p.rank)} • ${escapeHtml(p.role)}</div>
+                    <div style="font-size:11px; color:var(--muted); margin-top:2px;">${escapeHtml(p.rank)} â€¢ ${escapeHtml(p.role)}</div>
                   </div>
                   <span class="tag" style="${stStyle}"><b>${escapeHtml(p.status)}</b></span>
                 </div>
@@ -3041,8 +3297,8 @@ function openDrawer(job){
                 </div>
                 <div class="load-label">Load level</div>
                 <div style="margin-top:8px; font-size:13px; color:var(--text); opacity:.9;">
-                   ${p.phone ? `<div>📞 ${escapeHtml(p.phone)}</div>` : ""}
-                   ${p.email ? `<div style="font-size:12px; opacity:.7;">✉️ ${escapeHtml(p.email)}</div>` : ""}
+                   ${p.phone ? `<div>ðŸ“ž ${escapeHtml(p.phone)}</div>` : ""}
+                   ${p.email ? `<div style="font-size:12px; opacity:.7;">âœ‰ï¸ ${escapeHtml(p.email)}</div>` : ""}
                 </div>
               </div>
             </div>
@@ -3327,7 +3583,7 @@ const tatItems = [
         }
 
         // Simple truncation if still too long
-        const short = (lab.length > 15 && !allowLongLabels) ? lab.slice(0,14)+"…" : lab;
+        const short = (lab.length > 15 && !allowLongLabels) ? lab.slice(0,14)+"â€¦" : lab;
         
         // Center the text
         const labW = ctx.measureText(short).width;
@@ -3341,9 +3597,21 @@ const tatItems = [
     }
 
     // ===== Events =====
-    $q.addEventListener("input", () => { renderJobs(); rebuildDirectory(); renderTimeline(); });
-    $status.addEventListener("change", () => { renderJobs(); rebuildDirectory(); renderTimeline(); });
-    if($month) $month.addEventListener("change", () => { renderJobs(); rebuildDirectory(); renderTimeline(); });
+    $q.addEventListener("input", () => {
+      renderJobs();
+      rebuildDirectory();
+      if($viewTime.classList.contains("active")) renderSchedule();
+    });
+    $status.addEventListener("change", () => {
+      renderJobs();
+      rebuildDirectory();
+      if($viewTime.classList.contains("active")) renderSchedule();
+    });
+    if($month) $month.addEventListener("change", () => {
+      renderJobs();
+      rebuildDirectory();
+      if($viewTime.classList.contains("active")) renderSchedule();
+    });
     $refresh.addEventListener("click", loadData);
     $closeProfileModal.addEventListener("click", () => { $profileModal.classList.remove("open"); });
 
@@ -3376,99 +3644,390 @@ const tatItems = [
         if(name) openProfile(name);
       });
     }
+    if($schDayCards){
+      $schDayCards.addEventListener("click", (e) => {
+        const btn = e.target.closest(".sch-ins-link");
+        if(!btn) return;
+        const name = safe(btn.getAttribute("data-inspector"));
+        if(name) openProfile(name);
+      });
+    }
 
     window.addEventListener("keydown", (e) => {
       if(e.key === "Escape"){
         closeDrawer();
         toggleMenuDrawer(false);
       }
-    });
+    });    // ===== Schedule =====
+    function pad2(n){ return String(n).padStart(2, "0"); }
+    function toDayKey(d){ return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; }
+    function toMonthKey(d){ return `${d.getFullYear()}-${pad2(d.getMonth()+1)}`; }
 
-    // ===== Timeline (added) =====
-    function nowMarkerHtml(){
-      const d = new Date();
-      const label = d.toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" });
-      return `<div class="tl-now"><span>Today • ${escapeHtml(label)}</span></div>`;
+    function monthLabelFromKey(key){
+      const m = String(key || "").match(/^(\d{4})-(\d{2})$/);
+      if(!m) return key || "-";
+      const y = Number(m[1]);
+      const mon = Number(m[2]) - 1;
+      const d = new Date(y, mon, 1, 12, 0, 0, 0);
+      if(isNaN(d.getTime())) return key || "-";
+      return d.toLocaleDateString("en-GB", { month:"long", year:"numeric" });
     }
 
-    function tlMatches(j, q){
-      const hay = [
-        j.jobId, j.unit, j.jenis, j.daerah, j.negeri, j.zon,
-        j.assigned1, j.assigned2, j.status, j.priority
-      ].map(safe).join(" ").toLowerCase();
-      return hay.includes(q.toLowerCase());
+    function parseMonthKey(key){
+      const m = String(key || "").match(/^(\d{4})-(\d{2})$/);
+      if(!m) return null;
+      const y = Number(m[1]);
+      const mon = Number(m[2]);
+      if(!Number.isFinite(y) || !Number.isFinite(mon) || mon < 1 || mon > 12) return null;
+      return { y, mon };
     }
 
-    function timelineList(){
-      const q = safe($tlQ.value);
-      const st = safe($tlStatus.value);
+    function getHolidayEvents(dayKey){
+      return MALAYSIA_HOLIDAYS_2026[dayKey] || [];
+    }
 
-      let list = [...JOBS];
-      if(st) list = list.filter(j => safe(j.status) === st);
-      if(q) list = list.filter(j => tlMatches(j, q));
+    function getSalaryEvent(dayKey){
+      return SALARY_DATES_2026[dayKey] || null;
+    }
 
-      list.sort((a,b)=>{
-const da = parseDateSmart(a.tarikhTugasan);
-const db = parseDateSmart(b.tarikhTugasan);
-const ta = da ? da.getTime() : 0;
-const tb = db ? db.getTime() : 0;
-return tb - ta;
+    function getSpecialDaySet(monthKey){
+      const set = new Set();
+      Object.keys(MALAYSIA_HOLIDAYS_2026).forEach(k => {
+        if(k.startsWith(monthKey + "-")) set.add(k);
+      });
+      Object.keys(SALARY_DATES_2026).forEach(k => {
+        if(k.startsWith(monthKey + "-")) set.add(k);
+      });
+      return set;
+    }
 
-        return tb - ta;
+    function renderScheduleInspectorLink(name){
+      const n = safe(name);
+      if(!n || normalizeText(n) === "unassigned" || n === "-"){
+        return `<span style="opacity:.5;">Unassigned</span>`;
+      }
+      const exists = INSPECTORS.some(i => normalizeText(i.name) === normalizeText(n));
+      if(exists){
+        return `<button type="button" class="sch-ins-link" data-inspector="${escapeHtml(n)}">${escapeHtml(n)}</button>`;
+      }
+      return escapeHtml(n);
+    }
+
+    function scheduleStatusBucket(status){
+      const s = normalizeText(status);
+      if(!s) return "";
+      if(s.includes("completed") || s.includes("selesai")) return "completed";
+      if(s.includes("in progress") || s.includes("progress")) return "progress";
+      if(s.includes("assigned") || s.includes("ditugas")) return "assigned";
+      return "";
+    }
+
+    function hasAssignedInspector(job){
+      const a1 = normalizeText(job.assigned1);
+      const a2 = normalizeText(job.assigned2);
+      const invalid = new Set(["", "-", "none", "unassigned"]);
+      return !invalid.has(a1) || !invalid.has(a2);
+    }
+
+    function scheduleDateRange(job){
+      let start = parseDateSmart(job.tarikhTugasan) || parseDateSmart(job.timestamp);
+      if(!start) return null;
+      let end = parseDateSmart(job.endDate) || start;
+      start = new Date(start.getFullYear(), start.getMonth(), start.getDate(), 12, 0, 0, 0);
+      end = new Date(end.getFullYear(), end.getMonth(), end.getDate(), 12, 0, 0, 0);
+      if(end.getTime() < start.getTime()){
+        const tmp = start;
+        start = end;
+        end = tmp;
+      }
+      return { start, end };
+    }
+
+    function expandDayKeys(start, end){
+      const out = [];
+      const cur = new Date(start.getFullYear(), start.getMonth(), start.getDate(), 12, 0, 0, 0);
+      const last = new Date(end.getFullYear(), end.getMonth(), end.getDate(), 12, 0, 0, 0);
+      for(let i = 0; i < 370 && cur.getTime() <= last.getTime(); i++){
+        out.push(toDayKey(cur));
+        cur.setDate(cur.getDate() + 1);
+      }
+      return out;
+    }
+
+    function getSchedulableJobs(){
+      return JOBS.filter(j => {
+        const bucket = scheduleStatusBucket(j.status);
+        if(!bucket) return false;
+        if(!hasAssignedInspector(j)) return false;
+        return !!scheduleDateRange(j);
+      });
+    }
+
+    function getScheduleMonthKeys(){
+      const nowKey = toMonthKey(new Date());
+      const set = new Set([nowKey]);
+      getSchedulableJobs().forEach(j => {
+        const range = scheduleDateRange(j);
+        if(!range) return;
+        const from = new Date(range.start.getFullYear(), range.start.getMonth(), 1, 12, 0, 0, 0);
+        const to = new Date(range.end.getFullYear(), range.end.getMonth(), 1, 12, 0, 0, 0);
+        for(let i = 0, cur = new Date(from); i < 60 && cur.getTime() <= to.getTime(); i++){
+          set.add(toMonthKey(cur));
+          cur.setMonth(cur.getMonth() + 1);
+        }
+      });
+      return Array.from(set).sort((a,b) => a < b ? 1 : -1);
+    }
+
+    function renderScheduleMonthOptions(forceCurrent=false){
+      if(!$schMonth) return;
+      const nowKey = toMonthKey(new Date());
+      const keys = getScheduleMonthKeys();
+      $schMonth.innerHTML = keys.map(k => `<option value="${escapeHtml(k)}">${escapeHtml(monthLabelFromKey(k))}</option>`).join("");
+      if(forceCurrent || !SCH_MONTH_KEY || !keys.includes(SCH_MONTH_KEY)){
+        SCH_MONTH_KEY = keys.includes(nowKey) ? nowKey : (keys[0] || nowKey);
+      }
+      const hasSelected = Array.from($schMonth.options || []).some(o => safe(o.value) === SCH_MONTH_KEY);
+      if(!hasSelected){
+        SCH_MONTH_KEY = keys[0] || nowKey;
+      }
+      $schMonth.value = SCH_MONTH_KEY;
+    }
+
+    function buildScheduleDayMap(monthKey){
+      const map = new Map();
+      const monthJobs = new Map();
+      getSchedulableJobs().forEach(j => {
+        const bucket = scheduleStatusBucket(j.status);
+        const range = scheduleDateRange(j);
+        if(!bucket || !range) return;
+        const dayKeys = expandDayKeys(range.start, range.end);
+        dayKeys.forEach(k => {
+          if(!k.startsWith(monthKey + "-")) return;
+          if(!map.has(k)){
+            map.set(k, { jobs: [], statuses: new Set(), counts: { assigned: 0, progress: 0, completed: 0 } });
+          }
+          const rec = map.get(k);
+          rec.jobs.push(j);
+          rec.statuses.add(bucket);
+          rec.counts[bucket] = (rec.counts[bucket] || 0) + 1;
+          monthJobs.set(safe(j.jobId), j);
+        });
+      });
+      return { map, monthJobs: Array.from(monthJobs.values()) };
+    }
+
+    function statusOrderForSchedule(st){
+      const bucket = scheduleStatusBucket(st);
+      if(bucket === "progress") return 0;
+      if(bucket === "assigned") return 1;
+      if(bucket === "completed") return 2;
+      return 9;
+    }
+
+    function renderScheduleDayCards(dayKey){
+      if(!$schDayCards || !$schDayTitle) return;
+      const dateObj = parseDateSmart(dayKey);
+      const pretty = dateObj ? dateObj.toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" }) : "-";
+      const rec = SCH_DAY_MAP.get(dayKey);
+      const holidays = getHolidayEvents(dayKey);
+      const salary = getSalaryEvent(dayKey);
+      const jobs = rec && Array.isArray(rec.jobs) ? rec.jobs : [];
+
+      const list = [...jobs].sort((a, b) => {
+        const byStatus = statusOrderForSchedule(a.status) - statusOrderForSchedule(b.status);
+        if(byStatus !== 0) return byStatus;
+        return safe(a.jobId).localeCompare(safe(b.jobId));
       });
 
-      return list;
-    }
+      const badges = [];
+      if(holidays.length) badges.push(`${holidays.length} cuti`);
+      if(salary) badges.push("hari gaji");
+      $schDayTitle.textContent = `${pretty} (${list.length} job${list.length === 1 ? "" : "s"}${badges.length ? `, ${badges.join(", ")}` : ""})`;
 
-            function renderTimeline(){
-      const list = timelineList();
-      $tlCount.textContent = `${list.length} items`;
-
-      if(!list.length){
-        $tlList.innerHTML = "";
-        $tlEmpty.style.display = "block";
-        return;
+      const specialBlocks = [];
+      if(holidays.length){
+        specialBlocks.push(`
+          <section class="sch-special-card">
+            <h4 class="sch-special-title">Cuti Malaysia</h4>
+            ${holidays.map(h => `
+              <div class="sch-special-row">
+                <b>${escapeHtml(h.name || "Public Holiday")}</b>
+                ${h.note ? `<div style="color:var(--muted); margin-top:2px;">${escapeHtml(h.note)}</div>` : ""}
+              </div>
+            `).join("")}
+          </section>
+        `);
       }
-      $tlEmpty.style.display = "none";
+      if(salary){
+        specialBlocks.push(`
+          <section class="sch-special-card">
+            <h4 class="sch-special-title">Tarikh Pembayaran Emolumen</h4>
+            <div class="sch-special-row"><b>${escapeHtml(salary.title || "Tarikh Gaji")}</b></div>
+            <div class="sch-special-row">Hari: ${escapeHtml(salary.day || "-")}</div>
+            ${salary.note ? `<div class="sch-special-row" style="color:var(--muted);">${escapeHtml(salary.note)}</div>` : ""}
+          </section>
+        `);
+      }
 
-      const html = nowMarkerHtml() + list.map(j=>{
+      const jobCards = list.map(j => {
         const loc = `${safe(j.daerah)}, ${safe(j.negeri)}`.replace(/^,\s*|,\s*$/g, "");
-        const stClass = statusClass(j.status);
+        const assignedHtml = [
+          renderScheduleInspectorLink(j.assigned1),
+          renderScheduleInspectorLink(j.assigned2)
+        ].join(" / ");
+        const start = formatDate(j.tarikhTugasan);
+        const end = formatDate(j.endDate);
+        const range = (safe(j.endDate) && safe(j.endDate) !== safe(j.tarikhTugasan)) ? `${start} - ${end}` : start;
+        const chipClass = statusClass(j.status) || (scheduleStatusBucket(j.status) === "assigned" ? "s-assigned" : "");
         return `
-          <div class="tl-item">
-            <div class="tl-top">
+          <article class="sch-card">
+            <div class="sch-card-top">
               <div>
-                <div class="tl-title">${escapeHtml(j.jobId || "JOB")}</div>
-                <div class="tl-sub">${escapeHtml(j.unit)} • ${escapeHtml(j.jenis)}</div>
+                <div class="sch-card-id">${escapeHtml(safe(j.jobId) || "JOB")}</div>
+                <div class="sch-card-unit">${escapeHtml(safe(j.unit) || "-")}</div>
               </div>
-              <div class="tl-meta">
-                <span class="chip ${stClass}"><span class="dot"></span>${escapeHtml(j.status || "-")}</span>
-                <span class="chip"><span class="dot"></span>${escapeHtml(formatDate(j.tarikhTugasan))}</span>
-              </div>
+              <span class="chip ${chipClass}">
+                <span class="dot"></span>${escapeHtml(safe(j.status) || "-")}
+              </span>
             </div>
-            <div class="tl-sub">
-              <b>Lokasi:</b> ${escapeHtml(loc || "-")} &nbsp; <span style="opacity:.7;">(${escapeHtml(j.zon || "Zon -")})</span>
-            </div>
-            <div class="tl-sub">
-              <b>Pemeriksa:</b> ${escapeHtml(j.assigned1 || "Unassigned")} , ${escapeHtml(j.assigned2 || "Unassigned")}
-            </div>
-            <div class="tl-extra">
-              <div class="tl-sub"><b>Priority:</b> ${escapeHtml(j.priority || "-")}</div>
-              <div class="tl-sub"><b>Tarikh Permohonan:</b> ${escapeHtml(formatDate(j.timestamp))}</div>
-            </div>
-          </div>
+            <div class="sch-card-sub"><b>Jenis:</b> ${escapeHtml(safe(j.jenis) || "-")}</div>
+            <div class="sch-card-sub"><b>Pemeriksa:</b> ${assignedHtml}</div>
+            <div class="sch-card-sub"><b>Lokasi:</b> ${escapeHtml(loc || "-")} (${escapeHtml(safe(j.zon) || "-")})</div>
+            <div class="sch-card-sub"><b>Tarikh:</b> ${escapeHtml(range || "-")}</div>
+          </article>
         `;
       }).join("");
 
-      $tlList.innerHTML = html;
+      if(!specialBlocks.length && !jobCards){
+        $schDayCards.innerHTML = `<div class="mini-note">Tiada tugasan dijadualkan pada tarikh ini.</div>`;
+        return;
+      }
+      $schDayCards.innerHTML = specialBlocks.join("") + jobCards;
     }
 
-    $tlQ.addEventListener("input", renderTimeline);
-    $tlStatus.addEventListener("change", renderTimeline);
-    if($tlCompact){
-      $tlCompact.addEventListener("click", () => {
-        const on = $tlList.classList.toggle("compact");
-        $tlCompact.textContent = on ? "Comfort" : "Compact";
+    function renderScheduleCalendar(){
+      if(!$schGrid) return;
+      const parsed = parseMonthKey(SCH_MONTH_KEY);
+      if(!parsed){
+        $schGrid.innerHTML = `<div class="mini-note">Bulan tidak sah.</div>`;
+        if($schDayCards) $schDayCards.innerHTML = `<div class="mini-note">Tiada data.</div>`;
+        if($schCount) $schCount.textContent = "0 job(s)";
+        return;
+      }
+
+      const { y, mon } = parsed;
+      const first = new Date(y, mon - 1, 1, 12, 0, 0, 0);
+      const daysInMonth = new Date(y, mon, 0, 12, 0, 0, 0).getDate();
+      const offset = (first.getDay() + 6) % 7;
+
+      const built = buildScheduleDayMap(SCH_MONTH_KEY);
+      SCH_DAY_MAP = built.map;
+      const specialDaySet = getSpecialDaySet(SCH_MONTH_KEY);
+      if($schCount) $schCount.textContent = `${built.monthJobs.length} job(s)`;
+      if($schMonthInfo) $schMonthInfo.textContent = monthLabelFromKey(SCH_MONTH_KEY);
+
+      const todayKey = toDayKey(new Date());
+      if(!SCH_SELECTED_DAY || !SCH_SELECTED_DAY.startsWith(SCH_MONTH_KEY + "-")){
+        const hasTodayJob = SCH_DAY_MAP.has(todayKey);
+        const hasTodaySpecial = specialDaySet.has(todayKey);
+        if(todayKey.startsWith(SCH_MONTH_KEY + "-") && (hasTodayJob || hasTodaySpecial)){
+          SCH_SELECTED_DAY = todayKey;
+        }else{
+          const marked = new Set([...SCH_DAY_MAP.keys(), ...specialDaySet]);
+          if(marked.size > 0){
+            SCH_SELECTED_DAY = Array.from(marked).sort()[0];
+          }else{
+            SCH_SELECTED_DAY = `${SCH_MONTH_KEY}-01`;
+          }
+        }
+      }
+      if(!SCH_SELECTED_DAY.startsWith(SCH_MONTH_KEY + "-")){
+        const marked = new Set([...SCH_DAY_MAP.keys(), ...specialDaySet]);
+        if(marked.size > 0){
+          SCH_SELECTED_DAY = Array.from(marked).sort()[0];
+        }else{
+          SCH_SELECTED_DAY = `${SCH_MONTH_KEY}-01`;
+        }
+      }
+
+      const cells = [];
+      for(let i=0; i<offset; i++){
+        cells.push(`<button class="sch-day out" type="button" tabindex="-1" aria-hidden="true"></button>`);
+      }
+
+      for(let d=1; d<=daysInMonth; d++){
+        const dayKey = `${SCH_MONTH_KEY}-${pad2(d)}`;
+        const rec = SCH_DAY_MAP.get(dayKey);
+        const holidays = getHolidayEvents(dayKey);
+        const salary = getSalaryEvent(dayKey);
+        const hasHoliday = holidays.length > 0;
+        const hasSalary = !!salary;
+        const statuses = rec ? Array.from(rec.statuses) : [];
+        const count = rec ? rec.jobs.length : 0;
+        const dots = [
+          statuses.includes("assigned") ? `<i class="sch-dot sch-dot-assigned"></i>` : "",
+          statuses.includes("progress") ? `<i class="sch-dot sch-dot-progress"></i>` : "",
+          statuses.includes("completed") ? `<i class="sch-dot sch-dot-completed"></i>` : "",
+          hasHoliday ? `<i class="sch-dot sch-dot-holiday"></i>` : "",
+          hasSalary ? `<i class="sch-dot sch-dot-salary"></i>` : ""
+        ].join("");
+        const flags = [
+          hasHoliday ? `<span class="sch-flag sch-flag-h">CUTI</span>` : "",
+          hasSalary ? `<span class="sch-flag sch-flag-s">GAJI</span>` : ""
+        ].join("");
+        const classes = [
+          "sch-day",
+          (rec || hasHoliday || hasSalary) ? "has-jobs" : "",
+          dayKey === SCH_SELECTED_DAY ? "selected" : "",
+          dayKey === todayKey ? "today" : ""
+        ].filter(Boolean).join(" ");
+        cells.push(`
+          <button class="${classes}" type="button" data-day="${escapeHtml(dayKey)}" aria-label="${escapeHtml(dayKey)}">
+            <span class="sch-num">${d}</span>
+            ${flags ? `<span class="sch-flags">${flags}</span>` : ""}
+            <span class="sch-markers">${dots}${count ? `<span class="sch-count">${count}</span>` : ""}</span>
+          </button>
+        `);
+      }
+
+      const totalCells = Math.ceil(cells.length / 7) * 7;
+      for(let i=cells.length; i<totalCells; i++){
+        cells.push(`<button class="sch-day out" type="button" tabindex="-1" aria-hidden="true"></button>`);
+      }
+
+      $schGrid.innerHTML = cells.join("");
+      renderScheduleDayCards(SCH_SELECTED_DAY);
+    }
+
+    function renderSchedule(forceCurrentMonth=false){
+      if(!$schMonth || !$schGrid || !$schDayCards) return;
+      renderScheduleMonthOptions(forceCurrentMonth);
+      renderScheduleCalendar();
+    }
+
+    if($schGrid){
+      $schGrid.addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-day]");
+        if(!btn) return;
+        const day = safe(btn.getAttribute("data-day"));
+        if(!day) return;
+        SCH_SELECTED_DAY = day;
+        renderScheduleCalendar();
+      });
+    }
+    if($schMonth){
+      $schMonth.addEventListener("change", () => {
+        SCH_MONTH_KEY = safe($schMonth.value);
+        SCH_SELECTED_DAY = "";
+        renderScheduleCalendar();
+      });
+    }
+    if($schCurrentMonth){
+      $schCurrentMonth.addEventListener("click", () => {
+        SCH_MONTH_KEY = toMonthKey(new Date());
+        SCH_SELECTED_DAY = "";
+        renderSchedule(true);
       });
     }
 
@@ -3549,7 +4108,7 @@ return tb - ta;
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 18,
-        attribution: "© OpenStreetMap"
+        attribution: "Â© OpenStreetMap"
       }).addTo(MAP);
 
       PIN_LAYER = L.layerGroup().addTo(MAP);
@@ -3577,8 +4136,8 @@ return tb - ta;
         <div style="min-width:240px;">
           <div style="font-weight:1000; letter-spacing:.2px;">${escapeHtml(job.unit || "-")}</div>
           <div style="color:var(--muted); font-size:12px; margin-top:2px;">${escapeHtml(job.jenis || "-")}</div>
-          <div style="color:var(--muted); font-size:12px; margin-top:6px;">📍 ${escapeHtml(loc || "-")}</div>
-          <div style="color:var(--text); font-size:12px; margin-top:4px; font-weight:700;">📅 ${escapeHtml(dateDisplay)}</div>
+          <div style="color:var(--muted); font-size:12px; margin-top:6px;">ðŸ“ ${escapeHtml(loc || "-")}</div>
+          <div style="color:var(--text); font-size:12px; margin-top:4px; font-weight:700;">ðŸ“… ${escapeHtml(dateDisplay)}</div>
 
           <div style="display:flex; gap:10px; margin-top:10px; align-items:flex-start;">
             <div style="display:flex; gap:6px;">
@@ -3725,7 +4284,7 @@ return tb - ta;
       }
     }
 
-    // ===== Added: keep existing job filters, but timeline is independent =====
+    // ===== Added: keep existing job filters, while schedule remains independent =====
 
     initTheme();
     setToday();
