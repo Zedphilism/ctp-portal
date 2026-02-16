@@ -1896,7 +1896,7 @@
         <div class="controls">
           <div class="controls-left">
             <div class="input" title="Search by Job ID, Unit, Location, Inspector">
-              <span style="opacity:.85;">ðŸ”Ž</span>
+              <span style="opacity:.85;">&#128269;</span>
               <input id="q" type="text" placeholder="Search Job ID, Unit, Lokasi, Pemeriksa" />
             </div>
 
@@ -1949,7 +1949,7 @@
                 <th>Unit / Pasukan</th>
                 <th>Jenis Pemeriksaan</th>
                 <th>Lokasi</th>
-                <th>Tarikh Tugasan</th>
+                <th>Tarikh Penugasan</th>
                 <th>Status</th>
                 <th>Assigned Inspectors</th>
                 <th>Action</th>
@@ -1979,7 +1979,7 @@
             <div class="controls" style="margin-top:12px;">
               <div class="controls-left" style="width:100%;">
                 <div class="input" title="Search inspector name">
-                  <span style="opacity:.85;">ðŸ”Ž</span>
+                  <span style="opacity:.85;">&#128269;</span>
                   <input id="dirQ" type="text" placeholder="Search inspector name / specialization / zone" />
                 </div>
                 <select class="select" id="dirSpec" title="Filter by specialization">
@@ -2033,7 +2033,7 @@
         <div class="card stat">
           <div class="label">Completion Rate</div>
           <div class="value" id="aRate">0%</div>
-          <div class="hint">Completed Ã· visible</div>
+          <div class="hint">Completed / visible</div>
         </div>
         <div class="card stat">
           <div class="label">Top Negeri</div>
@@ -2182,8 +2182,8 @@
         </div>
 
         <div class="mini-note">
-          ðŸ”µ Pins: In Progress only. Click to view details.<br>
-          ðŸ”¥ Heat: workload density based on all jobs (Pending, In Progress, Completed, Cancelled).
+          Pins: In Progress only. Click to view details.<br>
+          Heat: workload density based on all jobs (Pending, In Progress, Completed, Cancelled).
         </div>
 
         <section class="map-completed">
@@ -2203,7 +2203,7 @@
         <h2 id="dTitle">JOB</h2>
         <p id="dSub">Select a job to view details</p>
       </div>
-      <button class="icon-btn" id="closeDrawer" title="Close">âœ•</button>
+      <button class="icon-btn" id="closeDrawer" title="Close">&times;</button>
     </div>
 
     <div class="drawer-body">
@@ -2230,7 +2230,7 @@
   </aside>
 
   <div class="modal-wrap" id="profileModal">
-    <button class="modal-close" id="closeProfileModal">âœ•</button>
+    <button class="modal-close" id="closeProfileModal">&times;</button>
     <div id="profileContent"></div>
   </div>
 
@@ -2630,7 +2630,7 @@ function mapRowToJob(row, sourceTab){
       const zon = pick(row, ["Zon","zon"]);
       
       // Date fields
-      const tarikhTugasan = pick(row, ["Tarikh Tugasan","Tarikh ditugaskan","Assigned Date","Tarikh","tarikh"]);
+      const tarikhTugasan = pick(row, ["Tarikh Penugasan","Tarikh ditugaskan","Assigned Date","Tarikh","tarikh"]);
       const endDate = pick(row, ["End Date", "Tarikh Tamat", "EndDate"]); // <--- NEW
       const timestamp = pick(row, ["Timestamp", "Tarikh Permohonan"]);    // <--- NEW
 
@@ -2746,8 +2746,7 @@ const fatMapped = fatJobs
 
 // JOBS = everything (for Jobs view)
 JOBS = dedupeByJobId(ctpMapped.concat(wdpMapped).concat(fatMapped));
-
-// âœ… Analytics/TAT only from Permohonan
+// Analytics/TAT only from Permohonan
 JOBS_PERMOHONAN = dedupeByJobId(ctpMapped);
 
 
@@ -2970,7 +2969,7 @@ function dedupeByJobId(list){
             <div class="top">
               <div style="padding-right:30px;">
                 <h3 style="font-size:15px; white-space:normal;">${escapeHtml(p.name)}</h3>
-                <div style="font-size:12px; color:var(--muted); margin-top:4px;">${escapeHtml(p.rank)} â€¢ ${escapeHtml(p.role)}</div>
+                <div style="font-size:12px; color:var(--muted); margin-top:4px;">${escapeHtml(p.rank)} &middot; ${escapeHtml(p.role)}</div>
               </div>
             </div>
             
@@ -2981,8 +2980,8 @@ function dedupeByJobId(list){
             </div>
 
             <div style="margin-top:12px; font-size:13px; color:var(--text); opacity:.9;">
-               ${p.phone ? `<div>ðŸ“ž <a href="tel:${p.phone}" style="color:inherit;">${escapeHtml(p.phone)}</a></div>` : ""}
-               ${p.email ? `<div style="font-size:12px; opacity:.7; margin-top:4px;">âœ‰ï¸ ${escapeHtml(p.email)}</div>` : ""}
+               ${p.phone ? `<div>&#128222; <a href="tel:${p.phone}" style="color:inherit;">${escapeHtml(p.phone)}</a></div>` : ""}
+               ${p.email ? `<div style="font-size:12px; opacity:.7; margin-top:4px;">&#9993; ${escapeHtml(p.email)}</div>` : ""}
             </div>
           </div>
         </div>
@@ -3283,7 +3282,7 @@ function openDrawer(job){
                 <div class="top">
                   <div>
                     <h3 title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</h3>
-                    <div style="font-size:11px; color:var(--muted); margin-top:2px;">${escapeHtml(p.rank)} â€¢ ${escapeHtml(p.role)}</div>
+                    <div style="font-size:11px; color:var(--muted); margin-top:2px;">${escapeHtml(p.rank)} &middot; ${escapeHtml(p.role)}</div>
                   </div>
                   <span class="tag" style="${stStyle}"><b>${escapeHtml(p.status)}</b></span>
                 </div>
@@ -3297,8 +3296,8 @@ function openDrawer(job){
                 </div>
                 <div class="load-label">Load level</div>
                 <div style="margin-top:8px; font-size:13px; color:var(--text); opacity:.9;">
-                   ${p.phone ? `<div>ðŸ“ž ${escapeHtml(p.phone)}</div>` : ""}
-                   ${p.email ? `<div style="font-size:12px; opacity:.7;">âœ‰ï¸ ${escapeHtml(p.email)}</div>` : ""}
+                   ${p.phone ? `<div>&#128222; ${escapeHtml(p.phone)}</div>` : ""}
+                   ${p.email ? `<div style="font-size:12px; opacity:.7;">&#9993; ${escapeHtml(p.email)}</div>` : ""}
                 </div>
               </div>
             </div>
@@ -3583,7 +3582,7 @@ const tatItems = [
         }
 
         // Simple truncation if still too long
-        const short = (lab.length > 15 && !allowLongLabels) ? lab.slice(0,14)+"â€¦" : lab;
+        const short = (lab.length > 15 && !allowLongLabels) ? lab.slice(0,14)+"..." : lab;
         
         // Center the text
         const labW = ctx.measureText(short).width;
@@ -4108,7 +4107,7 @@ const tatItems = [
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 18,
-        attribution: "Â© OpenStreetMap"
+        attribution: "&copy; OpenStreetMap"
       }).addTo(MAP);
 
       PIN_LAYER = L.layerGroup().addTo(MAP);
@@ -4136,9 +4135,8 @@ const tatItems = [
         <div style="min-width:240px;">
           <div style="font-weight:1000; letter-spacing:.2px;">${escapeHtml(job.unit || "-")}</div>
           <div style="color:var(--muted); font-size:12px; margin-top:2px;">${escapeHtml(job.jenis || "-")}</div>
-          <div style="color:var(--muted); font-size:12px; margin-top:6px;">ðŸ“ ${escapeHtml(loc || "-")}</div>
-          <div style="color:var(--text); font-size:12px; margin-top:4px; font-weight:700;">ðŸ“… ${escapeHtml(dateDisplay)}</div>
-
+          <div style="color:var(--muted); font-size:12px; margin-top:6px;">&#128205; ${escapeHtml(loc || "-")}</div>
+          <div style="color:var(--text); font-size:12px; margin-top:4px; font-weight:700;">&#128197; ${escapeHtml(dateDisplay)}</div>
           <div style="display:flex; gap:10px; margin-top:10px; align-items:flex-start;">
             <div style="display:flex; gap:6px;">
               ${p1 ? img(p1, job.assigned1) : ""}
@@ -4292,3 +4290,4 @@ const tatItems = [
   </script>
 </body>
 </html>
+
