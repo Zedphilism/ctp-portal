@@ -311,9 +311,12 @@
     function normalizeRows(rows){
       return (rows || []).map(r => {
         const tarikh = r.Tarikh || r.tarikh || r.date || r.Date || "";
-        const link = r.Link || r.link || r.URL || r.url || "";
-        return { tarikh:String(tarikh || ""), link:String(link || "") };
-      }).filter(r => r.link.trim()).sort((a,b) => {
+        const link = r.Link || r.link || r.title || r.name || "";
+        const linkUrl = r.LinkUrl || r.linkUrl || r.URL || r.url || "";
+        const text = String(link || linkUrl || "").trim();
+        const url = String(linkUrl || link || "").trim();
+        return { tarikh:String(tarikh || ""), link:text, linkUrl:url };
+      }).filter(r => r.linkUrl.trim()).sort((a,b) => {
         const da = parseDate(a.tarikh), db = parseDate(b.tarikh);
         if(da && db) return db - da;
         if(db) return 1;
@@ -330,7 +333,7 @@
       rowsBody.innerHTML = stateRows.map((r, i) => `
         <tr data-i="${i}" class="${selectedIdx === i ? "active" : ""}">
           <td>${safeText(dateLabel(r.tarikh))}</td>
-          <td><div class="link-clamp">${safeText(r.link)}</div></td>
+          <td><div class="link-clamp">${safeText(r.link || r.linkUrl)}</div></td>
         </tr>
       `).join("");
     }
@@ -340,12 +343,13 @@
       if(!row) return;
       selectedIdx = i;
       renderRows();
-      const preview = toPreviewUrl(row.link);
-      const dl = toDownloadUrl(row.link);
+      const source = row.linkUrl || row.link;
+      const preview = toPreviewUrl(source);
+      const dl = toDownloadUrl(source);
       viewerMeta.textContent = `Tarikh: ${dateLabel(row.tarikh)}`;
-      openBtn.href = preview || row.link;
-      downloadBtn.href = dl || row.link;
-      pdfFrame.src = preview || row.link;
+      openBtn.href = preview || source;
+      downloadBtn.href = dl || source;
+      pdfFrame.src = preview || source;
       pdfFrame.style.display = "";
       emptyState.style.display = "none";
     }
