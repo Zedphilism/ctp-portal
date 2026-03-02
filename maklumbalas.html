@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="ms">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Maklumbalas | Sistem Pemantauan Pemeriksaan</title>
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --panel:#0f1620;
+      --text:#e7eef8;
+      --muted:#9fb0c6;
+      --line:rgba(255,255,255,.08);
+      --accent:#3aa0ff;
+      --shadow:0 20px 60px rgba(0,0,0,.45);
+      --radius:18px;
+    }
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(900px 520px at 20% 8%, rgba(58,160,255,.14), transparent 62%),
+        radial-gradient(760px 520px at 82% 18%, rgba(42,170,104,.12), transparent 58%),
+        var(--bg);
+      padding:20px;
+    }
+    body.theme-light{
+      --bg:#e8eef6;
+      --panel:#f3f7fc;
+      --text:#17212f;
+      --muted:#5a6a7f;
+      --line:rgba(9,28,54,.14);
+      --accent:#2f87dc;
+      --shadow:0 18px 40px rgba(8,28,54,.18);
+    }
+    body.theme-dark{
+      --bg:#0b0f14;
+      --panel:#0f1620;
+      --text:#e7eef8;
+      --muted:#9fb0c6;
+      --line:rgba(255,255,255,.08);
+      --accent:#3aa0ff;
+      --shadow:0 20px 60px rgba(0,0,0,.45);
+    }
+    .theme-fab{ position:fixed; top:20px; left:20px; z-index:20; }
+    .theme-switch{ border:0; padding:0; background:transparent; cursor:pointer; line-height:0; }
+    .theme-track{
+      position:relative; width:86px; height:40px; border-radius:999px; display:block; overflow:hidden;
+      border:1px solid rgba(255,255,255,.12);
+      background: linear-gradient(165deg, #7d848e 0%, #4c525d 100%);
+      box-shadow: inset 0 2px 2px rgba(255,255,255,.14), inset 0 -6px 12px rgba(0,0,0,.35), 0 7px 14px rgba(0,0,0,.25);
+    }
+    .theme-track::before{
+      content:""; position:absolute; inset:3px; border-radius:999px; z-index:1;
+      background: linear-gradient(180deg, #757d88 0%, #5a616d 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.16), inset 0 -3px 6px rgba(0,0,0,.24);
+    }
+    .theme-thumb{
+      position:absolute; top:4px; left:4px; width:37px; height:32px; border-radius:999px; z-index:2;
+      background: linear-gradient(170deg, #181e26 0%, #10151c 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08), inset 0 -2px 5px rgba(0,0,0,.5), 0 3px 10px rgba(0,0,0,.34);
+      transition: transform .32s ease;
+    }
+    body.theme-light .theme-thumb{
+      transform:translateX(41px);
+      background: linear-gradient(170deg, #e4ebf7 0%, #d2dcea 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.85), inset 0 -3px 5px rgba(9,35,67,.16), 0 3px 10px rgba(6,31,66,.22);
+    }
+    .theme-icon{ position:absolute; top:50%; width:16px; height:16px; transform:translateY(-50%); z-index:3; color:#9ba3ad; }
+    .theme-icon-sun{ left:12px; }
+    .theme-icon-moon{ right:12px; }
+    body.theme-dark .theme-icon-moon{ color:#a9d0ff; text-shadow:0 0 8px rgba(74,156,255,.8); }
+    body.theme-light .theme-icon-sun{ color:#fff; text-shadow:0 0 10px rgba(255,255,255,.95); }
+
+    .shell{ max-width:1280px; margin:78px auto 0; }
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+    .title{ font-size:clamp(1.2rem, 2vw, 1.6rem); font-weight:900; letter-spacing:.2px; margin:0; }
+    .sub{ color:var(--muted); margin:4px 0 0; font-size:.95rem; }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      padding:10px 14px; border-radius:12px; border:1px solid var(--line);
+      background:rgba(255,255,255,.05); color:var(--text); text-decoration:none; cursor:pointer;
+      font-weight:700;
+    }
+    body.theme-light .btn{ background:rgba(255,255,255,.72); }
+    .btn:hover{ border-color:rgba(58,160,255,.45); }
+    .layout{ display:grid; grid-template-columns: 360px minmax(0,1fr); gap:14px; }
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow);
+    }
+    body.theme-light .card{ background:linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.64)); }
+    .card-h{ padding:14px 16px; border-bottom:1px solid var(--line); font-weight:900; }
+    .card-b{ padding:12px; }
+    .status{ color:var(--muted); font-size:.9rem; margin-bottom:10px; }
+    .config{ display:flex; gap:8px; margin-bottom:10px; }
+    .input{
+      width:100%; border-radius:10px; border:1px solid var(--line);
+      background:rgba(255,255,255,.03); color:var(--text); padding:9px 10px; outline:none;
+    }
+    body.theme-light .input{ background:rgba(255,255,255,.7); }
+    .table-wrap{ max-height:65vh; overflow:auto; border:1px solid var(--line); border-radius:12px; }
+    table{ width:100%; border-collapse:collapse; }
+    th, td{ padding:10px; border-bottom:1px solid var(--line); text-align:left; font-size:.9rem; }
+    th{ position:sticky; top:0; background:rgba(8,18,31,.94); z-index:1; }
+    body.theme-light th{ background:rgba(235,242,251,.95); }
+    tr{ cursor:pointer; }
+    tr:hover{ background:rgba(58,160,255,.1); }
+    tr.active{ background:rgba(58,160,255,.2); }
+    .link-clamp{
+      max-width:190px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      color:var(--accent);
+    }
+    .viewer-head{ display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap; padding:12px 14px; border-bottom:1px solid var(--line); }
+    .viewer-meta{ color:var(--muted); font-size:.9rem; }
+    .viewer-actions{ display:flex; gap:8px; }
+    .viewer{
+      width:100%; height:70vh; border:0; border-radius:0 0 var(--radius) var(--radius);
+      background:#0c1118;
+    }
+    .empty{
+      height:70vh; display:grid; place-items:center; color:var(--muted); text-align:center; padding:18px;
+    }
+    @media (max-width: 980px){
+      .layout{ grid-template-columns: 1fr; }
+      .table-wrap{ max-height:36vh; }
+      .viewer, .empty{ height:58vh; }
+      .shell{ margin-top:88px; }
+    }
+  </style>
+</head>
+<body class="theme-dark">
+  <div class="theme-fab">
+    <button class="theme-switch" id="themeSwitch" type="button" aria-label="Toggle light and dark theme" title="Switch theme">
+      <span class="theme-track">
+        <span class="theme-thumb"></span>
+        <span class="theme-icon theme-icon-sun" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="4"></circle></svg>
+        </span>
+        <span class="theme-icon theme-icon-moon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.7 13.35A8.65 8.65 0 0 1 10.65 3.3a.7.7 0 0 0-.85-.87A9.99 9.99 0 1 0 21.57 14.2a.7.7 0 0 0-.87-.85Z"/></svg>
+        </span>
+      </span>
+    </button>
+  </div>
+
+  <main class="shell">
+    <header class="topbar">
+      <div>
+        <h1 class="title">Maklumbalas</h1>
+        <p class="sub">Rujukan dokumen maklumbalas daripada tab <strong>MAKLUMBALAS</strong>.</p>
+      </div>
+      <a class="btn" href="index.html">Kembali Ke Utama</a>
+    </header>
+
+    <section class="layout">
+      <article class="card">
+        <div class="card-h">Senarai Penerbitan</div>
+        <div class="card-b">
+          <div id="statusText" class="status">Memuatkan data...</div>
+          <div class="config">
+            <input id="csvInput" class="input" type="text" placeholder="Paste CSV URL (optional fallback)" />
+            <button id="saveCsvBtn" class="btn" type="button">Simpan</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:120px;">Tarikh</th>
+                  <th>Link</th>
+                </tr>
+              </thead>
+              <tbody id="rowsBody">
+                <tr><td colspan="2" style="color:var(--muted);">Tiada data.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="viewer-head">
+          <div>
+            <div style="font-weight:900;">Pratonton PDF</div>
+            <div id="viewerMeta" class="viewer-meta">Pilih rekod di panel kiri.</div>
+          </div>
+          <div class="viewer-actions">
+            <a id="openBtn" class="btn" href="#" target="_blank" rel="noopener">Buka/Cetak</a>
+            <a id="downloadBtn" class="btn" href="#" target="_blank" rel="noopener">Muat Turun</a>
+          </div>
+        </div>
+        <iframe id="pdfFrame" class="viewer" title="Pratonton PDF" style="display:none;"></iframe>
+        <div id="emptyState" class="empty">
+          Pilih satu rekod untuk melihat PDF.<br/>Dokumen boleh dicetak atau dimuat turun.
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script>
+    const THEME_KEY = "ctp_theme";
+    const FALLBACK_CSV_URL = ""; // Optional: set published CSV URL for MAKLUMBALAS tab
+    const $ = (id) => document.getElementById(id);
+
+    const rowsBody = $("rowsBody");
+    const statusText = $("statusText");
+    const viewerMeta = $("viewerMeta");
+    const pdfFrame = $("pdfFrame");
+    const emptyState = $("emptyState");
+    const openBtn = $("openBtn");
+    const downloadBtn = $("downloadBtn");
+    const csvInput = $("csvInput");
+    const saveCsvBtn = $("saveCsvBtn");
+    const themeSwitch = $("themeSwitch");
+
+    let stateRows = [];
+    let selectedIdx = -1;
+
+    function applyTheme(theme){
+      const mode = theme === "light" ? "light" : "dark";
+      document.body.classList.toggle("theme-light", mode === "light");
+      document.body.classList.toggle("theme-dark", mode === "dark");
+      if(themeSwitch) themeSwitch.setAttribute("aria-pressed", mode === "dark" ? "true" : "false");
+    }
+    (function initTheme(){
+      let stored = "";
+      try{ stored = localStorage.getItem(THEME_KEY) || ""; }catch(e){}
+      applyTheme(stored || "dark");
+      if(themeSwitch){
+        themeSwitch.addEventListener("click", () => {
+          const next = document.body.classList.contains("theme-dark") ? "light" : "dark";
+          applyTheme(next);
+          try{ localStorage.setItem(THEME_KEY, next); }catch(e){}
+        });
+      }
+    })();
+
+    function safeText(t){
+      return String(t || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+    function parseDate(v){
+      const s = String(v || "").trim();
+      if(!s) return null;
+      if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return new Date(s + "T00:00:00");
+      const m = s.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})$/);
+      if(m){
+        const d = Number(m[1]), mo = Number(m[2]) - 1, y = Number(m[3].length === 2 ? "20" + m[3] : m[3]);
+        return new Date(y, mo, d);
+      }
+      const dt = new Date(s);
+      return isNaN(dt.getTime()) ? null : dt;
+    }
+    function dateLabel(v){
+      const d = parseDate(v);
+      return d ? d.toLocaleDateString("ms-MY", { day:"2-digit", month:"short", year:"numeric" }) : String(v || "-");
+    }
+    function extractDriveId(url){
+      const s = String(url || "");
+      let m = s.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+      if(m) return m[1];
+      m = s.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      return m ? m[1] : "";
+    }
+    function toPreviewUrl(url){
+      const id = extractDriveId(url);
+      return id ? `https://drive.google.com/file/d/${id}/preview` : String(url || "");
+    }
+    function toDownloadUrl(url){
+      const id = extractDriveId(url);
+      return id ? `https://drive.google.com/uc?export=download&id=${id}` : String(url || "");
+    }
+
+    function parseCsvLine(line){
+      const out = [];
+      let cur = "", q = false;
+      for(let i=0;i<line.length;i++){
+        const ch = line[i];
+        if(ch === '"'){
+          if(q && line[i+1] === '"'){ cur += '"'; i++; }
+          else q = !q;
+        }else if(ch === "," && !q){
+          out.push(cur); cur = "";
+        }else{
+          cur += ch;
+        }
+      }
+      out.push(cur);
+      return out.map(x => x.trim());
+    }
+    function parseCsv(text){
+      const lines = String(text || "").replace(/\r/g, "").split("\n").filter(Boolean);
+      if(!lines.length) return [];
+      const headers = parseCsvLine(lines[0]);
+      const idxTarikh = headers.findIndex(h => /tarikh/i.test(h));
+      const idxLink = headers.findIndex(h => /^link$/i.test(h) || /url/i.test(h));
+      return lines.slice(1).map(line => {
+        const cols = parseCsvLine(line);
+        return {
+          tarikh: idxTarikh > -1 ? cols[idxTarikh] : cols[0],
+          link: idxLink > -1 ? cols[idxLink] : cols[1]
+        };
+      }).filter(r => String(r.link || "").trim());
+    }
+    function normalizeRows(rows){
+      return (rows || []).map(r => {
+        const tarikh = r.Tarikh || r.tarikh || r.date || r.Date || "";
+        const link = r.Link || r.link || r.URL || r.url || "";
+        return { tarikh:String(tarikh || ""), link:String(link || "") };
+      }).filter(r => r.link.trim()).sort((a,b) => {
+        const da = parseDate(a.tarikh), db = parseDate(b.tarikh);
+        if(da && db) return db - da;
+        if(db) return 1;
+        if(da) return -1;
+        return String(b.tarikh).localeCompare(String(a.tarikh));
+      });
+    }
+
+    function renderRows(){
+      if(!stateRows.length){
+        rowsBody.innerHTML = `<tr><td colspan="2" style="color:var(--muted);">Tiada rekod ditemui.</td></tr>`;
+        return;
+      }
+      rowsBody.innerHTML = stateRows.map((r, i) => `
+        <tr data-i="${i}" class="${selectedIdx === i ? "active" : ""}">
+          <td>${safeText(dateLabel(r.tarikh))}</td>
+          <td><div class="link-clamp">${safeText(r.link)}</div></td>
+        </tr>
+      `).join("");
+    }
+
+    function selectRow(i){
+      const row = stateRows[i];
+      if(!row) return;
+      selectedIdx = i;
+      renderRows();
+      const preview = toPreviewUrl(row.link);
+      const dl = toDownloadUrl(row.link);
+      viewerMeta.textContent = `Tarikh: ${dateLabel(row.tarikh)}`;
+      openBtn.href = preview || row.link;
+      downloadBtn.href = dl || row.link;
+      pdfFrame.src = preview || row.link;
+      pdfFrame.style.display = "";
+      emptyState.style.display = "none";
+    }
+
+    async function loadFromApi(){
+      const base = String(window.CTP_API_BASE || "").trim();
+      if(!base) return [];
+      const url = base + (base.includes("?") ? "&" : "?") + "action=listMaklumbalas&t=" + Date.now();
+      const res = await fetch(url, { method:"GET", cache:"no-store" });
+      if(!res.ok) throw new Error("API not reachable");
+      const json = await res.json();
+      if(!json || !json.ok) throw new Error("API response invalid");
+      const rows = Array.isArray(json.rows) ? json.rows : (Array.isArray(json.data) ? json.data : []);
+      return normalizeRows(rows);
+    }
+
+    async function loadFromCsv(csvUrl){
+      if(!csvUrl) return [];
+      const res = await fetch(csvUrl, { method:"GET", cache:"no-store" });
+      if(!res.ok) throw new Error("CSV not reachable");
+      const text = await res.text();
+      return normalizeRows(parseCsv(text));
+    }
+
+    async function loadData(){
+      statusText.textContent = "Memuatkan data...";
+      stateRows = [];
+      selectedIdx = -1;
+      try{
+        let rows = [];
+        try{
+          rows = await loadFromApi();
+        }catch(_e){}
+
+        if(!rows.length){
+          const queryCsv = new URLSearchParams(location.search).get("csv") || "";
+          let saved = "";
+          try{ saved = localStorage.getItem("ctp_maklumbalas_csv") || ""; }catch(e){}
+          const csvUrl = queryCsv || saved || FALLBACK_CSV_URL;
+          if(csvUrl){
+            rows = await loadFromCsv(csvUrl);
+          }
+        }
+
+        stateRows = rows;
+        renderRows();
+        if(rows.length){
+          statusText.textContent = `${rows.length} rekod ditemui.`;
+          selectRow(0);
+        }else{
+          statusText.textContent = "Tiada data. Set CSV URL fallback atau aktifkan action=listMaklumbalas pada API.";
+        }
+      }catch(err){
+        statusText.textContent = "Gagal memuat data: " + String(err.message || err);
+      }
+    }
+
+    rowsBody.addEventListener("click", (e) => {
+      const tr = e.target.closest("tr[data-i]");
+      if(!tr) return;
+      selectRow(Number(tr.getAttribute("data-i")));
+    });
+
+    saveCsvBtn.addEventListener("click", () => {
+      const v = String(csvInput.value || "").trim();
+      try{
+        localStorage.setItem("ctp_maklumbalas_csv", v);
+        statusText.textContent = "CSV URL disimpan. Memuat semula...";
+      }catch(e){
+        statusText.textContent = "Tidak dapat simpan URL pada browser ini.";
+      }
+      loadData();
+    });
+
+    (function initCsvInput(){
+      let saved = "";
+      try{ saved = localStorage.getItem("ctp_maklumbalas_csv") || ""; }catch(e){}
+      csvInput.value = saved || FALLBACK_CSV_URL;
+    })();
+
+    loadData();
+  </script>
+</body>
+</html>
