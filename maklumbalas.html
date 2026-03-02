@@ -162,6 +162,8 @@
   <script src="js/config.js"></script>
   <script>
     const THEME_KEY = "ctp_theme";
+    const MAKLUMBALAS_SHEET_ID = "1-2k_geu-bDjiffXCJnYls3AZRj-zcnBq8NYQtfF91j0";
+    const MAKLUMBALAS_GID = "1264469812";
     const $ = (id) => document.getElementById(id);
 
     const viewerMeta = $("viewerMeta");
@@ -237,6 +239,19 @@
         return String(b.tarikh).localeCompare(String(a.tarikh));
       });
     }
+    function parseGvizRows(json){
+      if(!json || !json.table || !Array.isArray(json.table.cols) || !Array.isArray(json.table.rows)) return [];
+      const cols = json.table.cols.map(c => String((c && c.label) || "").trim());
+      const idxTarikh = cols.findIndex(h => /tarikh/i.test(h));
+      const idxLink = cols.findIndex(h => /^link$/i.test(h) || /url/i.test(h) || /pautan/i.test(h));
+      if(idxTarikh < 0 || idxLink < 0) return [];
+      return json.table.rows.map(r => {
+        const cells = Array.isArray(r.c) ? r.c : [];
+        const t = cells[idxTarikh] && cells[idxTarikh].v != null ? String(cells[idxTarikh].v) : "";
+        const l = cells[idxLink] && cells[idxLink].v != null ? String(cells[idxLink].v) : "";
+        return { Tarikh: t, Link: l, LinkUrl: l };
+      }).filter(x => String(x.LinkUrl || "").trim());
+    }
     function loadViewer(row){
       if(!row){
         viewerMeta.textContent = "Tiada rekod dijumpai pada tab MAKLUMBALAS.";
@@ -271,15 +286,35 @@
       const rows = Array.isArray(json.rows) ? json.rows : (Array.isArray(json.data) ? json.data : []);
       return normalizeRows(rows);
     }
+    async function loadFromSheetGviz(){
+      const url = `https://docs.google.com/spreadsheets/d/${MAKLUMBALAS_SHEET_ID}/gviz/tq?gid=${MAKLUMBALAS_GID}&tqx=out:json&t=${Date.now()}`;
+      const res = await fetch(url, { method:"GET", cache:"no-store" });
+      if(!res.ok) throw new Error("Sheet feed not reachable");
+      const raw = await res.text();
+      const start = raw.indexOf("{");
+      const end = raw.lastIndexOf("}");
+      if(start < 0 || end < 0 || end <= start) throw new Error("Sheet feed format invalid");
+      const json = JSON.parse(raw.slice(start, end + 1));
+      return normalizeRows(parseGvizRows(json));
+    }
 
     async function loadData(){
       viewerMeta.textContent = "Memuatkan dokumen terkini dari MAKLUMBALAS...";
       try{
-        const rows = await loadFromApi();
+        let rows = [];
+        try{
+          rows = await loadFromApi();
+        }catch(apiErr){
+          const msg = String(apiErr && apiErr.message || apiErr || "");
+          if(!/Unknown action|not reachable|response/i.test(msg)){
+            throw apiErr;
+          }
+          rows = await loadFromSheetGviz();
+        }
         loadViewer(rows[0] || null);
       }catch(err){
         loadViewer(null);
-        viewerMeta.textContent = "Gagal memuat data: " + String(err.message || err);
+        viewerMeta.textContent = "Gagal memuat data: " + String(err.message || err) + ". Jika guna gviz, pastikan sheet diterbitkan (Publish to web).";
       }
     }
 
