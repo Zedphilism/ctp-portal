@@ -90,7 +90,7 @@
     }
     body.theme-light .btn{ background:rgba(255,255,255,.72); }
     .btn:hover{ border-color:rgba(58,160,255,.45); }
-    .layout{ display:grid; grid-template-columns: 360px minmax(0,1fr); gap:14px; }
+    .layout{ display:grid; grid-template-columns: minmax(0,1fr); gap:14px; }
     .card{
       background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
       border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow);
@@ -98,25 +98,6 @@
     body.theme-light .card{ background:linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.64)); }
     .card-h{ padding:14px 16px; border-bottom:1px solid var(--line); font-weight:900; }
     .card-b{ padding:12px; }
-    .status{ color:var(--muted); font-size:.9rem; margin-bottom:10px; }
-    .config{ display:flex; gap:8px; margin-bottom:10px; }
-    .input{
-      width:100%; border-radius:10px; border:1px solid var(--line);
-      background:rgba(255,255,255,.03); color:var(--text); padding:9px 10px; outline:none;
-    }
-    body.theme-light .input{ background:rgba(255,255,255,.7); }
-    .table-wrap{ max-height:65vh; overflow:auto; border:1px solid var(--line); border-radius:12px; }
-    table{ width:100%; border-collapse:collapse; }
-    th, td{ padding:10px; border-bottom:1px solid var(--line); text-align:left; font-size:.9rem; }
-    th{ position:sticky; top:0; background:rgba(8,18,31,.94); z-index:1; }
-    body.theme-light th{ background:rgba(235,242,251,.95); }
-    tr{ cursor:pointer; }
-    tr:hover{ background:rgba(58,160,255,.1); }
-    tr.active{ background:rgba(58,160,255,.2); }
-    .link-clamp{
-      max-width:190px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-      color:var(--accent);
-    }
     .viewer-head{ display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap; padding:12px 14px; border-bottom:1px solid var(--line); }
     .viewer-meta{ color:var(--muted); font-size:.9rem; }
     .viewer-actions{ display:flex; gap:8px; }
@@ -129,7 +110,6 @@
     }
     @media (max-width: 980px){
       .layout{ grid-template-columns: 1fr; }
-      .table-wrap{ max-height:36vh; }
       .viewer, .empty{ height:58vh; }
       .shell{ margin-top:88px; }
     }
@@ -161,34 +141,10 @@
 
     <section class="layout">
       <article class="card">
-        <div class="card-h">Senarai Penerbitan</div>
-        <div class="card-b">
-          <div id="statusText" class="status">Memuatkan data...</div>
-          <div class="config">
-            <input id="csvInput" class="input" type="text" placeholder="Paste CSV URL (optional fallback)" />
-            <button id="saveCsvBtn" class="btn" type="button">Simpan</button>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th style="width:120px;">Tarikh</th>
-                  <th>Link</th>
-                </tr>
-              </thead>
-              <tbody id="rowsBody">
-                <tr><td colspan="2" style="color:var(--muted);">Tiada data.</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </article>
-
-      <article class="card">
         <div class="viewer-head">
           <div>
             <div style="font-weight:900;">Pratonton PDF</div>
-            <div id="viewerMeta" class="viewer-meta">Pilih rekod di panel kiri.</div>
+            <div id="viewerMeta" class="viewer-meta">Memuatkan dokumen terkini dari MAKLUMBALAS...</div>
           </div>
           <div class="viewer-actions">
             <a id="openBtn" class="btn" href="#" target="_blank" rel="noopener">Buka/Cetak</a>
@@ -206,22 +162,14 @@
   <script src="js/config.js"></script>
   <script>
     const THEME_KEY = "ctp_theme";
-    const FALLBACK_CSV_URL = ""; // Optional: set published CSV URL for MAKLUMBALAS tab
     const $ = (id) => document.getElementById(id);
 
-    const rowsBody = $("rowsBody");
-    const statusText = $("statusText");
     const viewerMeta = $("viewerMeta");
     const pdfFrame = $("pdfFrame");
     const emptyState = $("emptyState");
     const openBtn = $("openBtn");
     const downloadBtn = $("downloadBtn");
-    const csvInput = $("csvInput");
-    const saveCsvBtn = $("saveCsvBtn");
     const themeSwitch = $("themeSwitch");
-
-    let stateRows = [];
-    let selectedIdx = -1;
 
     function applyTheme(theme){
       const mode = theme === "light" ? "light" : "dark";
@@ -242,9 +190,6 @@
       }
     })();
 
-    function safeText(t){
-      return String(t || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    }
     function parseDate(v){
       const s = String(v || "").trim();
       if(!s) return null;
@@ -276,38 +221,6 @@
       const id = extractDriveId(url);
       return id ? `https://drive.google.com/uc?export=download&id=${id}` : String(url || "");
     }
-
-    function parseCsvLine(line){
-      const out = [];
-      let cur = "", q = false;
-      for(let i=0;i<line.length;i++){
-        const ch = line[i];
-        if(ch === '"'){
-          if(q && line[i+1] === '"'){ cur += '"'; i++; }
-          else q = !q;
-        }else if(ch === "," && !q){
-          out.push(cur); cur = "";
-        }else{
-          cur += ch;
-        }
-      }
-      out.push(cur);
-      return out.map(x => x.trim());
-    }
-    function parseCsv(text){
-      const lines = String(text || "").replace(/\r/g, "").split("\n").filter(Boolean);
-      if(!lines.length) return [];
-      const headers = parseCsvLine(lines[0]);
-      const idxTarikh = headers.findIndex(h => /tarikh/i.test(h));
-      const idxLink = headers.findIndex(h => /^link$/i.test(h) || /url/i.test(h));
-      return lines.slice(1).map(line => {
-        const cols = parseCsvLine(line);
-        return {
-          tarikh: idxTarikh > -1 ? cols[idxTarikh] : cols[0],
-          link: idxLink > -1 ? cols[idxLink] : cols[1]
-        };
-      }).filter(r => String(r.link || "").trim());
-    }
     function normalizeRows(rows){
       return (rows || []).map(r => {
         const tarikh = r.Tarikh || r.tarikh || r.date || r.Date || "";
@@ -324,29 +237,19 @@
         return String(b.tarikh).localeCompare(String(a.tarikh));
       });
     }
-
-    function renderRows(){
-      if(!stateRows.length){
-        rowsBody.innerHTML = `<tr><td colspan="2" style="color:var(--muted);">Tiada rekod ditemui.</td></tr>`;
+    function loadViewer(row){
+      if(!row){
+        viewerMeta.textContent = "Tiada rekod dijumpai pada tab MAKLUMBALAS.";
+        pdfFrame.style.display = "none";
+        emptyState.style.display = "";
+        openBtn.href = "#";
+        downloadBtn.href = "#";
         return;
       }
-      rowsBody.innerHTML = stateRows.map((r, i) => `
-        <tr data-i="${i}" class="${selectedIdx === i ? "active" : ""}">
-          <td>${safeText(dateLabel(r.tarikh))}</td>
-          <td><div class="link-clamp">${safeText(r.link || r.linkUrl)}</div></td>
-        </tr>
-      `).join("");
-    }
-
-    function selectRow(i){
-      const row = stateRows[i];
-      if(!row) return;
-      selectedIdx = i;
-      renderRows();
       const source = row.linkUrl || row.link;
       const preview = toPreviewUrl(source);
       const dl = toDownloadUrl(source);
-      viewerMeta.textContent = `Tarikh: ${dateLabel(row.tarikh)}`;
+      viewerMeta.textContent = `Tarikh: ${dateLabel(row.tarikh)} | Dokumen terkini`;
       openBtn.href = preview || source;
       downloadBtn.href = dl || source;
       pdfFrame.src = preview || source;
@@ -366,69 +269,16 @@
       return normalizeRows(rows);
     }
 
-    async function loadFromCsv(csvUrl){
-      if(!csvUrl) return [];
-      const res = await fetch(csvUrl, { method:"GET", cache:"no-store" });
-      if(!res.ok) throw new Error("CSV not reachable");
-      const text = await res.text();
-      return normalizeRows(parseCsv(text));
-    }
-
     async function loadData(){
-      statusText.textContent = "Memuatkan data...";
-      stateRows = [];
-      selectedIdx = -1;
+      viewerMeta.textContent = "Memuatkan dokumen terkini dari MAKLUMBALAS...";
       try{
-        let rows = [];
-        try{
-          rows = await loadFromApi();
-        }catch(_e){}
-
-        if(!rows.length){
-          const queryCsv = new URLSearchParams(location.search).get("csv") || "";
-          let saved = "";
-          try{ saved = localStorage.getItem("ctp_maklumbalas_csv") || ""; }catch(e){}
-          const csvUrl = queryCsv || saved || FALLBACK_CSV_URL;
-          if(csvUrl){
-            rows = await loadFromCsv(csvUrl);
-          }
-        }
-
-        stateRows = rows;
-        renderRows();
-        if(rows.length){
-          statusText.textContent = `${rows.length} rekod ditemui.`;
-          selectRow(0);
-        }else{
-          statusText.textContent = "Tiada rekod ditemui pada tab MAKLUMBALAS.";
-        }
+        const rows = await loadFromApi();
+        loadViewer(rows[0] || null);
       }catch(err){
-        statusText.textContent = "Gagal memuat data: " + String(err.message || err);
+        loadViewer(null);
+        viewerMeta.textContent = "Gagal memuat data: " + String(err.message || err);
       }
     }
-
-    rowsBody.addEventListener("click", (e) => {
-      const tr = e.target.closest("tr[data-i]");
-      if(!tr) return;
-      selectRow(Number(tr.getAttribute("data-i")));
-    });
-
-    saveCsvBtn.addEventListener("click", () => {
-      const v = String(csvInput.value || "").trim();
-      try{
-        localStorage.setItem("ctp_maklumbalas_csv", v);
-        statusText.textContent = "CSV URL disimpan. Memuat semula...";
-      }catch(e){
-        statusText.textContent = "Tidak dapat simpan URL pada browser ini.";
-      }
-      loadData();
-    });
-
-    (function initCsvInput(){
-      let saved = "";
-      try{ saved = localStorage.getItem("ctp_maklumbalas_csv") || ""; }catch(e){}
-      csvInput.value = saved || FALLBACK_CSV_URL;
-    })();
 
     loadData();
   </script>
