@@ -12,7 +12,7 @@
       --muted:#9fb0c6;
       --line:rgba(255,255,255,.08);
       --accent:#3aa0ff;
-      --shadow:0 20px 60px rgba(0,0,0,.45);
+      --shadow:0 20px 60px rgba(13, 1, 1, 0.45);
       --radius:18px;
     }
     *{ box-sizing:border-box; }
@@ -264,7 +264,10 @@
       const res = await fetch(url, { method:"GET", cache:"no-store" });
       if(!res.ok) throw new Error("API not reachable");
       const json = await res.json();
-      if(!json || !json.ok) throw new Error("API response invalid");
+      if(!json || !json.ok){
+        const reason = (json && json.error) ? String(json.error) : "API response invalid";
+        throw new Error(reason);
+      }
       const rows = Array.isArray(json.rows) ? json.rows : (Array.isArray(json.data) ? json.data : []);
       return normalizeRows(rows);
     }
