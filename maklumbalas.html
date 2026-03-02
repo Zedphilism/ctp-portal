@@ -396,7 +396,7 @@
           statusText.textContent = `${rows.length} rekod ditemui.`;
           selectRow(0);
         }else{
-          statusText.textContent = "Tiada data. Set CSV URL fallback atau aktifkan action=listMaklumbalas pada API.";
+          statusText.textContent = "Tiada rekod ditemui pada tab MAKLUMBALAS.";
         }
       }catch(err){
         statusText.textContent = "Gagal memuat data: " + String(err.message || err);
