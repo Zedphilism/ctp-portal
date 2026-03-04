@@ -887,6 +887,7 @@
       <div class="drawer-section">
         <div class="drawer-label">Pautan Pantas</div>
 
+        <a class="drawer-link" id="drawerPortalLink" href="dashboard.html">Kembali ke Portal Aktif</a>
         <a class="drawer-link" href="index.html">Kembali ke Laman Utama</a>
         <a class="drawer-link" href="about.html">Tentang Kami</a>
 
@@ -922,6 +923,8 @@
     const menuFab = document.getElementById("menuFab");
     const themeSwitch = document.getElementById("themeSwitch");
     const THEME_KEY = "ctp_theme";
+    const CELL_KEY = "ctp_selected_cell";
+    const drawerPortalLink = document.getElementById("drawerPortalLink");
 
     function applyTheme(theme){
       const mode = theme === "light" ? "light" : "dark";
@@ -949,6 +952,13 @@
       }
     }
     initTheme();
+
+    function syncPortalLinks(){
+      const selected = localStorage.getItem(CELL_KEY);
+      const target = selected === "bukan_teknikal" ? "dashboardtwo.html" : "dashboard.html";
+      if(drawerPortalLink) drawerPortalLink.setAttribute("href", target);
+    }
+    syncPortalLinks();
 
     function toggle(open){
       drawer.classList.toggle("open", open);
