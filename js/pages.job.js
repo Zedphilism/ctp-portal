@@ -48,15 +48,31 @@
   el("#title").textContent = "Loading.";
 
   try {
-    // ✅ Decide which sheet to query
+    // Decide which sheet to query
     // Priority:
-    // 1) explicit URL param ?tab=wdp
-    // 2) auto-detect from jobId prefix WDP-
+    // 1) explicit URL param ?tab=...
+    // 2) auto-detect from jobId prefix
     const urlTab = (qsParam("tab") || "").toLowerCase().trim();
-    const autoTab = String(jobId).toUpperCase().startsWith("WDP-") ? "wdp" : "";
+    const upperId = String(jobId).toUpperCase();
+    let autoTab = "";
+    if (upperId.startsWith("WDP-")) autoTab = "wdp";
+    else if (upperId.startsWith("CTP-")) autoTab = "permohonan";
+    else if (upperId.startsWith("GS1-")) autoTab = "pemeriksaan gunasama 1";
+    else if (upperId.startsWith("GS2-")) autoTab = "pemeriksaan gunasama 2";
+    else if (upperId.startsWith("FAT-")) autoTab = "fat";
     const tab = urlTab || autoTab;
 
-    const res = await API.getJob(jobId, tab ? { tab } : {});
+    let res = await API.getJob(jobId, tab ? { tab } : {});
+
+    // Fallback for backends that expose listJobs but not getJob.
+    const unknownGetJob = !res.ok && String(res.error || "").toLowerCase().includes("unknown action");
+    if (unknownGetJob) {
+      const listRes = await API.listJobs(tab ? { tab } : {});
+      if (listRes && listRes.ok && Array.isArray(listRes.jobs)) {
+        const found = listRes.jobs.find(x => String(x["Job ID"] || "").trim() === String(jobId).trim());
+        if (found) res = { ok: true, job: found };
+      }
+    }
 
     if (!res.ok) {
       el("#title").textContent = "Job Not Found";
