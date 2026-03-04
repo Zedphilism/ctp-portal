@@ -612,7 +612,7 @@
     </div>
 
     <div class="actions">
-      <a class="btn-link" href="dashboard.html">Kembali ke portal</a>
+      <a class="btn-link" id="portalBackLink" href="dashboard.html">Kembali ke portal</a>
     </div>
 
     <h1>Maklumat Cawangan Teknik dan Pemeriksaan (CT&amp;P)</h1>
@@ -702,6 +702,7 @@
       <div class="drawer-section">
         <div class="drawer-label">Pautan Pantas</div>
 
+        <a class="drawer-link" id="drawerPortalLink" href="dashboard.html">Kembali ke Portal Aktif</a>
         <a class="drawer-link" href="index.html">Kembali ke Laman Utama</a>
         <a class="drawer-link" href="about.html">Tentang Kami</a>
 
@@ -738,6 +739,9 @@
     const menuFab = document.getElementById("menuFab");
     const themeSwitch = document.getElementById("themeSwitch");
     const THEME_KEY = "ctp_theme";
+    const CELL_KEY = "ctp_selected_cell";
+    const portalBackLink = document.getElementById("portalBackLink");
+    const drawerPortalLink = document.getElementById("drawerPortalLink");
 
     function applyTheme(theme){
       const mode = theme === "light" ? "light" : "dark";
@@ -765,6 +769,14 @@
       }
     }
     initTheme();
+
+    function syncPortalLinks(){
+      const selected = localStorage.getItem(CELL_KEY);
+      const target = selected === "bukan_teknikal" ? "dashboardtwo.html" : "dashboard.html";
+      if(portalBackLink) portalBackLink.setAttribute("href", target);
+      if(drawerPortalLink) drawerPortalLink.setAttribute("href", target);
+    }
+    syncPortalLinks();
 
     function toggle(open){
       drawer.classList.toggle("open", open);
