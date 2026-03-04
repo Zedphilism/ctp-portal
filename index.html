@@ -922,16 +922,6 @@
     </div>
   </aside>
 
-  <div class="choice-backdrop" id="choiceBackdrop"></div>
-  <section class="choice-modal" id="choiceModal" role="dialog" aria-modal="true" aria-labelledby="choiceTitle">
-    <h3 id="choiceTitle">Sahkan Pilihan Sel</h3>
-    <p id="choiceText">Anda sedang memilih sel. Teruskan?</p>
-    <div class="choice-actions">
-      <button class="choice-btn" id="choiceCancel" type="button">Batal</button>
-      <button class="choice-btn primary" id="choiceConfirm" type="button">Teruskan</button>
-    </div>
-  </section>
-
   <script>
     const CELL_KEY = "ctp_selected_cell";
     const THEME_KEY = "ctp_theme";
@@ -941,14 +931,6 @@
     const backdrop = document.getElementById("backdrop");
     const openBtn = document.getElementById("drawerToggle");
     const closeBtn = document.getElementById("drawerClose");
-    const choiceBackdrop = document.getElementById("choiceBackdrop");
-    const choiceModal = document.getElementById("choiceModal");
-    const choiceText = document.getElementById("choiceText");
-    const choiceCancel = document.getElementById("choiceCancel");
-    const choiceConfirm = document.getElementById("choiceConfirm");
-    let pendingCell = "";
-    let pendingTarget = "";
-
     const ANNOUNCEMENTS = [
       { priority: 100, text: "Sila pastikan anda memilih sel dan borang yang betul mengikut keperluan pemeriksaan anda." },
       { priority: 90, text: "Semak SOP dan garis panduan yang telah disediakan sebelum menghantar permohonan." },
@@ -999,32 +981,6 @@
       openBtn.setAttribute("aria-expanded", open ? "true" : "false");
     }
 
-    function closeChoiceModal(){
-      choiceModal.classList.remove("open");
-      choiceBackdrop.classList.remove("open");
-      pendingCell = "";
-      pendingTarget = "";
-    }
-
-    function openChoiceModal(label, cell, target){
-      pendingCell = cell;
-      pendingTarget = target;
-      choiceText.textContent = "Anda sedang memilih " + label + ". Pastikan ini sel yang betul sebelum meneruskan.";
-      choiceModal.classList.add("open");
-      choiceBackdrop.classList.add("open");
-    }
-
-    function confirmChoice(){
-      if(!pendingCell || !pendingTarget){
-        closeChoiceModal();
-        return;
-      }
-      localStorage.setItem(CELL_KEY, pendingCell);
-      const target = pendingTarget;
-      closeChoiceModal();
-      window.location.href = target;
-    }
-
     function setStatusText(){
       const status = document.getElementById("cellStatusText");
       const dot = document.querySelector(".cell-badge .dot");
@@ -1050,8 +1006,8 @@
       const target = btn.getAttribute("data-target") || "";
       if(!selectedCell || !target) return;
 
-      const label = selectedCell === "teknikal" ? "Sel Teknikal" : "Sel Bukan Teknikal";
-      openChoiceModal(label, selectedCell, target);
+      localStorage.setItem(CELL_KEY, selectedCell);
+      window.location.href = target;
     }
 
     openBtn.addEventListener("click", () => {
@@ -1060,17 +1016,8 @@
     });
     closeBtn.addEventListener("click", () => toggleDrawer(false));
     backdrop.addEventListener("click", () => toggleDrawer(false));
-    choiceCancel.addEventListener("click", closeChoiceModal);
-    choiceBackdrop.addEventListener("click", closeChoiceModal);
-    choiceConfirm.addEventListener("click", confirmChoice);
-
     window.addEventListener("keydown", (e) => {
-      if(e.key !== "Escape") return;
-      if(choiceModal.classList.contains("open")){
-        closeChoiceModal();
-        return;
-      }
-      toggleDrawer(false);
+      if(e.key === "Escape") toggleDrawer(false);
     });
 
     document.addEventListener("click", handleRoutingClick);
