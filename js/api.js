@@ -1,7 +1,8 @@
 const API = {
-  // Internal helper: Standard GET fetch
+  // Internal helper: standard GET fetch with per-cell default params from config.js
   async request(action, params = {}) {
-    const q = new URLSearchParams({ action, ...params });
+    const defaults = window.CTP_API_DEFAULT_PARAMS || {};
+    const q = new URLSearchParams({ action, ...defaults, ...params });
     const url = `${window.CTP_API_BASE}?${q.toString()}`;
 
     const res = await fetch(url, {
@@ -16,10 +17,10 @@ const API = {
   ping: () => API.request("ping"),
   meta: () => API.request("meta"),
 
-  // allow passing { tab: "wdp" }
+  // Allow passing { tab: "wdp" } or other aliases expected by backend.
   listJobs: (params) => API.request("listJobs", params),
 
-  // ✅ updated: allow passing { tab: "wdp" }
+  // Allow passing tab hints when querying a single job.
   getJob: (jobId, params = {}) => API.request("getJob", { jobId, ...params }),
 
   listInspectors: (params) => API.request("listInspectors", params),
