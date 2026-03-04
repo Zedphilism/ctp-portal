@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="ms">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sistem Pemantauan Pemeriksaan</title>
-
+  <title>Portal CT&P | Pilih Sel</title>
+  <meta name="description" content="Halaman pemilihan Sel Teknikal atau Sel Bukan Teknikal di bawah Cawangan Teknik & Pemeriksaan." />
   <style>
     :root{
       --bg:#0b0f14;
@@ -13,29 +13,12 @@
       --text:#e7eef8;
       --muted:#9fb0c6;
       --line:rgba(255,255,255,.08);
-      --accent:#3aa0ff;
-      --good:#23c26b;
       --shadow:0 20px 60px rgba(0,0,0,.45);
       --radius:18px;
+      --tech:#3aa0ff;
+      --nontech:#23c26b;
     }
 
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
-
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      background:
-        radial-gradient(900px 520px at 20% 10%, rgba(58,160,255,.14), transparent 60%),
-        radial-gradient(820px 520px at 80% 20%, rgba(35,194,107,.10), transparent 55%),
-        var(--bg);
-      color:var(--text);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:24px;
-      overflow:hidden;
-    }
     body.theme-light{
       --bg:#e8eef6;
       --panel:#f3f7fc;
@@ -43,89 +26,60 @@
       --text:#17212f;
       --muted:#5a6a7f;
       --line:rgba(9,28,54,.14);
-      --accent:#2f87dc;
-      --good:#1ea45c;
       --shadow:0 18px 40px rgba(8,28,54,.18);
+      --tech:#2f87dc;
+      --nontech:#1ea45c;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       background:
-        radial-gradient(880px 520px at 20% 8%, rgba(74,156,235,.20), transparent 62%),
-        radial-gradient(760px 520px at 82% 18%, rgba(42,170,104,.14), transparent 58%),
+        radial-gradient(920px 520px at 20% 8%, rgba(58,160,255,.14), transparent 60%),
+        radial-gradient(860px 520px at 82% 18%, rgba(35,194,107,.10), transparent 55%),
         var(--bg);
+      color:var(--text);
+      overflow-x:hidden;
+      position:relative;
     }
-    body.theme-dark{
-      --bg:#0b0f14;
-      --panel:#0f1620;
-      --panel2:#0c121a;
-      --text:#e7eef8;
-      --muted:#9fb0c6;
-      --line:rgba(255,255,255,.08);
-      --accent:#3aa0ff;
-      --good:#23c26b;
-      --shadow:0 20px 60px rgba(0,0,0,.45);
-    }
-    /* ===== subtle vignette to pull focus to center ===== */
-body::before{
-  content:"";
-  position:fixed;
-  inset:-40px;
-  pointer-events:none;
-  z-index:0;
-  background:radial-gradient(closest-side at 50% 45%,
-    rgba(0,0,0,0) 55%,
-    rgba(0,0,0,.28) 100%
-  );
-}
-body.theme-light::before{
-  background:radial-gradient(closest-side at 50% 45%,
-    rgba(255,255,255,0) 62%,
-    rgba(17,36,58,.10) 100%
-  );
-}
 
-/* ===== ultra subtle noise/grain overlay ===== */
-body::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:0;
-  opacity:.035;
-  background-image:
-    repeating-linear-gradient(0deg,
-      rgba(255,255,255,.06) 0px,
-      rgba(255,255,255,.06) 1px,
-      rgba(0,0,0,0) 2px,
-      rgba(0,0,0,0) 4px
-    );
-  mix-blend-mode:overlay;
-}
-
-    /* ===== TOP RIGHT MENU (label + button) ===== */
-    .menu-fab{
+    body::before{
+      content:"";
       position:fixed;
-      top:20px;
-      right:20px;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      z-index:200;
-      transition: transform .18s ease, opacity .18s ease;
-      will-change: transform, opacity;
+      inset:-40px;
+      pointer-events:none;
+      z-index:0;
+      background:radial-gradient(closest-side at 50% 42%, rgba(0,0,0,0) 55%, rgba(0,0,0,.28) 100%);
     }
+
+    body.theme-light::before{
+      background:radial-gradient(closest-side at 50% 45%, rgba(255,255,255,0) 62%, rgba(17,36,58,.10) 100%);
+    }
+
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+      opacity:.03;
+      background-image:repeating-linear-gradient(0deg, rgba(255,255,255,.07) 0px, rgba(255,255,255,.07) 1px, transparent 2px, transparent 4px);
+      mix-blend-mode:overlay;
+    }
+
     .theme-fab{
       position:fixed;
-      top:20px;
-      left:20px;
-      z-index:210;
+      top:18px;
+      left:18px;
+      z-index:220;
       display:flex;
       align-items:center;
     }
-    .theme-switch{
-      border:0;
-      padding:0;
-      background:transparent;
-      cursor:pointer;
-      line-height:0;
-    }
+
+    .theme-switch{ border:0; padding:0; background:transparent; cursor:pointer; line-height:0; }
+
     .theme-track{
       position:relative;
       width:86px;
@@ -134,22 +88,21 @@ body::after{
       display:block;
       overflow:hidden;
       border:1px solid rgba(255,255,255,.12);
-      background: linear-gradient(165deg, #7d848e 0%, #4c525d 100%);
-      box-shadow:
-        inset 0 2px 2px rgba(255,255,255,.14),
-        inset 0 -6px 12px rgba(0,0,0,.35),
-        0 7px 14px rgba(0,0,0,.25);
+      background:linear-gradient(165deg, #7d848e 0%, #4c525d 100%);
+      box-shadow:inset 0 2px 2px rgba(255,255,255,.14), inset 0 -6px 12px rgba(0,0,0,.35), 0 7px 14px rgba(0,0,0,.25);
       transition: background .28s ease, border-color .28s ease, box-shadow .28s ease;
     }
+
     .theme-track::before{
       content:"";
       position:absolute;
       inset:3px;
       border-radius:999px;
-      background: linear-gradient(180deg, #757d88 0%, #5a616d 100%);
+      background:linear-gradient(180deg, #757d88 0%, #5a616d 100%);
       box-shadow: inset 0 1px 0 rgba(255,255,255,.16), inset 0 -3px 6px rgba(0,0,0,.24);
       z-index:1;
     }
+
     .theme-thumb{
       position:absolute;
       top:4px;
@@ -158,13 +111,11 @@ body::after{
       height:32px;
       border-radius:999px;
       z-index:2;
-      background: linear-gradient(180deg, #8b929d 0%, #5c6470 100%);
-      box-shadow:
-        inset 0 1px 1px rgba(255,255,255,.25),
-        inset 0 -2px 5px rgba(0,0,0,.28),
-        0 4px 8px rgba(0,0,0,.3);
-      transition: left .28s ease, background .28s ease, box-shadow .28s ease;
+      background:linear-gradient(180deg, #8b929d 0%, #5c6470 100%);
+      box-shadow:inset 0 1px 1px rgba(255,255,255,.25), inset 0 -2px 5px rgba(0,0,0,.28), 0 4px 8px rgba(0,0,0,.3);
+      transition:left .28s ease, background .28s ease;
     }
+
     .theme-icon{
       position:absolute;
       top:50%;
@@ -176,66 +127,28 @@ body::after{
       transition: color .28s ease, filter .28s ease, opacity .28s ease;
       pointer-events:none;
     }
-    .theme-icon svg{
-      width:100%;
-      height:100%;
-      display:block;
-      fill:currentColor;
-    }
+
+    .theme-icon svg{ width:100%; height:100%; display:block; fill:currentColor; }
     .theme-icon-sun{ left:12px; }
     .theme-icon-moon{ right:12px; }
-    body.theme-light .theme-thumb{
-      left:4px;
-      background: linear-gradient(180deg, #9097a1 0%, #656d79 100%);
-      box-shadow:
-        inset 0 1px 1px rgba(255,255,255,.24),
-        inset 0 -2px 5px rgba(0,0,0,.27),
-        0 4px 8px rgba(0,0,0,.3);
-    }
-    body.theme-light .theme-icon-sun{
-      color:#ffffff;
-      filter: drop-shadow(0 0 6px rgba(255,255,255,.9)) drop-shadow(0 0 12px rgba(255,255,255,.5));
-      opacity:1;
-    }
-    body.theme-light .theme-icon-moon{
-      color:rgba(201,220,255,.55);
-      filter:none;
-      opacity:.6;
-    }
-    body.theme-dark .theme-track{
-      border-color: rgba(76,140,255,.3);
-      background: linear-gradient(165deg, #7a818d 0%, #49505d 100%);
-      box-shadow:
-        inset 0 2px 2px rgba(255,255,255,.12),
-        inset 0 -6px 12px rgba(0,0,0,.36),
-        0 7px 14px rgba(0,0,0,.28);
-    }
-    body.theme-dark .theme-thumb{
-      left:45px;
-      background: linear-gradient(180deg, #7f8691 0%, #58606c 100%);
-      box-shadow:
-        inset 0 1px 1px rgba(255,255,255,.22),
-        inset 0 -2px 6px rgba(0,0,0,.3),
-        0 4px 8px rgba(0,0,0,.32);
-    }
-    body.theme-dark .theme-icon-sun{
-      color:rgba(255,255,255,.45);
-      filter:none;
-      opacity:.55;
-    }
-    body.theme-dark .theme-icon-moon{
-      color:#d8e9ff;
-      filter: drop-shadow(0 0 6px rgba(92,164,255,.95)) drop-shadow(0 0 14px rgba(92,164,255,.7));
-      opacity:1;
-    }
-    .theme-switch:focus-visible .theme-track{
-      outline:2px solid var(--accent);
-      outline-offset:2px;
-    }
-    .menu-fab.hide{
-      opacity:0;
-      transform:translateY(-10px);
-      pointer-events:none;
+
+    body.theme-light .theme-thumb{ left:4px; }
+    body.theme-light .theme-icon-sun{ color:#fff; filter:drop-shadow(0 0 6px rgba(255,255,255,.9)); opacity:1; }
+    body.theme-light .theme-icon-moon{ color:rgba(201,220,255,.55); opacity:.6; }
+    body.theme-dark .theme-thumb{ left:45px; }
+    body.theme-dark .theme-icon-sun{ color:rgba(255,255,255,.45); opacity:.55; }
+    body.theme-dark .theme-icon-moon{ color:#d8e9ff; filter:drop-shadow(0 0 6px rgba(92,164,255,.95)); opacity:1; }
+
+    .theme-switch:focus-visible .theme-track{ outline:2px solid var(--tech); outline-offset:2px; }
+
+    .menu-fab{
+      position:fixed;
+      top:18px;
+      right:18px;
+      z-index:220;
+      display:flex;
+      align-items:center;
+      gap:10px;
     }
 
     .menu-label{
@@ -244,13 +157,12 @@ body::after{
       letter-spacing:.6px;
       color:var(--muted);
       text-transform:uppercase;
-      opacity:.85;
+      opacity:.9;
       user-select:none;
       display:none;
     }
-    @media (min-width: 860px){
-      .menu-label{ display:block; }
-    }
+
+    @media (min-width:860px){ .menu-label{ display:block; } }
 
     .hamburger{
       width:46px;
@@ -265,18 +177,15 @@ body::after{
       cursor:pointer;
       transition: transform .18s ease, background .15s ease, border-color .15s ease;
     }
+
     .hamburger:hover{
       background:rgba(58,160,255,.12);
       border-color:rgba(58,160,255,.4);
       transform:translateY(-1px);
     }
 
-    /* ===== Hamburger lines (animated to X) ===== */
-    .burger{
-      width:22px;
-      height:18px;
-      position:relative;
-    }
+    .burger{ width:22px; height:18px; position:relative; }
+
     .burger span{
       position:absolute;
       left:0;
@@ -286,324 +195,25 @@ body::after{
       border-radius:999px;
       transition: transform .18s ease, top .18s ease, opacity .18s ease;
     }
+
     .burger span:nth-child(1){ top:0; }
     .burger span:nth-child(2){ top:7.5px; }
     .burger span:nth-child(3){ top:15px; }
 
-    .hamburger.is-open .burger span:nth-child(1){
-      top:7.5px;
-      transform:rotate(45deg);
-    }
-    .hamburger.is-open .burger span:nth-child(2){
-      opacity:0;
-    }
-    .hamburger.is-open .burger span:nth-child(3){
-      top:7.5px;
-      transform:rotate(-45deg);
-    }
+    .hamburger.is-open .burger span:nth-child(1){ top:7.5px; transform:rotate(45deg); }
+    .hamburger.is-open .burger span:nth-child(2){ opacity:0; }
+    .hamburger.is-open .burger span:nth-child(3){ top:7.5px; transform:rotate(-45deg); }
 
-    /* ===== MAIN CARD ===== */
-    .card{
-      width:min(720px,100%);
-      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:24px;
-      text-align:center;
-      position:relative;
-      z-index:1;
-      overflow:hidden;
-    }
-/* ===== calm hover acknowledgement (no layout shift) ===== */
-.card{
-  transition: background .18s ease, border-color .18s ease;
-}
-.card:hover{
-  border-color:rgba(58,160,255,.18);
-  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
-}
-
-
-    /* ===== inner highlight for premium glass feel ===== */
-.card::after{
-  content:"";
-  position:absolute;
-  inset:1px;
-  border-radius:calc(var(--radius) - 1px);
-  pointer-events:none;
-  background:linear-gradient(
-    180deg,
-    rgba(255,255,255,.10),
-    rgba(255,255,255,0) 38%
-  );
-  opacity:.35;
-}
-
-    /* calm diagonal */
-    .card::before{
-      content:"";
-      position:absolute;
-      top:-40%;
-      right:-50%;
-      width:140%;
-      height:70%;
-      background:linear-gradient(
-        135deg,
-        rgba(58,160,255,.10),
-        rgba(58,160,255,.04),
-        transparent
-      );
-      transform:rotate(-6deg);
-      pointer-events:none;
-    }
-    .card > *{
-      position:relative;
-      z-index:1;
-    }
-
-    .logos{
-      display:flex;
-      justify-content:center;
-      gap:28px;
-      margin-bottom:16px;
-    }
-
-    .logo{
-      width:78px;
-      height:78px;
-      border-radius:20px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .logo img{
-      width:56px;
-      height:56px;
-      object-fit:contain;
-    }
-
-    /* #10: typography polish */
-    h1{
-      margin:8px 0 6px;
-      font-size:21px;
-      font-weight:900;
-      letter-spacing:.35px;
-    }
-
-    .subtitle{
-      font-size:13px;
-      color:var(--muted);
-      letter-spacing:.25px;
-    }
-
-    .divider{
-      width:90px;
-      height:1px;
-      background:var(--line);
-      margin:16px auto 18px;
-    }
-
-    .desc{
-      font-size:14px;
-      color:var(--muted);
-      line-height:1.7;
-      max-width:460px;
-      margin:0 auto 26px;
-    }
-
-    .actions{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:14px;
-    }
-
-    /* ===== BUTTON: fluid liquid motion ===== */
-    .btn-primary{
-      position:relative;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(235,242,250,.9));
-      color: #06111f;
-      padding:12px 24px;
-      border-radius:12px;
-      font-weight:900;
-      font-size:14px;
-      text-decoration:none;
-      border:1px solid rgba(255,255,255,.5);
-      transition: transform .25s ease, box-shadow .25s ease, color .25s ease, border-color .25s ease;
-      min-width: 180px;
-      overflow:hidden;
-      isolation:isolate;
-    }
-
-    .btn-primary::before{
-      content:"";
-      position:absolute;
-      width:205%;
-      height:255%;
-      left:-52%;
-      top:56%;
-      border-radius:42%;
-      background:
-        radial-gradient(circle at 50% 55%, rgba(54,162,255,.98) 0 52%, rgba(11,45,82,.96) 86%);
-      transform:translateY(62%) rotate(0deg);
-      transition: transform .75s cubic-bezier(.22,.8,.2,1);
-      animation: liquid-idle 7s ease-in-out infinite;
-      z-index:0;
-    }
-    .btn-primary::after{
-      content:"";
-      position:absolute;
-      width:188%;
-      height:235%;
-      left:-44%;
-      top:60%;
-      border-radius:40%;
-      background: radial-gradient(circle at 50% 42%, rgba(140,212,255,.85) 0 42%, rgba(53,143,224,.36) 74%, transparent 90%);
-      transform:translateY(76%) rotate(0deg);
-      transition: transform .88s cubic-bezier(.22,.82,.2,1), opacity .38s ease;
-      animation: liquid-idle 5.8s ease-in-out infinite reverse;
-      opacity:.92;
-      z-index:0;
-      mix-blend-mode:screen;
-    }
-
-    .btn-primary span{
-      position:relative;
-      z-index:1;
-    }
-
-    .btn-primary:hover{
-      transform:translateY(-1px);
-      box-shadow:0 10px 26px rgba(58,160,255,.36);
-      color:#fff;
-      border-color:rgba(147,207,255,.78);
-    }
-
-    .btn-primary:hover::before{
-      transform:translateY(-36%) rotate(-8deg);
-      animation-duration: 2.4s;
-    }
-    .btn-primary:hover::after{
-      transform:translateY(-28%) rotate(9deg);
-      animation-duration: 2s;
-      opacity:1;
-    }
-    .btn-primary:active{
-      transform:translateY(0);
-    }
-
-    .btn-primary[aria-disabled="true"]{
-      opacity:.75;
-      pointer-events:none;
-      transform:none;
-      box-shadow:none;
-    }
-    .btn-primary.is-routing{
-      pointer-events:none;
-      color:#fff;
-      border-color:rgba(151,214,255,.92);
-      box-shadow:0 12px 34px rgba(58,160,255,.42), 0 0 0 1px rgba(151,214,255,.22) inset;
-    }
-    .btn-primary.is-routing::before{
-      transform:translateY(-14%) rotate(-10deg);
-      animation: liquid-fast .85s linear infinite;
-    }
-    .btn-primary.is-routing::after{
-      transform:translateY(-8%) rotate(12deg);
-      animation: liquid-fast 1s linear infinite reverse;
-      opacity:1;
-    }
-    @keyframes liquid-idle{
-      0%, 100%{ border-radius:41% 59% 48% 52%/57% 45% 55% 43%; }
-      50%{ border-radius:58% 42% 51% 49%/43% 55% 45% 57%; }
-    }
-    @keyframes liquid-fast{
-      0%{ border-radius:40% 60% 49% 51%/56% 44% 56% 44%; }
-      50%{ border-radius:60% 40% 53% 47%/44% 56% 44% 56%; }
-      100%{ border-radius:40% 60% 49% 51%/56% 44% 56% 44%; }
-    }
-    .route-overlay{
-      position:fixed;
-      inset:0;
-      z-index:260;
-      pointer-events:none;
-      opacity:0;
-      background:
-        radial-gradient(circle at center, rgba(24,54,92,.7) 0%, rgba(8,16,28,.94) 58%, rgba(5,9,16,.985) 100%);
-      clip-path: circle(0px at 50% 50%);
-      transition: clip-path .9s cubic-bezier(.2,.88,.24,1), opacity .25s ease;
-    }
-    body.route-out .route-overlay{
-      opacity:1;
-      clip-path: circle(160vmax at var(--iris-x, 50%) var(--iris-y, 50%));
-    }
-    body.route-out .card,
-    body.route-out .ticker,
-    body.route-out .menu-fab,
-    body.route-out .theme-fab{
-      filter: blur(3px);
-      transform: scale(.965);
-      opacity:0;
-      transition: transform .62s cubic-bezier(.2,.88,.24,1), opacity .45s ease, filter .55s ease;
-    }
-
-    .footer{
-      margin-top:18px;
-      font-size:12px;
-      color:var(--muted);
-      opacity:.75;
-      letter-spacing:.2px;
-    }
-
-    .status{
-      position:absolute;
-      bottom:28px;
-      right:28px;
-      display:flex;
-      align-items:center;
-      gap:8px;
-      font-size:11px;
-      font-weight:800;
-      color:var(--muted);
-      background: rgba(0,0,0,.3);
-      padding:6px 10px;
-      border-radius:99px;
-      border:1px solid var(--line);
-    }
-
-    .dot{
-      width:6px;
-      height:6px;
-      background:var(--good);
-      border-radius:50%;
-      box-shadow: 0 0 0 2px rgba(35,194,107,.12);
-    }
-    /* ===== rare reassurance pulse, not distracting ===== */
-.dot{
-  animation: dotPulse 9s ease-in-out infinite;
-}
-@keyframes dotPulse{
-  0%, 92%, 100%{ box-shadow: 0 0 0 2px rgba(35,194,107,.12); opacity:1; }
-  96%{ box-shadow: 0 0 0 6px rgba(35,194,107,.10); opacity:.92; }
-}
-
-    /* ===== DRAWER ===== */
     .drawer-backdrop{
       position:fixed;
       inset:0;
       background:rgba(0,0,0,.6);
-      z-index:150;
+      z-index:180;
       opacity:0;
       pointer-events:none;
       transition:.2s;
     }
+
     .drawer{
       position:fixed;
       top:0;
@@ -613,12 +223,13 @@ body::after{
       max-width:85vw;
       background:var(--panel);
       border-left:1px solid var(--line);
-      z-index:180;
+      z-index:200;
       transform:translateX(100%);
       transition:.25s cubic-bezier(.2,.8,.2,1);
       display:flex;
       flex-direction:column;
     }
+
     .drawer.open{ transform:translateX(0); }
     .drawer-backdrop.open{ opacity:1; pointer-events:auto; }
 
@@ -629,6 +240,7 @@ body::after{
       justify-content:space-between;
       align-items:center;
     }
+
     .d-title{ font-weight:900; font-size:15px; }
 
     .d-close{
@@ -641,28 +253,18 @@ body::after{
       padding:6px 8px;
       border-radius:10px;
     }
-    .d-close:hover{
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-    }
 
-    .d-body{
-      padding:20px;
-      font-size:13px;
-      color:var(--muted);
-      line-height:1.65;
-      overflow:auto;
-    }
+    .d-close:hover{ background:rgba(255,255,255,.04); color:var(--text); }
 
-    .drawer-section{ margin-bottom:18px; }
+    .d-body{ padding:20px; font-size:13px; color:var(--muted); line-height:1.65; overflow:auto; }
 
     .drawer-label{
       font-size:11px;
       text-transform:uppercase;
       letter-spacing:1px;
       font-weight:900;
-      opacity:.65;
-      margin: 0 0 10px;
+      opacity:.7;
+      margin:0 0 10px;
     }
 
     .drawer-link{
@@ -678,408 +280,574 @@ body::after{
       transition:.15s;
     }
 
-    .drawer-link:hover{
-      background:rgba(58,160,255,.14);
-      border-color:rgba(58,160,255,.4);
-    }
+    .drawer-link:hover{ background:rgba(58,160,255,.14); border-color:rgba(58,160,255,.4); }
 
-    /* #2: version box */
-    .meta-box{
-      padding:12px 12px;
-      border-radius:12px;
-      border:1px solid var(--line);
-      background:rgba(0,0,0,.22);
-      color:var(--muted);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size:12px;
-      line-height:1.6;
-    }
-
-    /* notice box */
     .notice{
-      padding:12px 12px;
+      padding:12px;
       border-radius:12px;
-      border:1px solid rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.1);
       background:rgba(255,255,255,.03);
       color:var(--muted);
       font-size:12px;
       line-height:1.6;
+      margin-top:10px;
     }
-    .notice strong{
-      color:var(--text);
+
+    .notice strong{ color:var(--text); font-weight:900; }
+
+    .wrap{
+      max-width:1200px;
+      margin:0 auto;
+      padding:96px 16px 40px;
+      position:relative;
+      z-index:1;
+    }
+
+    .hero{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      margin-bottom:12px;
+    }
+
+    .logos{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:24px;
+      margin-bottom:10px;
+    }
+
+    .logos img{
+      width:58px;
+      height:58px;
+      object-fit:contain;
+      filter:drop-shadow(0 8px 20px rgba(0,0,0,.35));
+    }
+
+    .hero h1{
+      margin:0;
+      font-size:27px;
       font-weight:900;
+      letter-spacing:.45px;
+      text-transform:uppercase;
     }
 
-    /* ===== Easter egg: 40s cinematic fade to black then back ===== */
-body.eegg-fade{
-  animation: eeggFadeCycle 40s linear forwards;
-}
+    .hero h2{
+      margin:5px 0 0;
+      font-size:16px;
+      font-weight:700;
+      letter-spacing:.35px;
+      color:var(--muted);
+      text-transform:uppercase;
+    }
 
-@keyframes eeggFadeCycle{
-  /* start normal */
-  0%   { filter: grayscale(0) brightness(1); }
+    .hero p{
+      margin:12px auto 0;
+      max-width:760px;
+      font-size:13px;
+      line-height:1.7;
+      color:var(--muted);
+    }
 
-  /* gradually desaturate + dim */
-  40%  { filter: grayscale(.75) brightness(.55); }
+    .ticker{
+      width:min(820px, 100%);
+      margin:14px auto 18px;
+      pointer-events:none;
+    }
 
-  /* reach fully black (keep grayscale max) */
-  50%  { filter: grayscale(1) brightness(0); }
+    .ticker-inner{
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.1);
+      background:rgba(0,0,0,.22);
+      backdrop-filter:blur(10px);
+      overflow:hidden;
+      box-shadow:0 18px 55px rgba(0,0,0,.35);
+    }
 
-  /* stay black briefly so it feels intentional */
-  55%  { filter: grayscale(1) brightness(0); }
+    .ticker-row{ display:flex; align-items:center; gap:10px; padding:9px 11px; }
 
-  /* recover */
-  100% { filter: grayscale(0) brightness(1); }
-}
+    .ticker-tag{
+      flex:0 0 auto;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.9px;
+      text-transform:uppercase;
+      color:var(--muted);
+      opacity:.9;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+    }
 
-/* ===== Easter egg overlay (ZAIDI) ===== */
-.eegg-overlay{
-  position:fixed;
-  inset:0;
-  z-index:9999;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:24px;
-  background:rgba(0,0,0,.55);
-  backdrop-filter: blur(8px);
-  opacity:0;
-  transition: opacity .22s ease;
-}
+    .ticker-viewport{ position:relative; overflow:hidden; flex:1; height:20px; }
 
-.eegg-overlay.show{ opacity:1; }
+    .ticker-track{
+      display:inline-flex;
+      align-items:center;
+      white-space:nowrap;
+      will-change:transform;
+      animation:tickerMove 46s linear infinite;
+      animation-delay:1.5s;
+    }
 
-.eegg-card{
-  width:min(560px, 92vw);
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(15,22,32,.88);
-  box-shadow: 0 24px 80px rgba(0,0,0,.55);
-  overflow:hidden;
-  transform: translateY(10px);
-  opacity:0;
-  transition: transform .22s ease, opacity .22s ease;
-}
+    .ticker-text{ font-size:12px; font-weight:800; color:rgba(231,238,248,.92); padding-right:34px; }
 
-.eegg-overlay.show .eegg-card{
-  transform: translateY(0);
-  opacity:1;
-}
+    .ticker-dot{
+      width:6px;
+      height:6px;
+      border-radius:50%;
+      background:var(--tech);
+      box-shadow:0 0 0 3px rgba(58,160,255,.1);
+      margin:0 12px;
+      flex:0 0 auto;
+    }
 
-.eegg-body{
-  padding:18px 18px 14px;
-  color:#e7eef8;
-}
+    .ticker-inner:hover .ticker-track{ animation-play-state:paused; }
 
-.eegg-title{
-  font-weight:900;
-  letter-spacing:.4px;
-  font-size:12px;
-  text-transform:uppercase;
-  color:rgba(231,238,248,.85);
-  margin:0 0 10px;
-}
+    @keyframes tickerMove{ 0%{ transform:translateX(0); } 100%{ transform:translateX(-100%); } }
 
-.eegg-mono{
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  font-size:13px;
-  line-height:1.65;
-  color:rgba(231,238,248,.92);
-  margin:0;
-  white-space:pre-line;
-}
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+    }
 
-.eegg-photo{
-  width:100%;
-  height:240px;
-  object-fit:cover;
-  display:block;
-  filter: none;
-}
+    .card{
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
+      position:relative;
+      overflow:hidden;
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      min-height:430px;
+      transition:border-color .2s ease, box-shadow .24s ease, transform .2s ease, background .2s ease;
+    }
 
-.eegg-fadeout{
-  opacity:0 !important;
-  pointer-events:none;
-}
+    .card::before{
+      content:"";
+      position:absolute;
+      top:-42%;
+      right:-52%;
+      width:140%;
+      height:74%;
+      transform:rotate(-8deg);
+      pointer-events:none;
+      opacity:.9;
+    }
 
-/* ===== ANNOUNCEMENT TICKER (no card resize) ===== */
-.ticker{
-  position:fixed;
-  top:78px;                 /* sits below your top-right menu */
-  left:50%;
-  transform:translateX(-50%);
-  width:min(720px,100%);    /* match card width */
-  z-index:120;              /* above card, below drawer/backdrop */
-  pointer-events:none;      /* doesn't block clicks */
-}
+    .card.tech::before{ background:linear-gradient(135deg, rgba(58,160,255,.18), rgba(58,160,255,.06), transparent); }
+    .card.nontech::before{ background:linear-gradient(135deg, rgba(35,194,107,.2), rgba(35,194,107,.08), transparent); }
+    .card > *{ position:relative; z-index:1; }
 
-.ticker-inner{
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.22);
-  backdrop-filter: blur(10px);
-  overflow:hidden;
-  box-shadow: 0 18px 55px rgba(0,0,0,.35);
-}
+    .card.tech:hover{
+      border-color:rgba(58,160,255,.4);
+      box-shadow:0 22px 66px rgba(29,117,196,.34), 0 0 0 1px rgba(58,160,255,.15) inset;
+      transform:translateY(-2px);
+    }
 
-.ticker-row{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:8px 10px;
-}
+    .card.nontech:hover{
+      border-color:rgba(35,194,107,.42);
+      box-shadow:0 22px 66px rgba(27,132,81,.32), 0 0 0 1px rgba(35,194,107,.16) inset;
+      transform:translateY(-2px);
+    }
 
-.ticker-tag{
-  flex:0 0 auto;
-  font-size:11px;
-  font-weight:900;
-  letter-spacing:.9px;
-  text-transform:uppercase;
-  color:var(--muted);
-  opacity:.9;
-  padding:6px 10px;
-  border-radius:999px;
-  border:1px solid var(--line);
-  background:rgba(255,255,255,.03);
-}
+    .card h2{ margin:0; font-size:18px; font-weight:900; letter-spacing:.2px; }
 
-.ticker-viewport{
-  position:relative;
-  overflow:hidden;
-  flex:1;
-  height:18px;
-}
+    .chip{
+      margin-top:8px;
+      display:inline-flex;
+      align-items:center;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.35px;
+      font-weight:900;
+      width:fit-content;
+    }
 
-.ticker-track{
-  display:inline-flex;
-  align-items:center;
-  white-space:nowrap;
-  will-change: transform;
-  animation: tickerMove 55s linear infinite;
-  animation-delay: 1.5s;
-}
+    .tech .chip{ background:rgba(58,160,255,.16); color:#bfe4ff; border:1px solid rgba(58,160,255,.38); }
+    .nontech .chip{ background:rgba(35,194,107,.15); color:#c8f3df; border:1px solid rgba(35,194,107,.38); }
 
-.ticker-text{
-  font-size:12px;
-  font-weight:800;
-  color:rgba(231,238,248,.92);
-  padding-right:40px; /* gap between repeats */
-}
-body.theme-light .ticker-inner{
-  border-color:rgba(18,42,70,.14);
-  background:rgba(255,255,255,.72);
-  box-shadow: 0 16px 40px rgba(22,43,66,.14);
-}
-body.theme-light .ticker-text{ color:var(--text); }
-body.theme-light .ticker-tag{ background:rgba(255,255,255,.62); }
-body.theme-light .status{ background: rgba(255,255,255,.68); }
-body.theme-light .meta-box{ background: rgba(255,255,255,.62); }
-body.theme-light .notice{
-  border-color:rgba(11,31,54,.12);
-  background:rgba(255,255,255,.56);
-}
+    .section-label{
+      margin:14px 0 8px;
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      font-weight:900;
+      color:var(--muted);
+    }
 
-.ticker-dot{
-  width:6px;
-  height:6px;
-  border-radius:50%;
-  background:var(--accent);
-  box-shadow: 0 0 0 3px rgba(58,160,255,.10);
-  margin:0 12px;
-  flex:0 0 auto;
-}
+    ul{ margin:0; padding-left:18px; display:grid; gap:6px; font-size:13px; line-height:1.45; }
 
-@keyframes tickerMove{
-  0%   { transform: translateX(0); }      /* visible immediately */
-  100% { transform: translateX(-100%); }
-}
+    .forms{
+      margin-top:12px;
+      padding:10px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      display:grid;
+      gap:8px;
+    }
 
+    .forms a{
+      display:flex;
+      align-items:center;
+      color:var(--text);
+      text-decoration:none;
+      font-size:12px;
+      font-weight:800;
+      padding:8px 10px;
+      border:1px solid var(--line);
+      border-radius:10px;
+      background:rgba(255,255,255,.03);
+      transition:border-color .15s ease, background .15s ease, box-shadow .2s ease;
+      min-height:44px;
+    }
 
-/* pause on hover (only if you want it clickable later) */
-.ticker-inner:hover .ticker-track{
-  animation-play-state: paused;
-}
+    .forms a:hover{ border-color:rgba(255,255,255,.28); background:rgba(255,255,255,.06); }
+    .tech .forms a:hover{
+      border-color:rgba(58,160,255,.45);
+      box-shadow:0 0 0 1px rgba(58,160,255,.2) inset, 0 0 22px rgba(58,160,255,.22);
+    }
+    .nontech .forms a:hover{
+      border-color:rgba(35,194,107,.48);
+      box-shadow:0 0 0 1px rgba(35,194,107,.2) inset, 0 0 22px rgba(35,194,107,.2);
+    }
 
-/* Hide ticker on very small heights */
-@media (max-height: 520px){
-  .ticker{ display:none; }
-}
+    .scope-note{
+      margin-top:10px;
+      font-size:11px;
+      color:var(--muted);
+      line-height:1.45;
+      border:1px dashed rgba(255,255,255,.2);
+      border-radius:10px;
+      padding:8px 10px;
+      min-height:52px;
+    }
 
+    .cta{
+      margin-top:auto;
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:8px;
+      padding-top:12px;
+    }
+
+    .btn-liquid{
+      position:relative;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.45);
+      background:linear-gradient(180deg, rgba(255,255,255,.95), rgba(235,242,250,.9));
+      color:#071528;
+      padding:11px 16px;
+      border-radius:12px;
+      font-weight:900;
+      font-size:13px;
+      letter-spacing:.2px;
+      cursor:pointer;
+      overflow:hidden;
+      isolation:isolate;
+      transition:transform .22s ease, box-shadow .25s ease, color .25s ease, border-color .2s ease;
+    }
+
+    .btn-liquid::before,
+    .btn-liquid::after{
+      content:"";
+      position:absolute;
+      border-radius:42%;
+      z-index:0;
+      transition:transform .75s cubic-bezier(.22,.8,.2,1), opacity .35s ease;
+      animation:liquid-idle 7s ease-in-out infinite;
+    }
+
+    .btn-liquid::before{
+      width:208%;
+      height:255%;
+      left:-52%;
+      top:56%;
+      background:radial-gradient(circle at 50% 55%, var(--liquid-main) 0 52%, var(--liquid-deep) 86%);
+      transform:translateY(63%) rotate(0deg);
+    }
+
+    .btn-liquid::after{
+      width:188%;
+      height:235%;
+      left:-44%;
+      top:60%;
+      background:radial-gradient(circle at 50% 42%, var(--liquid-glow) 0 42%, var(--liquid-soft) 74%, transparent 90%);
+      transform:translateY(76%) rotate(0deg);
+      opacity:.92;
+      mix-blend-mode:screen;
+      animation-duration:5.8s;
+      animation-direction:reverse;
+    }
+
+    .btn-liquid span{ position:relative; z-index:1; }
+
+    .btn-liquid:hover{
+      transform:translateY(-1px);
+      color:#fff;
+      border-color:var(--btn-glow);
+      box-shadow:0 10px 26px var(--btn-shadow);
+    }
+
+    .btn-liquid:hover::before{ transform:translateY(-36%) rotate(-8deg); animation-duration:2.4s; }
+    .btn-liquid:hover::after{ transform:translateY(-28%) rotate(9deg); animation-duration:2s; opacity:1; }
+
+    .tech .btn-liquid{
+      --liquid-main:rgba(54,162,255,.98);
+      --liquid-deep:rgba(11,45,82,.96);
+      --liquid-glow:rgba(140,212,255,.85);
+      --liquid-soft:rgba(53,143,224,.36);
+      --btn-glow:rgba(147,207,255,.78);
+      --btn-shadow:rgba(58,160,255,.36);
+    }
+
+    .nontech .btn-liquid{
+      --liquid-main:rgba(39,196,119,.98);
+      --liquid-deep:rgba(7,64,43,.96);
+      --liquid-glow:rgba(167,247,211,.86);
+      --liquid-soft:rgba(70,175,126,.34);
+      --btn-glow:rgba(162,240,204,.8);
+      --btn-shadow:rgba(35,194,107,.34);
+    }
+
+    .tiny-note{ font-size:11px; color:var(--muted); line-height:1.45; }
+
+    .support{
+      margin-top:14px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px;
+      background:rgba(255,255,255,.03);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .support h3{ margin:0; font-size:13px; text-transform:uppercase; letter-spacing:.5px; }
+    .support p{ margin:0; font-size:12px; color:var(--muted); }
+    .support a{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      text-decoration:none;
+      color:var(--text);
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:12px;
+      font-weight:900;
+      background:rgba(255,255,255,.04);
+    }
+    .support a:hover{
+      border-color:rgba(58,160,255,.45);
+      background:rgba(58,160,255,.12);
+    }
+
+    .cell-badge{
+      margin-top:12px;
+      font-size:12px;
+      color:var(--muted);
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:7px 10px;
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      background:rgba(255,255,255,.03);
+    }
+
+    .dot{ width:8px; height:8px; border-radius:999px; background:var(--tech); }
+
+    @keyframes liquid-idle{
+      0%,100%{ border-radius:41% 59% 48% 52%/57% 45% 55% 43%; }
+      50%{ border-radius:58% 42% 51% 49%/43% 55% 45% 57%; }
+    }
+
+    body.theme-light .ticker-inner{
+      border-color:rgba(18,42,70,.14);
+      background:rgba(255,255,255,.72);
+      box-shadow:0 16px 40px rgba(22,43,66,.14);
+    }
+
+    body.theme-light .ticker-text{ color:var(--text); }
+    body.theme-light .ticker-tag{ background:rgba(255,255,255,.62); }
+    body.theme-light .cell-badge,
+    body.theme-light .support,
+    body.theme-light .forms,
+    body.theme-light .scope-note,
+    body.theme-light .notice{ background:rgba(255,255,255,.62); }
+
+    @media (max-width:920px){
+      .grid{ grid-template-columns:1fr; }
+      .card{ min-height:unset; }
+      .wrap{ padding-top:88px; }
+      .hero h1{ font-size:22px; }
+      .hero h2{ font-size:14px; }
+    }
   </style>
 </head>
 <body class="theme-dark">
-
   <div class="theme-fab">
     <button class="theme-switch" id="themeSwitch" type="button" aria-label="Toggle light and dark theme" title="Switch theme">
       <span class="theme-track">
         <span class="theme-thumb"></span>
         <span class="theme-icon theme-icon-sun" aria-hidden="true">
-          <svg viewBox="0 0 24 24" role="presentation">
-            <path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0-5a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1zm10-6a1 1 0 0 1-1 1h-2a1 1 0 1 1 0-2h2a1 1 0 0 1 1 1zM7 12a1 1 0 0 1-1 1H4a1 1 0 1 1 0-2h2a1 1 0 0 1 1 1zm11.07-6.66a1 1 0 0 1 0 1.42l-1.41 1.41a1 1 0 1 1-1.42-1.41l1.42-1.42a1 1 0 0 1 1.41 0zM8.76 15.24a1 1 0 0 1 0 1.41l-1.42 1.42a1 1 0 0 1-1.41-1.42l1.41-1.41a1 1 0 0 1 1.42 0zm0-8.48a1 1 0 0 1-1.42 0L5.93 5.34a1 1 0 0 1 1.41-1.41l1.42 1.41a1 1 0 0 1 0 1.42zm8.49 8.48 1.41 1.41a1 1 0 1 1-1.41 1.42l-1.42-1.42a1 1 0 1 1 1.42-1.41z"></path>
-          </svg>
+          <svg viewBox="0 0 24 24" role="presentation"><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0-5a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1zm10-6a1 1 0 0 1-1 1h-2a1 1 0 1 1 0-2h2a1 1 0 0 1 1 1zM7 12a1 1 0 0 1-1 1H4a1 1 0 1 1 0-2h2a1 1 0 0 1 1 1zm11.07-6.66a1 1 0 0 1 0 1.42l-1.41 1.41a1 1 0 1 1-1.42-1.41l1.42-1.42a1 1 0 0 1 1.41 0zM8.76 15.24a1 1 0 0 1 0 1.41l-1.42 1.42a1 1 0 0 1-1.41-1.42l1.41-1.41a1 1 0 0 1 1.42 0zm0-8.48a1 1 0 0 1-1.42 0L5.93 5.34a1 1 0 0 1 1.41-1.41l1.42 1.41a1 1 0 0 1 0 1.42zm8.49 8.48 1.41 1.41a1 1 0 1 1-1.41 1.42l-1.42-1.42a1 1 0 1 1 1.42-1.41z"></path></svg>
         </span>
         <span class="theme-icon theme-icon-moon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" role="presentation">
-            <path d="M20.71 14.29A9 9 0 0 1 9.71 3.29a1 1 0 0 0-1.24-1.24A11 11 0 1 0 22 15.53a1 1 0 0 0-1.29-1.24z"></path>
-          </svg>
+          <svg viewBox="0 0 24 24" role="presentation"><path d="M20.71 14.29A9 9 0 0 1 9.71 3.29a1 1 0 0 0-1.24-1.24A11 11 0 1 0 22 15.53a1 1 0 0 0-1.29-1.24z"></path></svg>
         </span>
       </span>
     </button>
   </div>
 
   <div class="menu-fab" id="menuFab">
-    <div class="menu-label">Menu</div>
+    <div class="menu-label">Pautan Pantas</div>
     <button class="hamburger" id="drawerToggle" aria-label="Buka menu" aria-expanded="false" type="button">
-      <div class="burger" aria-hidden="true">
-        <span></span><span></span><span></span>
-      </div>
+      <div class="burger" aria-hidden="true"><span></span><span></span><span></span></div>
     </button>
   </div>
 
-  <div class="ticker" id="ticker" aria-hidden="false">
-  <div class="ticker-inner">
-    <div class="ticker-row">
-      <div class="ticker-tag">Pengumuman</div>
-      <div class="ticker-viewport">
-        <div class="ticker-track" id="tickerTrack">
-          <span class="ticker-text" id="tickerText"></span>
-          <span class="ticker-dot"></span>
-          <span class="ticker-text" id="tickerText2"></span>
+  <main class="wrap">
+    <section class="hero">
+      <div class="logos">
+        <img src="assets/icon1.png" alt="Jata Negara" />
+        <img src="assets/icon2.png" alt="MINDEF" />
+      </div>
+      <h1>Cawangan Teknik & Pemeriksaan</h1>
+      <h2>Sistem Pemantauan Pemeriksaan</h2>
+      <p>Portal berpusat untuk pengurusan data, pemantauan pemeriksaan dan analisis prestasi.</p>
+    </section>
+
+    <section class="ticker" id="ticker" aria-hidden="false">
+      <div class="ticker-inner">
+        <div class="ticker-row">
+          <div class="ticker-tag">Peringatan</div>
+          <div class="ticker-viewport">
+            <div class="ticker-track" id="tickerTrack">
+              <span class="ticker-text" id="tickerText"></span>
+              <span class="ticker-dot"></span>
+              <span class="ticker-text" id="tickerText2"></span>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
+    </section>
 
+    <section class="grid" aria-label="Pilihan sel">
+      <article class="card tech">
+        <h2>Sel Teknikal</h2>
+        <span class="chip">Skop Teknikal</span>
 
-  <aside class="card">
-    <div class="logos">
-      <div class="logo"><img src="./assets/icon1.png" alt="JATA"></div>
-      <div class="logo"><img src="./assets/icon2.png" alt="MINDEF"></div>
-    </div>
+        <p class="section-label">Jenis Pemeriksaan</p>
+        <ul>
+          <li>Pemeriksaan Alat Ganti Kenderaan ATM</li>
+          <li>Pemeriksaan Mewujudkan Dokumen Peralatan ATM</li>
+          <li>Pemeriksaan Penerimaan Peralatan ATM</li>
+          <li>Pemeriksaan Penerimaan Akhir (FAT)</li>
+        </ul>
 
-    <h1>Sistem Pemantauan Pemeriksaan</h1>
-    <div class="subtitle">Sel Teknikal Cawangan Teknik dan Pemeriksaan.</div>
+        <div class="forms" aria-label="Borang Sel Teknikal">
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSdHfQWKturVq4XISrKFqgZG6teJxpDAiVcwuC26hoavMBjGLw/viewform" target="_blank" rel="noopener">Borang: Pemeriksaan Alat Ganti Kenderaan ATM</a>
+          <a href="https://forms.gle/9yxfaEAvEiHfBjTXA" target="_blank" rel="noopener">Borang: Mewujudkan Dokumen / Penerimaan Peralatan ATM</a>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSc9qcmCLyHy-t-GIo3cz1k9aoTrzk5F-ComMLORNVfxovIJ3A/viewform?usp=sharing&ouid=116666925478114456158" target="_blank" rel="noopener">Borang: Pemeriksaan Penerimaan Akhir (FAT)</a>
+        </div>
 
-    <div class="divider"></div>
+        <div class="scope-note">Maklumat pemisahan skop lebih terperinci, SOP, dan sempadan kuasa: <strong>[ISI OLEH PENTADBIR]</strong></div>
 
-    <p class="desc">
-      Portal berpusat untuk pengurusan data, pemantauan pemeriksaan, dan analisis prestasi.
-Menu menyediakan akses kepada Borang Permohonan Pemeriksaan dan pautan berkaitan.
-Untuk meneruskan, sila klik butang di bawah.
+        <div class="cta">
+          <button class="btn-liquid" data-cell="teknikal" data-target="dashboard.html"><span>Masuk Sel Teknikal</span></button>
+          <span class="tiny-note">Dashboard semasa (aktif) adalah untuk aliran ini.</span>
+        </div>
+      </article>
 
-    </p>
+      <article class="card nontech">
+        <h2>Sel Bukan Teknikal</h2>
+        <span class="chip">Skop Bukan Teknikal</span>
 
-    <div class="actions">
-      <a href="dashboard.html" class="btn-primary" id="enterBtn"><span>Masuk Portal</span></a>
-      <div class="footer">@2026 Sel Teknikal CT&P</div>
-    </div>
+        <p class="section-label">Jenis Pemeriksaan</p>
+        <ul>
+          <li>Pemeriksaan Gunasama 1</li>
+          <li>Pemeriksaan Gunasama 2</li>
+          <li>Pemeriksaan Penerimaan Akhir (FAT)</li>
+        </ul>
 
-    <div class="status">
+        <div class="forms" aria-label="Borang Sel Bukan Teknikal">
+          <a href="#" aria-disabled="true">Borang Gunasama 1: [LINK AKAN DITAMBAH]</a>
+          <a href="#" aria-disabled="true">Borang Gunasama 2: [LINK AKAN DITAMBAH]</a>
+          <a href="#" aria-disabled="true">Borang FAT (Bukan Teknikal): [LINK AKAN DITAMBAH]</a>
+        </div>
+
+        <div class="scope-note">Flow data, rujukan operasi, dan tatacara FAT bukan teknikal: <strong>[ISI OLEH PENTADBIR]</strong></div>
+
+        <div class="cta">
+          <button class="btn-liquid" data-cell="bukan_teknikal" data-target="non-teknikal.html"><span>Masuk Sel Bukan Teknikal</span></button>
+          <span class="tiny-note">Halaman khusus bukan teknikal boleh diaktifkan selepas siap database baru.</span>
+        </div>
+      </article>
+    </section>
+
+    <section class="support">
+      <div>
+        <h3>Perlukan Bantuan? Hubungi Kami</h3>
+        <p>Jika terdapat kekeliruan sel atau isu penghantaran borang, hubungi pentadbir segera.</p>
+      </div>
+      <a href="https://wa.me/qr/QPQSVVZHMP22L1" target="_blank" rel="noopener">Hubungi Pentadbir</a>
+    </section>
+
+    <div class="cell-badge" id="cellStatus">
       <span class="dot"></span>
-      Sistem Dalam Talian
+      <span id="cellStatusText">Tiada sel dipilih untuk sesi ini.</span>
+    </div>
+  </main>
+
+  <div class="drawer-backdrop" id="backdrop"></div>
+  <aside class="drawer" id="rightDrawer" aria-hidden="true">
+    <div class="d-head">
+      <span class="d-title">Pautan Pantas</span>
+      <button class="d-close" id="drawerClose" aria-label="Tutup menu" type="button">&times;</button>
+    </div>
+    <div class="d-body">
+      <div class="drawer-label">Menu</div>
+      <a class="drawer-link" href="about.html">Tentang Kami</a>
+      <a class="drawer-link" href="guide.html">Garis Panduan</a>
+      <a class="drawer-link" href="https://wa.me/qr/QPQSVVZHMP22L1" target="_blank" rel="noopener">Hubungi Pentadbir</a>
+      <div class="notice">
+        <strong>Akses terhad.</strong> Pautan ini untuk pegawai yang dibenarkan sahaja dan tertakluk kepada pematuhan audit dalaman.
+      </div>
     </div>
   </aside>
 
-  <div class="drawer-backdrop" id="backdrop"></div>
-
-  <div class="drawer" id="rightDrawer" aria-hidden="true">
-    <div class="d-head">
-      <span class="d-title">Menu & Sumber</span>
-      <button class="d-close" id="drawerClose" aria-label="Tutup menu" type="button">&times;</button>
-    </div>
-
-    <div class="d-body">
-
-      <div class="drawer-section">
-        <div class="drawer-label">Borang Dalam Talian</div>
-
-        <a class="drawer-link"
-           href="https://docs.google.com/forms/d/e/1FAIpQLSdHfQWKturVq4XISrKFqgZG6teJxpDAiVcwuC26hoavMBjGLw/viewform"
-           target="_blank" rel="noopener">
-          Permohonan Pemeriksaan Alat Ganti Kenderaan ATM
-        </a>
-
-        <a class="drawer-link"
-           href="https://forms.gle/9yxfaEAvEiHfBjTXA"
-           target="_blank" rel="noopener">
-          Permohonan Mewujudkan Dokumen Peralatan ATM / Penerimaan Peralatan ATM
-        </a>
-
-        <a class="drawer-link"
-           href="https://docs.google.com/forms/d/e/1FAIpQLSc9qcmCLyHy-t-GIo3cz1k9aoTrzk5F-ComMLORNVfxovIJ3A/viewform?usp=sharing&ouid=116666925478114456158"
-           target="_blank" rel="noopener">
-          Permohonan Pemeriksaan Penerimaan Akhir (FAT)
-        </a>
-      </div>
-
-      <div class="drawer-section">
-        <div class="drawer-label">Pautan Pantas</div>
-
-        <a class="drawer-link" href="about.html">
-          Tentang Kami
-        </a>
-
-        <a class="drawer-link"
-           href="https://wa.me/qr/QPQSVVZHMP22L1"
-           target="_blank" rel="noopener">
-          Hubungi Pentadbir
-        </a>
-
-        <a class="drawer-link" href="guide.html">
-          Garis Panduan
-        </a>
-
-        <a class="drawer-link" href="maklumbalas.html">
-          Maklumbalas
-        </a>
-
-        <div class="notice" style="margin-top:10px;">
-          <strong>Akses terhad.</strong> Portal ini untuk kegunaan pegawai yang dibenarkan sahaja.
-          Aktiviti boleh direkodkan untuk tujuan pematuhan dan audit.
-        </div>
-      </div>
-
-      <div class="drawer-section">
-        <div class="drawer-label">Maklumat Sistem</div>
-        <div class="meta-box">
-          Versi: 2.1.0<br/>
-          Kemas kini terakhir: 26 Dis 2025<br/>
-          Persekitaran: Portal Dalaman
-        </div>
-      </div>
-
-    </div>
-  </div>
-  <div class="route-overlay" id="routeOverlay" aria-hidden="true"></div>
-
   <script>
+    const CELL_KEY = "ctp_selected_cell";
+    const THEME_KEY = "ctp_theme";
+    const themeSwitch = document.getElementById("themeSwitch");
+
     const drawer = document.getElementById("rightDrawer");
     const backdrop = document.getElementById("backdrop");
     const openBtn = document.getElementById("drawerToggle");
     const closeBtn = document.getElementById("drawerClose");
-    const menuFab = document.getElementById("menuFab");
-    const enterBtn = document.getElementById("enterBtn");
-    const themeSwitch = document.getElementById("themeSwitch");
-    const routeOverlay = document.getElementById("routeOverlay");
-    const THEME_KEY = "ctp_theme";
 
-    // ===== Announcement ticker =====
-const ANNOUNCEMENTS = [
-  "Sila pastikan borang permohonan pemeriksaan yang digunakan adalah betul mengikut keperluan pemeriksaan anda.",
-  "Klik pada menu di sebelah kanan untuk mengakses borang permohonan pemeriksaan.",
-  "Pemohon digalakan untuk membaca garis panduan sebelum menghantar permohonan",
-  "Sebarang pertanyaan lanjut boleh berhubung terus dengan pentadbir sistem SSjn Zaidi."
-];
-const ANNOUNCEMENT = ANNOUNCEMENTS.join("   •   ");
-
-
-const t1 = document.getElementById("tickerText");
-const t2 = document.getElementById("tickerText2");
-if (t1 && t2) {
-  t1.textContent = ANNOUNCEMENT;
-  t2.textContent = ANNOUNCEMENT; // repeat for seamless loop
-}
+    const ANNOUNCEMENTS = [
+      { priority: 100, text: "Sila pastikan anda memilih sel dan borang yang betul mengikut keperluan pemeriksaan anda." },
+      { priority: 90, text: "Semak SOP dan garis panduan yang telah disediakan sebelum menghantar permohonan." },
+      { priority: 80, text: "Sebarang permasalah boleh berhubung terus dengan SSjn Zaidi Abdullah." }
+    ];
 
     function applyTheme(theme){
       const mode = theme === "light" ? "light" : "dark";
@@ -1093,9 +861,7 @@ if (t1 && t2) {
 
     function initTheme(){
       let stored = "";
-      try{
-        stored = localStorage.getItem(THEME_KEY) || "";
-      }catch(e){}
+      try{ stored = localStorage.getItem(THEME_KEY) || ""; }catch(e){}
       applyTheme(stored || "dark");
       if(themeSwitch){
         themeSwitch.addEventListener("click", () => {
@@ -1106,311 +872,83 @@ if (t1 && t2) {
         });
       }
     }
-    initTheme();
 
+    function initTicker(){
+      const t1 = document.getElementById("tickerText");
+      const t2 = document.getElementById("tickerText2");
+      if(!t1 || !t2) return;
+      const sorted = [...ANNOUNCEMENTS]
+        .sort((a,b) => b.priority - a.priority)
+        .map(x => x.text);
+      const text = sorted.join("   •   ");
+      t1.textContent = text;
+      t2.textContent = text;
+    }
 
-    function toggle(open){
+    function toggleDrawer(open){
       drawer.classList.toggle("open", open);
       backdrop.classList.toggle("open", open);
       drawer.setAttribute("aria-hidden", open ? "false" : "true");
       openBtn.classList.toggle("is-open", open);
       openBtn.setAttribute("aria-expanded", open ? "true" : "false");
+    }
 
-      if (open) menuFab.classList.remove("hide");
+    function setStatusText(){
+      const status = document.getElementById("cellStatusText");
+      const dot = document.querySelector(".cell-badge .dot");
+      const selected = localStorage.getItem(CELL_KEY);
+      if(selected === "teknikal"){
+        status.textContent = "Sel aktif semasa: Sel Teknikal";
+        dot.style.background = "#3aa0ff";
+        return;
+      }
+      if(selected === "bukan_teknikal"){
+        status.textContent = "Sel aktif semasa: Sel Bukan Teknikal";
+        dot.style.background = "#23c26b";
+        return;
+      }
+      status.textContent = "Tiada sel dipilih untuk sesi ini.";
+      dot.style.background = "#6b7f99";
+    }
+
+    function handleRoutingClick(ev){
+      const btn = ev.target.closest("button[data-cell]");
+      if(!btn) return;
+      const selectedCell = btn.getAttribute("data-cell") || "";
+      const target = btn.getAttribute("data-target") || "";
+      if(!selectedCell || !target) return;
+
+      const label = selectedCell === "teknikal" ? "Sel Teknikal" : "Sel Bukan Teknikal";
+      const confirmed = confirm("Anda sedang memilih " + label + ". Teruskan?");
+      if(!confirmed) return;
+
+      localStorage.setItem(CELL_KEY, selectedCell);
+
+      if(target === "non-teknikal.html"){
+        alert("Halaman Sel Bukan Teknikal belum diaktifkan lagi. Context telah disimpan sebagai Sel Bukan Teknikal.");
+        setStatusText();
+        return;
+      }
+
+      window.location.href = target;
     }
 
     openBtn.addEventListener("click", () => {
       const isOpen = drawer.classList.contains("open");
-      toggle(!isOpen);
+      toggleDrawer(!isOpen);
+    });
+    closeBtn.addEventListener("click", () => toggleDrawer(false));
+    backdrop.addEventListener("click", () => toggleDrawer(false));
+
+    window.addEventListener("keydown", (e) => {
+      if(e.key === "Escape") toggleDrawer(false);
     });
 
-    closeBtn.addEventListener("click", () => toggle(false));
-    backdrop.addEventListener("click", () => toggle(false));
+    document.addEventListener("click", handleRoutingClick);
 
-    document.addEventListener("keydown", e => {
-      if (e.key === "Escape") toggle(false);
-    });
-
-    // Cinematic route-out: fluid surge + iris close before dashboard redirect
-    enterBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      enterBtn.setAttribute("aria-disabled", "true");
-      enterBtn.classList.add("is-routing");
-      const label = enterBtn.querySelector("span");
-      if (label) label.textContent = "Membuka papan pemuka...";
-      const rect = enterBtn.getBoundingClientRect();
-      const x = `${rect.left + (rect.width / 2)}px`;
-      const y = `${rect.top + (rect.height / 2)}px`;
-      document.body.style.setProperty("--iris-x", x);
-      document.body.style.setProperty("--iris-y", y);
-      if(routeOverlay) routeOverlay.setAttribute("aria-hidden", "false");
-      document.body.classList.add("route-out");
-      setTimeout(() => {
-        window.location.href = enterBtn.getAttribute("href");
-      }, 880);
-    });
-
-    // Auto-hide menu on scroll down, show on scroll up
-    let lastY = window.scrollY;
-    let ticking = false;
-
-    function onScroll(){
-      const y = window.scrollY;
-
-      if (drawer.classList.contains("open")) {
-        menuFab.classList.remove("hide");
-        lastY = y;
-        ticking = false;
-        return;
-      }
-
-      const goingDown = y > lastY;
-      const delta = Math.abs(y - lastY);
-
-      if (delta < 6) {
-        ticking = false;
-        return;
-      }
-
-      if (goingDown) menuFab.classList.add("hide");
-      else menuFab.classList.remove("hide");
-
-      lastY = y;
-      ticking = false;
-    }
-
-    window.addEventListener("scroll", () => {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(onScroll);
-      }
-    }, { passive:true });
-
-    // ===== Easter egg: sound + grayscale dim fade (no structure changes) =====
-(function(){
-  const AUDIO_SRC = "./assets/easter-egg.mp3"; // change filename if needed
-  let audio = null;
-  let audioUnlocked = false;
-
-  function unlockAudioOnce(){
-    if (audioUnlocked) return;
-    audioUnlocked = true;
-
-    // Create audio on first real user interaction
-    audio = new Audio(AUDIO_SRC);
-    audio.preload = "auto";
-    audio.volume = 0.9;
-
-    // Try a silent play and pause to unlock on some browsers
-    audio.play().then(() => {
-      audio.pause();
-      audio.currentTime = 0;
-    }).catch(() => {
-      // If it fails, we still keep audio object and will try again on trigger
-    });
-
-    document.removeEventListener("pointerdown", unlockAudioOnce, { capture:true });
-    document.removeEventListener("keydown", unlockAudioOnce, { capture:true });
-  }
-
-  // Unlock sound as early as possible using user gesture
-  document.addEventListener("pointerdown", unlockAudioOnce, { capture:true, once:true });
-  document.addEventListener("keydown", unlockAudioOnce, { capture:true, once:true });
-
-  function startEasterEgg(){
-    // Toggle effect on and off
-    const on = !document.body.classList.contains("eegg-fade");
-    document.body.classList.toggle("eegg-fade", on);
-
-    // Play or stop audio
-    if (on) {
-      if (!audio) audio = new Audio(AUDIO_SRC);
-      audio.currentTime = 0;
-
-      audio.play().catch(() => {
-        // If blocked, user can click once and it will work next time
-        // No DOM changes, so we do nothing noisy here
-      });
-    } else {
-      if (audio) {
-        audio.pause();
-        audio.currentTime = 0;
-      }
-    }
-  }
-
-  // Hook this to your existing easter egg trigger
-  // If you already have a Konami trigger, call startEasterEgg() there.
-  // For example, if your trigger currently does: toast("Mode Inspektor: Aktif ✔");
-  // Add: startEasterEgg();
-
-  // If you want a quick trigger for testing right now:
-  // Press Shift + E
-  document.addEventListener("keydown", (e) => {
-    if (e.shiftKey && (e.key === "E" || e.key === "e")) startEasterEgg();
-  });
-
-  // Expose function if you want to call it from elsewhere
-  window.__startEasterEgg = startEasterEgg;
-})();
-
-    // ===== Easter egg: 40s fade to black then back, re-triggerable =====
-(function(){
-  const DURATION_MS = 40000;
-
-  function startFadeCycle(){
-    // restart animation cleanly
-    document.body.classList.remove("eegg-fade");
-    void document.body.offsetWidth; // reflow to restart animation
-    document.body.classList.add("eegg-fade");
-
-    // remove class after animation so it can be triggered again
-    setTimeout(() => {
-      document.body.classList.remove("eegg-fade");
-    }, DURATION_MS + 50);
-  }
-
-  // expose for your easter egg trigger (Konami, secret click, etc.)
-  window.__startFadeCycle = startFadeCycle;
-})();
-
-// ===== Easter egg: type "ZAIDI" to trigger deletion joke + dev note + photo =====
-(function(){
-  const TRIGGER = "zaidi";
-  const PHOTO_SRC = "./assets/zaidi.jpg"; // change if needed
-  const AUTO_DISMISS_MS = 10000;          // 10s after reveal appears
-  const STEP_MS = 650;                    // countdown pace
-  const PAUSE_MS = 750;                   // pause after 0
-  const ELLIPSIS_MS = 450;                // pause after "…"
-
-  let buffer = "";
-  let active = false;
-
-  function isTypingIntoField(){
-    const el = document.activeElement;
-    if (!el) return false;
-    const tag = (el.tagName || "").toLowerCase();
-    return tag === "input" || tag === "textarea" || el.isContentEditable;
-  }
-
-  function safeRemove(node){
-    if (!node) return;
-    node.classList.add("eegg-fadeout");
-    setTimeout(() => node.remove(), 240);
-  }
-
-  function runEasterEgg(){
-    if (active) return;
-    active = true;
-
-    // build overlay (no changes to your existing DOM structure)
-    const overlay = document.createElement("div");
-    overlay.className = "eegg-overlay";
-    overlay.setAttribute("role", "dialog");
-    overlay.setAttribute("aria-label", "Developer note");
-
-    const card = document.createElement("div");
-    card.className = "eegg-card";
-
-    const body = document.createElement("div");
-    body.className = "eegg-body";
-
-    const title = document.createElement("div");
-    title.className = "eegg-title";
-    title.textContent = "SYSTEM";
-
-    const text = document.createElement("p");
-    text.className = "eegg-mono";
-    text.textContent = "SYSTEM DELETION";
-
-    body.appendChild(title);
-    body.appendChild(text);
-    card.appendChild(body);
-    overlay.appendChild(card);
-    document.body.appendChild(overlay);
-
-    // show
-    requestAnimationFrame(() => overlay.classList.add("show"));
-
-    // phase timings
-    const countdown = ["5", "4", "3", "2", "1", "0"];
-    let idx = 0;
-
-    function showDevNoteAndPhoto(){
-      // text
-      title.textContent = "DEVELOPER NOTE";
-      text.textContent =
-        "Developer note:\n" +
-        "You can relax.\n" +
-        "I don’t delete things lightly.";
-
-      // photo (color, candid)
-      const img = document.createElement("img");
-      img.className = "eegg-photo";
-      img.src = PHOTO_SRC;
-      img.alt = "Developer photo";
-      img.loading = "eager";
-
-      // put photo under the note, same moment
-      card.appendChild(img);
-
-      // auto dismiss after 10s
-      setTimeout(() => {
-        safeRemove(overlay);
-        active = false;
-      }, AUTO_DISMISS_MS);
-    }
-
-    // countdown sequence
-    const t1 = setInterval(() => {
-      // switch to single-line mechanical countdown with dot separators
-      if (idx === 0) {
-        title.textContent = "SYSTEM";
-      }
-      const left = countdown.slice(idx).join(" · ");
-      text.textContent = left;
-      idx++;
-
-      if (idx > countdown.length) {
-        clearInterval(t1);
-
-        // pause
-        setTimeout(() => {
-          text.textContent = "…";
-
-          // ellipsis beat
-          setTimeout(() => {
-            showDevNoteAndPhoto();
-          }, ELLIPSIS_MS);
-
-        }, PAUSE_MS);
-      }
-    }, STEP_MS);
-
-    // allow click to dismiss early (optional but harmless)
-    overlay.addEventListener("click", () => {
-      clearInterval(t1);
-      safeRemove(overlay);
-      active = false;
-    }, { once:true });
-  }
-
-  document.addEventListener("keydown", (e) => {
-    if (active) return;
-    if (isTypingIntoField()) return;
-
-    const k = e.key;
-    if (k.length !== 1) return;
-
-    buffer = (buffer + k.toLowerCase()).slice(-TRIGGER.length);
-    if (buffer === TRIGGER) {
-      buffer = "";
-      runEasterEgg();
-    }
-  });
-})();
-
+    initTheme();
+    initTicker();
+    setStatusText();
   </script>
 </body>
 </html>
-
