@@ -67,15 +67,7 @@
     let status = $status.value.trim();
     if (!status || status.toLowerCase().includes("all")) status = "";
 
-    try {
-      $meta.textContent = "Connecting...";
-      // We can skip explicit meta() call if we just want data, but it's fine to keep
-      const m = await API.meta(); 
-      $meta.textContent = m.ok ? "Connected" : "API Error";
-    } catch (e) {
-      console.error(e);
-      $meta.textContent = "Offline";
-    }
+    $meta.textContent = "Loading...";
 
     let res;
     try {
