@@ -1,0 +1,639 @@
+﻿<!doctype html>
+<html lang="ms">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rancangan Pergerakan | CT&P Portal</title>
+  <meta name="description" content="Rancangan Pergerakan Tugas Pemeriksaan Cawangan Teknik dan Pemeriksaan." />
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --panel:#0f1620;
+      --panel2:#0c121a;
+      --text:#e7eef8;
+      --muted:#9fb0c6;
+      --line:rgba(255,255,255,.08);
+      --accent:#3aa0ff;
+      --good:#23c26b;
+      --shadow:0 20px 60px rgba(0,0,0,.45);
+      --radius:16px;
+      --soft:rgba(255,255,255,.04);
+      --hover:rgba(255,255,255,.08);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 500px at 12% -12%, rgba(58,160,255,.16), transparent 55%),
+        radial-gradient(900px 500px at 88% 10%, rgba(35,194,107,.12), transparent 50%),
+        var(--bg);
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      border-bottom:1px solid var(--line);
+      backdrop-filter: blur(12px);
+      background: rgba(11,15,20,.72);
+    }
+
+    .topbar-inner{
+      max-width:1100px;
+      margin:0 auto;
+      padding:14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .brand{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+
+    .brand h1{
+      margin:0;
+      font-size:15px;
+      font-weight:900;
+      letter-spacing:.3px;
+      text-transform:uppercase;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .brand p{
+      margin:0;
+      color:var(--muted);
+      font-size:12px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:var(--soft);
+      color:var(--text);
+      text-decoration:none;
+      font-weight:800;
+      padding:10px 12px;
+      transition: background .15s ease, transform .12s ease, border-color .15s ease;
+    }
+
+    .btn:hover{
+      background:var(--hover);
+      border-color:rgba(58,160,255,.35);
+      transform: translateY(-1px);
+    }
+
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:20px 16px 70px;
+      display:grid;
+      gap:14px;
+    }
+
+    .card{
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:var(--panel);
+      box-shadow:var(--shadow);
+    }
+
+    .hero{
+      padding:18px;
+      background:
+        radial-gradient(120% 120% at 20% 8%, rgba(58,160,255,.22), transparent 60%),
+        radial-gradient(120% 120% at 88% 80%, rgba(35,194,107,.14), transparent 60%),
+        var(--panel);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .hero h2{
+      margin:0;
+      font-size:20px;
+      line-height:1.3;
+      font-weight:1000;
+      text-transform:uppercase;
+      letter-spacing:.35px;
+    }
+
+    .hero .sub{
+      margin-top:8px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .chips{
+      margin-top:12px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      padding:7px 10px;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.2px;
+      background:rgba(255,255,255,.03);
+      color:var(--text);
+    }
+
+    .chip .dot{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:var(--accent);
+      box-shadow:0 0 0 3px rgba(58,160,255,.14);
+    }
+
+    .grid-2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+
+    .section{
+      padding:14px;
+      background:var(--panel2);
+    }
+
+    .section h3{
+      margin:0 0 10px;
+      font-size:12px;
+      font-weight:1000;
+      text-transform:uppercase;
+      letter-spacing:.35px;
+      color:var(--muted);
+    }
+
+    .list{
+      margin:0;
+      padding:0;
+      list-style:none;
+      display:grid;
+      gap:8px;
+    }
+
+    .list li{
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:10px;
+      background:rgba(255,255,255,.03);
+      font-size:14px;
+      font-weight:700;
+      line-height:1.45;
+      transition: background .15s ease, border-color .15s ease;
+    }
+
+    .list li:hover{
+      background:rgba(58,160,255,.08);
+      border-color:rgba(58,160,255,.28);
+    }
+
+    .timeline{
+      padding:14px;
+      background:var(--panel2);
+    }
+
+    .timeline h3{
+      margin:0 0 12px;
+      font-size:12px;
+      font-weight:1000;
+      letter-spacing:.35px;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+
+    .day{
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:rgba(255,255,255,.03);
+      overflow:hidden;
+      margin-bottom:10px;
+      transition: border-color .15s ease, transform .12s ease, box-shadow .15s ease;
+    }
+
+    .day:hover{
+      border-color:rgba(58,160,255,.32);
+      transform:translateY(-1px);
+      box-shadow:0 10px 28px rgba(0,0,0,.25);
+    }
+
+    .day summary{
+      list-style:none;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px 14px;
+      font-weight:900;
+      letter-spacing:.2px;
+    }
+
+    .day summary::-webkit-details-marker{ display:none; }
+
+    .day-date{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      min-width:0;
+    }
+
+    .badge{
+      border:1px solid rgba(58,160,255,.35);
+      background:rgba(58,160,255,.12);
+      color:#bfe4ff;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.2px;
+      padding:6px 9px;
+      white-space:nowrap;
+    }
+
+    .day-route{
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+      white-space:nowrap;
+    }
+
+    .day-body{
+      border-top:1px solid var(--line);
+      padding:12px 14px 14px;
+      display:grid;
+      gap:10px;
+    }
+
+    .row{
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:rgba(255,255,255,.03);
+      padding:10px;
+    }
+
+    .row .k{
+      font-size:11px;
+      font-weight:1000;
+      letter-spacing:.35px;
+      text-transform:uppercase;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+
+    .row .v{
+      font-size:13px;
+      line-height:1.5;
+      font-weight:700;
+    }
+
+    .flight-grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap:8px;
+      margin-top:8px;
+    }
+
+    .flight-item{
+      border:1px solid var(--line);
+      border-radius:10px;
+      padding:8px;
+      background:rgba(255,255,255,.03);
+      font-size:12px;
+      line-height:1.4;
+    }
+
+    .flight-item b{
+      display:block;
+      color:var(--muted);
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.3px;
+      margin-bottom:2px;
+    }
+
+    .summary{
+      padding:14px;
+      background:var(--panel2);
+    }
+
+    .summary h3{
+      margin:0 0 12px;
+      font-size:12px;
+      text-transform:uppercase;
+      color:var(--muted);
+      font-weight:1000;
+      letter-spacing:.35px;
+    }
+
+    .table-wrap{
+      overflow:auto;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+    }
+
+    table{
+      width:100%;
+      min-width:760px;
+      border-collapse:collapse;
+    }
+
+    th, td{
+      text-align:left;
+      padding:12px;
+      border-bottom:1px solid var(--line);
+      vertical-align:top;
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    th{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.35px;
+      color:var(--muted);
+      font-weight:1000;
+      background:rgba(255,255,255,.03);
+    }
+
+    .footer-action{
+      display:flex;
+      justify-content:flex-end;
+      margin-top:12px;
+    }
+
+    .reveal{
+      opacity:0;
+      transform:translateY(16px);
+      transition: opacity .45s ease, transform .45s ease;
+    }
+
+    .reveal.show{
+      opacity:1;
+      transform:none;
+    }
+
+    @media (max-width: 900px){
+      .grid-2{ grid-template-columns: 1fr; }
+      .flight-grid{ grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px){
+      .topbar-inner{
+        flex-direction:column;
+        align-items:stretch;
+      }
+      .btn{
+        justify-content:center;
+      }
+      .hero h2{
+        font-size:17px;
+      }
+      .day summary{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+      .day-route{
+        white-space:normal;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <h1>Rancangan Pergerakan</h1>
+        <p>Portal CT&amp;P &bull; Itinerari tugas pemeriksaan</p>
+      </div>
+      <a class="btn" href="dashboard.html" onclick="if(history.length > 1){ history.back(); return false; }">Kembali ke Schedule</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card hero reveal">
+      <h2>ITINERARI PERGERAKAN TUGAS PEMERIKSAAN</h2>
+      <div class="sub">
+        <div><b>Cawangan Teknik dan Pemeriksaan</b></div>
+        <div><b>Bahagian Perolehan, Kementerian Pertahanan</b></div>
+      </div>
+      <div class="chips">
+        <span class="chip"><span class="dot"></span>9 - 12 Mac 2026</span>
+        <span class="chip"><span class="dot" style="background:var(--good); box-shadow:0 0 0 3px rgba(35,194,107,.14);"></span>Sarawak &amp; Sabah</span>
+      </div>
+    </section>
+
+    <section class="grid-2 reveal">
+      <article class="card section">
+        <h3>Pegawai/Pemeriksa</h3>
+        <ol class="list" style="list-style:decimal; padding-left:20px;">
+          <li>SSjn Mohamad Zaidi bin Abdullah</li>
+          <li>Sjn Nazirul Hafiz bin Abd Shukor</li>
+        </ol>
+      </article>
+
+      <article class="card section">
+        <h3>Tujuan</h3>
+        <ul class="list">
+          <li>Melaksanakan pemeriksaan penerimaan dan pemeriksaan mewujudkan dokumen Peralatan ATM di beberapa pasukan di Sarawak dan Sabah.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="card timeline reveal">
+      <h3>Timeline Harian</h3>
+
+      <details class="day" open>
+        <summary>
+          <span class="day-date"><span class="badge">9 Mac 2026 (Isnin)</span></span>
+          <span class="day-route">Kuala Lumpur &rarr; Kuching</span>
+        </summary>
+        <div class="day-body">
+          <div class="row">
+            <div class="k">&#128694; Pergerakan</div>
+            <div class="v">Kuala Lumpur &rarr; Kuching</div>
+          </div>
+          <div class="row">
+            <div class="k">&#9992; Penerbangan</div>
+            <div class="flight-grid">
+              <div class="flight-item"><b>Syarikat</b>Malaysia Airlines</div>
+              <div class="flight-item"><b>&#9992; Penerbangan</b>MH2542</div>
+              <div class="flight-item"><b>&#128339; Berlepas</b>07:50 pagi &ndash; KLIA</div>
+              <div class="flight-item"><b>&#128339; Tiba</b>09:40 pagi &ndash; Lapangan Terbang Antarabangsa Kuching</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="k">&#128221; Aktiviti</div>
+            <div class="v">
+              Bergerak ke <b>Kem Pending, Kuching</b><br/>
+              Melaksanakan <b>Pemeriksaan Penerimaan Peralatan ATM</b><br/>
+              Pasukan: <b>71 Batalion Kor Ordnans Diraja</b>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="day">
+        <summary>
+          <span class="day-date"><span class="badge">10 Mac 2026 (Selasa)</span></span>
+          <span class="day-route">Kuching, Sarawak</span>
+        </summary>
+        <div class="day-body">
+          <div class="row">
+            <div class="k">&#128205; Lokasi</div>
+            <div class="v">Kuching, Sarawak</div>
+          </div>
+          <div class="row">
+            <div class="k">&#128694; Aktiviti</div>
+            <div class="v">
+              Pergerakan ke <b>Kem 3 Briged</b><br/>
+              Seterusnya ke <b>Kem Penrissen Lama</b>
+            </div>
+          </div>
+          <div class="row">
+            <div class="k">&#128221; Tugas</div>
+            <div class="v">Melaksanakan <b>Pemeriksaan Mewujudkan Dokumen Peralatan ATM</b></div>
+          </div>
+          <div class="row">
+            <div class="k">Pasukan terlibat</div>
+            <div class="v">
+              <b>Kem 3 Briged</b><br/>
+              <b>8 Rejimen Artileri Diraja</b>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="day">
+        <summary>
+          <span class="day-date"><span class="badge">11 Mac 2026 (Rabu)</span></span>
+          <span class="day-route">Kuching &rarr; Kota Kinabalu</span>
+        </summary>
+        <div class="day-body">
+          <div class="row">
+            <div class="k">&#128694; Pergerakan</div>
+            <div class="v">Kuching &rarr; Kota Kinabalu</div>
+          </div>
+          <div class="row">
+            <div class="k">&#9992; Penerbangan</div>
+            <div class="flight-grid">
+              <div class="flight-item"><b>Syarikat</b>AirAsia</div>
+              <div class="flight-item"><b>&#9992; Penerbangan</b>AK6350</div>
+              <div class="flight-item"><b>&#128339; Berlepas</b>06:00 pagi &ndash; Lapangan Terbang Kuching</div>
+              <div class="flight-item"><b>&#128339; Tiba</b>07:25 pagi &ndash; Lapangan Terbang Kota Kinabalu</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="k">&#128221; Aktiviti</div>
+            <div class="v">
+              Bergerak ke <b>Kem Lok Kawi, Kota Kinabalu</b><br/>
+              Melaksanakan <b>Pemeriksaan Penerimaan Peralatan ATM</b><br/>
+              Pasukan: <b>75 Batalion Kor Ordnans Diraja</b>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="day">
+        <summary>
+          <span class="day-date"><span class="badge">12 Mac 2026 (Khamis)</span></span>
+          <span class="day-route">Kota Kinabalu &rarr; Kuala Lumpur</span>
+        </summary>
+        <div class="day-body">
+          <div class="row">
+            <div class="k">&#128694; Pergerakan</div>
+            <div class="v">Kota Kinabalu &rarr; Kuala Lumpur</div>
+          </div>
+          <div class="row">
+            <div class="k">&#9992; Penerbangan</div>
+            <div class="flight-grid">
+              <div class="flight-item"><b>Syarikat</b>Malaysia Airlines</div>
+              <div class="flight-item"><b>&#9992; Penerbangan</b>MH2621</div>
+              <div class="flight-item"><b>&#128339; Berlepas</b>11:55 pagi &ndash; Kota Kinabalu</div>
+              <div class="flight-item"><b>&#128339; Tiba</b>02:35 petang &ndash; KLIA</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="k">&#128221; Aktiviti</div>
+            <div class="v">Tiba di Kuala Lumpur dan tamat penugasan.</div>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="card summary reveal">
+      <h3>Ringkasan Pergerakan</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Tarikh</th>
+              <th>Lokasi</th>
+              <th>Aktiviti</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>9 Mac</td>
+              <td>Kuala Lumpur &rarr; Kuching</td>
+              <td>Penerbangan dan pemeriksaan di 71 Bn KOD</td>
+            </tr>
+            <tr>
+              <td>10 Mac</td>
+              <td>Kuching</td>
+              <td>Pemeriksaan Kem 3 Briged &amp; 8 RAD</td>
+            </tr>
+            <tr>
+              <td>11 Mac</td>
+              <td>Kuching &rarr; Kota Kinabalu</td>
+              <td>Penerbangan dan pemeriksaan di 75 Bn KOD</td>
+            </tr>
+            <tr>
+              <td>12 Mac</td>
+              <td>Kota Kinabalu &rarr; Kuala Lumpur</td>
+              <td>Penerbangan pulang</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="footer-action">
+        <a class="btn" href="dashboard.html" onclick="if(history.length > 1){ history.back(); return false; }">Kembali ke Schedule</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const blocks = document.querySelectorAll(".reveal");
+      blocks.forEach((el, i) => {
+        setTimeout(() => el.classList.add("show"), i * 90);
+      });
+    });
+  </script>
+</body>
+</html>
