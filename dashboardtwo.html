@@ -819,11 +819,12 @@
       background: var(--muted);
       box-shadow: 0 0 0 3px rgba(255,255,255,.04);
     }
-    .s-assigned .dot{ background: #f59e0b; }
+    .s-assigned .dot{ background: #7dd3fc; }
     .s-pending .dot{ background: var(--warn); }
     .s-progress .dot{ background: var(--accent); }
     .s-done .dot{ background: var(--good); }
     .s-cancel .dot{ background: var(--bad); }
+    .s-reject .dot{ background: #ef4444; }
 
     .assignees{
       display:flex;
@@ -2500,6 +2501,7 @@
       if(st === "In Progress") return "s-progress";
       if(st === "Completed") return "s-done";
       if(st === "Cancelled") return "s-cancel";
+      if(st === "Rejected") return "s-reject";
       return "";
     }
 
@@ -2616,6 +2618,7 @@ function formatDate(raw){
       if(s.includes("pending") || s.includes("baharu") || s.includes("baru")) return "Pending";
       if(s.includes("progress") || s.includes("sedang") || s.includes("jalan")) return "In Progress";
       if(s.includes("complete") || s.includes("selesai") || s.includes("tamat")) return "Completed";
+      if(s.includes("reject") || s.includes("ditolak") || s.includes("tolak")) return "Rejected";
       if(s.includes("cancel") || s.includes("batal")) return "Cancelled";
       return safe(raw);
     }
