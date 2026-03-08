@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Portal CT&P | Pilih Sel</title>
-  <meta name="description" content="Halaman pemilihan Sel Teknikal atau Sel Bukan Teknikal di bawah Cawangan Teknik & Pemeriksaan." />
+  <meta name="description" content="Halaman pemilihan Sel Teknikal atau Sel Non Teknikal di bawah Cawangan Teknik & Pemeriksaan." />
   <style>
     :root{
       --bg:#0b0f14;
@@ -460,6 +460,31 @@
 
     .card h2{ margin:0; font-size:18px; font-weight:900; letter-spacing:.2px; }
 
+    .build-tag{
+      margin-top:10px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 11px;
+      border-radius:999px;
+      border:1px solid rgba(255,180,77,.34);
+      background:rgba(255,180,77,.14);
+      color:#fff2dc;
+      font-size:10px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:1px;
+    }
+
+    .build-tag::before{
+      content:"";
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:#ffb44d;
+      box-shadow:0 0 12px rgba(255,180,77,.5);
+    }
+
     .chip{
       margin-top:8px;
       display:inline-flex;
@@ -473,8 +498,8 @@
       width:fit-content;
     }
 
-    .tech .chip{ background:rgba(58,160,255,.16); color:#bfe4ff; border:1px solid rgba(58,160,255,.38); }
-    .nontech .chip{ background:rgba(35,194,107,.15); color:#c8f3df; border:1px solid rgba(35,194,107,.38); }
+    .tech .chip{ background:rgba(58,160,255,.16); color:#e9f5ff; border:1px solid rgba(58,160,255,.38); }
+    .nontech .chip{ background:rgba(35,194,107,.15); color:#ecfff4; border:1px solid rgba(35,194,107,.38); }
 
     .section-label{
       margin:14px 0 8px;
@@ -775,6 +800,24 @@
     body.theme-light .scope-note,
     body.theme-light .notice{ background:rgba(255,255,255,.62); }
 
+    body.theme-light .tech .chip{
+      background:rgba(47,135,220,.14);
+      color:#0c4f8d;
+      border-color:rgba(47,135,220,.28);
+    }
+
+    body.theme-light .nontech .chip{
+      background:rgba(30,164,92,.14);
+      color:#0f6b3a;
+      border-color:rgba(30,164,92,.28);
+    }
+
+    body.theme-light .build-tag{
+      background:rgba(255,180,77,.20);
+      color:#8a4300;
+      border-color:rgba(218,121,0,.28);
+    }
+
     body.theme-light .choice-modal{
       box-shadow:0 24px 60px rgba(18,33,54,.2);
     }
@@ -864,8 +907,9 @@
       </article>
 
       <article class="card nontech">
-        <h2>Sel Bukan Teknikal</h2>
-        <span class="chip">Skop Bukan Teknikal</span>
+        <h2>Sel Non Teknikal</h2>
+        <span class="build-tag">Under Construction</span>
+        <span class="chip">Skop Non Teknikal</span>
 
         <p class="section-label">Jenis Pemeriksaan</p>
         <ul>
@@ -874,17 +918,17 @@
           <li>Pemeriksaan Penerimaan Akhir (FAT)</li>
         </ul>
 
-        <div class="forms" aria-label="Borang Sel Bukan Teknikal">
+        <div class="forms" aria-label="Borang Sel Non Teknikal">
           <a href="#" aria-disabled="true">Borang Gunasama 1: [LINK AKAN DITAMBAH]</a>
           <a href="#" aria-disabled="true">Borang Gunasama 2: [LINK AKAN DITAMBAH]</a>
-          <a href="#" aria-disabled="true">Borang FAT (Bukan Teknikal): [LINK AKAN DITAMBAH]</a>
+          <a href="#" aria-disabled="true">Borang FAT (Non Teknikal): [LINK AKAN DITAMBAH]</a>
         </div>
 
-        <div class="scope-note">Flow data, rujukan operasi, dan tatacara FAT bukan teknikal: <strong>[ISI OLEH PENTADBIR]</strong></div>
+        <div class="scope-note">Flow data, rujukan operasi, dan tatacara FAT non teknikal: <strong>[ISI OLEH PENTADBIR]</strong></div>
 
         <div class="cta">
-          <button class="btn-liquid" data-cell="bukan_teknikal" data-target="dashboardtwo.html"><span>Masuk Sel Bukan Teknikal</span></button>
-          <span class="tiny-note">Dashboard sel bukan teknikal menggunakan tema hijau dan sumber data berasingan.</span>
+          <button class="btn-liquid" data-cell="bukan_teknikal" data-target="dashboardtwo.html"><span>Masuk Sel Non Teknikal</span></button>
+          <span class="tiny-note">Dashboard sel non teknikal menggunakan tema hijau dan sumber data berasingan.</span>
         </div>
       </article>
     </section>
@@ -912,7 +956,7 @@
     <div class="d-body">
       <div class="drawer-label">Menu</div>
       <a class="drawer-link" href="dashboard.html">Dashboard Sel Teknikal</a>
-      <a class="drawer-link" href="dashboardtwo.html">Dashboard Sel Bukan Teknikal</a>
+      <a class="drawer-link" href="dashboardtwo.html">Dashboard Sel Non Teknikal</a>
       <a class="drawer-link" href="about.html">Tentang Kami</a>
       <a class="drawer-link" href="guide.html">Garis Panduan</a>
       <a class="drawer-link" href="https://wa.me/qr/QPQSVVZHMP22L1" target="_blank" rel="noopener">Hubungi Pentadbir</a>
@@ -991,7 +1035,7 @@
         return;
       }
       if(selected === "bukan_teknikal"){
-        status.textContent = "Sel aktif semasa: Sel Bukan Teknikal";
+        status.textContent = "Sel aktif semasa: Sel Non Teknikal";
         dot.style.background = "#23c26b";
         return;
       }
