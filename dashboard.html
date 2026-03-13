@@ -463,6 +463,64 @@
       text-transform:uppercase;
     }
 
+    .audio-panel{
+      margin-top:16px;
+      padding:14px 16px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.08);
+      display:grid;
+      gap:12px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+    }
+
+    .audio-meta{
+      display:grid;
+      gap:4px;
+    }
+
+    .audio-meta strong{
+      font-size:12px;
+      letter-spacing:.8px;
+      text-transform:uppercase;
+    }
+
+    .audio-status{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.55;
+    }
+
+    .audio-controls{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    .audio-btn{
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:9px 12px;
+      min-width:84px;
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.25px;
+      cursor:pointer;
+      transition:transform .16s ease, background .16s ease, border-color .16s ease;
+    }
+
+    .audio-btn:hover{
+      transform:translateY(-1px);
+      background:rgba(29,163,92,.14);
+      border-color:rgba(29,163,92,.28);
+    }
+
+    .audio-btn:active{
+      transform:translateY(0);
+    }
+
     .raya-banner-side{
       display:grid;
       grid-template-columns:repeat(2, minmax(0, 1fr));
@@ -2007,6 +2065,17 @@
           <span>Selamat Pulang Ke Kampung</span>
           <span>Pandu Cermat</span>
         </div>
+        <div class="audio-panel" aria-label="Kawalan audio Aidilfitri">
+          <div class="audio-meta">
+            <strong>Audio Raya</strong>
+            <span class="audio-status" id="audioStatus">Sedia dimainkan: Aidilfitri Raya</span>
+          </div>
+          <div class="audio-controls">
+            <button class="audio-btn" id="audioPlayBtn" type="button">Play</button>
+            <button class="audio-btn" id="audioStopBtn" type="button">Stop</button>
+            <button class="audio-btn" id="audioNextBtn" type="button">Next</button>
+          </div>
+        </div>
       </div>
       <div class="raya-banner-side" aria-hidden="true">
         <div class="raya-ketupat">
@@ -2498,6 +2567,14 @@
     const $newJobText = $("#newJobText");
     const $themeSwitch = $("#themeSwitch");
     const $rayaAudio = $("#rayaAudio");
+    const $audioPlayBtn = $("#audioPlayBtn");
+    const $audioStopBtn = $("#audioStopBtn");
+    const $audioNextBtn = $("#audioNextBtn");
+    const $audioStatus = $("#audioStatus");
+    const AUDIO_PLAYLIST = [
+      { src: "assets/aidilfitri.mp3", label: "Aidilfitri Raya" }
+    ];
+    let audioTrackIndex = 0;
 
     const $tabJobs = $("#tabJobs");
     const $tabDir = $("#tabDir");
@@ -2590,19 +2667,90 @@
       }
     }
 
+    function currentAudioTrack(){
+      return AUDIO_PLAYLIST[audioTrackIndex] || AUDIO_PLAYLIST[0] || null;
+    }
+
+    function setAudioStatus(message){
+      if($audioStatus) $audioStatus.textContent = message;
+    }
+
+    function syncAudioTrack(){
+      const track = currentAudioTrack();
+      if(!$rayaAudio || !track) return null;
+      if($rayaAudio.getAttribute("src") !== track.src){
+        $rayaAudio.setAttribute("src", track.src);
+        $rayaAudio.load();
+      }
+      $rayaAudio.loop = AUDIO_PLAYLIST.length === 1;
+      return track;
+    }
+
     async function tryPlayRayaAudio(){
-      if(!$rayaAudio) return false;
+      const track = syncAudioTrack();
+      if(!$rayaAudio || !track) return false;
       try{
         $rayaAudio.volume = 0.28;
         await $rayaAudio.play();
+        setAudioStatus(`Sedang dimainkan: ${track.label}`);
         return true;
       }catch(e){
+        setAudioStatus(`Sedia dimainkan: ${track.label}`);
         return false;
       }
     }
 
+    function stopRayaAudio(){
+      const track = currentAudioTrack();
+      if(!$rayaAudio || !track) return;
+      $rayaAudio.pause();
+      $rayaAudio.currentTime = 0;
+      setAudioStatus(`Dihentikan: ${track.label}`);
+    }
+
+    function nextRayaAudio(){
+      if(!AUDIO_PLAYLIST.length) return Promise.resolve(false);
+      audioTrackIndex = (audioTrackIndex + 1) % AUDIO_PLAYLIST.length;
+      if($rayaAudio) $rayaAudio.currentTime = 0;
+      return tryPlayRayaAudio();
+    }
+
     function initRayaAudio(){
-      if(!$rayaAudio) return;
+      const track = syncAudioTrack();
+      if(!$rayaAudio || !track) return;
+      setAudioStatus(`Sedia dimainkan: ${track.label}`);
+
+      if($audioPlayBtn){
+        $audioPlayBtn.addEventListener("click", () => {
+          tryPlayRayaAudio();
+        });
+      }
+      if($audioStopBtn){
+        $audioStopBtn.addEventListener("click", () => {
+          stopRayaAudio();
+        });
+      }
+      if($audioNextBtn){
+        $audioNextBtn.addEventListener("click", () => {
+          nextRayaAudio();
+        });
+      }
+
+      $rayaAudio.addEventListener("play", () => {
+        const liveTrack = currentAudioTrack();
+        if(liveTrack) setAudioStatus(`Sedang dimainkan: ${liveTrack.label}`);
+      });
+      $rayaAudio.addEventListener("pause", () => {
+        const liveTrack = currentAudioTrack();
+        if(!liveTrack || $rayaAudio.currentTime === 0) return;
+        setAudioStatus(`Dijeda: ${liveTrack.label}`);
+      });
+      $rayaAudio.addEventListener("ended", () => {
+        if(AUDIO_PLAYLIST.length > 1){
+          nextRayaAudio();
+        }
+      });
+
       let fallbackBound = false;
       const resume = async () => {
         const ok = await tryPlayRayaAudio();

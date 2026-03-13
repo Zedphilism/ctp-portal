@@ -485,6 +485,63 @@
       line-height:1.7;
     }
 
+    .audio-panel{
+      padding:14px 16px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.08);
+      display:grid;
+      gap:12px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+    }
+
+    .audio-meta{
+      display:grid;
+      gap:4px;
+    }
+
+    .audio-meta strong{
+      font-size:12px;
+      letter-spacing:.8px;
+      text-transform:uppercase;
+    }
+
+    .audio-status{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.55;
+    }
+
+    .audio-controls{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    .audio-btn{
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:9px 12px;
+      min-width:84px;
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.25px;
+      cursor:pointer;
+      transition:transform .16s ease, background .16s ease, border-color .16s ease;
+    }
+
+    .audio-btn:hover{
+      transform:translateY(-1px);
+      background:rgba(27,160,90,.14);
+      border-color:rgba(27,160,90,.28);
+    }
+
+    .audio-btn:active{
+      transform:translateY(0);
+    }
+
     .ticker{
       width:min(820px, 100%);
       margin:14px auto 18px;
@@ -1029,6 +1086,17 @@
             <strong>Doa dan Harapan</strong>
             <span>Semoga segala urusan pemeriksaan, penyelarasan jadual, dan tugasan CT&amp;P dipermudah sepanjang musim perayaan ini.</span>
           </div>
+          <div class="audio-panel" aria-label="Kawalan audio Aidilfitri">
+            <div class="audio-meta">
+              <strong>Audio Raya</strong>
+              <span class="audio-status" id="audioStatus">Sedia dimainkan: Aidilfitri Raya</span>
+            </div>
+            <div class="audio-controls">
+              <button class="audio-btn" id="audioPlayBtn" type="button">Play</button>
+              <button class="audio-btn" id="audioStopBtn" type="button">Stop</button>
+              <button class="audio-btn" id="audioNextBtn" type="button">Next</button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1140,6 +1208,14 @@
     const THEME_KEY = "ctp_theme";
     const themeSwitch = document.getElementById("themeSwitch");
     const rayaAudio = document.getElementById("rayaAudio");
+    const audioPlayBtn = document.getElementById("audioPlayBtn");
+    const audioStopBtn = document.getElementById("audioStopBtn");
+    const audioNextBtn = document.getElementById("audioNextBtn");
+    const audioStatus = document.getElementById("audioStatus");
+    const AUDIO_PLAYLIST = [
+      { src: "assets/aidilfitri.mp3", label: "Aidilfitri Raya" }
+    ];
+    let audioTrackIndex = 0;
 
     const drawer = document.getElementById("rightDrawer");
     const backdrop = document.getElementById("backdrop");
@@ -1188,6 +1264,25 @@
       t2.textContent = tickerMessage;
     }
 
+    function currentAudioTrack(){
+      return AUDIO_PLAYLIST[audioTrackIndex] || AUDIO_PLAYLIST[0] || null;
+    }
+
+    function setAudioStatus(message){
+      if(audioStatus) audioStatus.textContent = message;
+    }
+
+    function syncAudioTrack(){
+      const track = currentAudioTrack();
+      if(!rayaAudio || !track) return null;
+      if(rayaAudio.getAttribute("src") !== track.src){
+        rayaAudio.setAttribute("src", track.src);
+        rayaAudio.load();
+      }
+      rayaAudio.loop = AUDIO_PLAYLIST.length === 1;
+      return track;
+    }
+
     function toggleDrawer(open){
       drawer.classList.toggle("open", open);
       backdrop.classList.toggle("open", open);
@@ -1215,18 +1310,70 @@
     }
 
     async function tryPlayRayaAudio(){
-      if(!rayaAudio) return false;
+      const track = syncAudioTrack();
+      if(!rayaAudio || !track) return false;
       try{
         rayaAudio.volume = 0.28;
         await rayaAudio.play();
+        setAudioStatus(`Sedang dimainkan: ${track.label}`);
         return true;
       }catch(e){
+        setAudioStatus(`Sedia dimainkan: ${track.label}`);
         return false;
       }
     }
 
+    function stopRayaAudio(){
+      const track = currentAudioTrack();
+      if(!rayaAudio || !track) return;
+      rayaAudio.pause();
+      rayaAudio.currentTime = 0;
+      setAudioStatus(`Dihentikan: ${track.label}`);
+    }
+
+    function nextRayaAudio(){
+      if(!AUDIO_PLAYLIST.length) return Promise.resolve(false);
+      audioTrackIndex = (audioTrackIndex + 1) % AUDIO_PLAYLIST.length;
+      if(rayaAudio) rayaAudio.currentTime = 0;
+      return tryPlayRayaAudio();
+    }
+
     function initRayaAudio(){
-      if(!rayaAudio) return;
+      const track = syncAudioTrack();
+      if(!rayaAudio || !track) return;
+      setAudioStatus(`Sedia dimainkan: ${track.label}`);
+
+      if(audioPlayBtn){
+        audioPlayBtn.addEventListener("click", () => {
+          tryPlayRayaAudio();
+        });
+      }
+      if(audioStopBtn){
+        audioStopBtn.addEventListener("click", () => {
+          stopRayaAudio();
+        });
+      }
+      if(audioNextBtn){
+        audioNextBtn.addEventListener("click", () => {
+          nextRayaAudio();
+        });
+      }
+
+      rayaAudio.addEventListener("play", () => {
+        const liveTrack = currentAudioTrack();
+        if(liveTrack) setAudioStatus(`Sedang dimainkan: ${liveTrack.label}`);
+      });
+      rayaAudio.addEventListener("pause", () => {
+        const liveTrack = currentAudioTrack();
+        if(!liveTrack || rayaAudio.currentTime === 0) return;
+        setAudioStatus(`Dijeda: ${liveTrack.label}`);
+      });
+      rayaAudio.addEventListener("ended", () => {
+        if(AUDIO_PLAYLIST.length > 1){
+          nextRayaAudio();
+        }
+      });
+
       let fallbackBound = false;
       const resume = async () => {
         const ok = await tryPlayRayaAudio();
