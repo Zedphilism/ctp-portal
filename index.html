@@ -1013,6 +1013,103 @@
       box-shadow:0 24px 60px rgba(18,33,54,.2);
     }
 
+    body.normal-mode{
+      --bg:#0b0f14;
+      --panel:#0f1620;
+      --panel2:#0c121a;
+      --text:#e7eef8;
+      --muted:#9fb0c6;
+      --line:rgba(255,255,255,.08);
+      --shadow:0 20px 60px rgba(0,0,0,.45);
+      --radius:18px;
+      --tech:#3aa0ff;
+      --nontech:#23c26b;
+      background:
+        radial-gradient(920px 520px at 20% 8%, rgba(58,160,255,.14), transparent 60%),
+        radial-gradient(860px 520px at 82% 18%, rgba(35,194,107,.10), transparent 55%),
+        var(--bg);
+    }
+
+    body.normal-mode::before{
+      background:radial-gradient(closest-side at 50% 42%, rgba(0,0,0,0) 55%, rgba(0,0,0,.28) 100%);
+    }
+
+    body.normal-mode::after{
+      opacity:.03;
+      background-image:repeating-linear-gradient(0deg, rgba(255,255,255,.07) 0px, rgba(255,255,255,.07) 1px, transparent 2px, transparent 4px);
+    }
+
+    body.normal-mode.theme-light{
+      --bg:#e8eef6;
+      --panel:#f3f7fc;
+      --panel2:#e9eff8;
+      --text:#17212f;
+      --muted:#5a6a7f;
+      --line:rgba(9,28,54,.14);
+      --shadow:0 18px 40px rgba(8,28,54,.18);
+      --tech:#2f87dc;
+      --nontech:#1ea45c;
+      background:
+        radial-gradient(920px 520px at 20% 8%, rgba(58,160,255,.14), transparent 60%),
+        radial-gradient(860px 520px at 82% 18%, rgba(35,194,107,.10), transparent 55%),
+        var(--bg);
+    }
+
+    body.normal-mode.theme-light::before{
+      background:radial-gradient(closest-side at 50% 45%, rgba(255,255,255,0) 62%, rgba(17,36,58,.10) 100%);
+    }
+
+    body.normal-mode .hamburger:hover{ background:rgba(58,160,255,.12); border-color:rgba(58,160,255,.4); }
+    body.normal-mode .drawer-link:hover{ background:rgba(58,160,255,.14); border-color:rgba(58,160,255,.4); }
+    body.normal-mode .hero{ display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; margin-bottom:12px; }
+    body.normal-mode .hero .hero-shell{ display:block; padding:0; border:0; background:none; box-shadow:none; overflow:visible; }
+    body.normal-mode .hero .hero-shell::before{ display:none; }
+    body.normal-mode .hero .logos{ justify-content:center; margin-bottom:10px; }
+    body.normal-mode .hero .logos img{ filter:drop-shadow(0 8px 20px rgba(0,0,0,.35)); }
+    body.normal-mode .hero h1{ font-size:27px; font-weight:900; letter-spacing:.45px; text-transform:uppercase; line-height:normal; }
+    body.normal-mode .hero h2{ margin:5px 0 0; font-size:16px; font-weight:700; letter-spacing:.35px; color:var(--muted); text-transform:uppercase; }
+    body.normal-mode .hero p{ margin:12px auto 0; max-width:760px; font-size:13px; line-height:1.7; color:var(--muted); }
+    body.normal-mode .raya-badge,
+    body.normal-mode .hero-kicker,
+    body.normal-mode .hero-ornament,
+    body.normal-mode .hero-note,
+    body.normal-mode .audio-panel{ display:none !important; }
+    body.normal-mode .ticker-tag{ color:var(--muted); background:rgba(255,255,255,.03); }
+    body.normal-mode .ticker-dot{ background:var(--tech); box-shadow:0 0 0 3px rgba(58,160,255,.1); }
+    body.normal-mode .card{ background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025)); backdrop-filter:none; }
+    body.normal-mode .card.tech::before{ background:linear-gradient(135deg, rgba(58,160,255,.18), rgba(58,160,255,.06), transparent); }
+    body.normal-mode .card.nontech::before{ background:linear-gradient(135deg, rgba(35,194,107,.2), rgba(35,194,107,.08), transparent); }
+    body.normal-mode .card.tech:hover{ border-color:rgba(58,160,255,.4); box-shadow:0 22px 66px rgba(29,117,196,.34), 0 0 0 1px rgba(58,160,255,.15) inset; }
+    body.normal-mode .card.nontech:hover{ border-color:rgba(35,194,107,.42); box-shadow:0 22px 66px rgba(27,132,81,.32), 0 0 0 1px rgba(35,194,107,.16) inset; }
+    body.normal-mode .tech .chip{ background:rgba(58,160,255,.16); color:#e9f5ff; border:1px solid rgba(58,160,255,.38); }
+    body.normal-mode .nontech .chip{ background:rgba(35,194,107,.15); color:#ecfff4; border:1px solid rgba(35,194,107,.38); }
+    body.normal-mode .forms a:hover{ border-color:rgba(255,255,255,.28); background:rgba(255,255,255,.06); }
+    body.normal-mode .tech .forms a:hover{ border-color:rgba(58,160,255,.45); box-shadow:0 0 0 1px rgba(58,160,255,.2) inset, 0 0 22px rgba(58,160,255,.22); }
+    body.normal-mode .nontech .forms a:hover{ border-color:rgba(35,194,107,.48); box-shadow:0 0 0 1px rgba(35,194,107,.2) inset, 0 0 22px rgba(35,194,107,.2); }
+    body.normal-mode .tech .btn-liquid{
+      --liquid-main:rgba(54,162,255,.98);
+      --liquid-deep:rgba(11,45,82,.96);
+      --liquid-glow:rgba(140,212,255,.85);
+      --liquid-soft:rgba(53,143,224,.36);
+      --btn-glow:rgba(147,207,255,.78);
+      --btn-shadow:rgba(58,160,255,.36);
+    }
+    body.normal-mode .nontech .btn-liquid{
+      --liquid-main:rgba(39,196,119,.98);
+      --liquid-deep:rgba(7,64,43,.96);
+      --liquid-glow:rgba(167,247,211,.86);
+      --liquid-soft:rgba(70,175,126,.34);
+      --btn-glow:rgba(162,240,204,.8);
+      --btn-shadow:rgba(35,194,107,.34);
+    }
+    body.normal-mode .support a:hover{ border-color:rgba(58,160,255,.45); background:rgba(58,160,255,.12); }
+    body.normal-mode .choice-btn.primary{ border-color:rgba(58,160,255,.4); background:rgba(58,160,255,.16); color:#d5ebff; }
+    body.normal-mode .choice-btn.primary:hover{ background:rgba(58,160,255,.25); box-shadow:0 0 0 1px rgba(58,160,255,.2) inset; }
+    body.normal-mode.theme-light .ticker-inner{ border-color:rgba(18,42,70,.14); background:rgba(255,255,255,.72); box-shadow:0 16px 40px rgba(22,43,66,.14); }
+    body.normal-mode.theme-light .ticker-tag{ background:rgba(255,255,255,.62); }
+    body.normal-mode.theme-light .tech .chip{ background:rgba(47,135,220,.14); color:#0c4f8d; border-color:rgba(47,135,220,.28); }
+    body.normal-mode.theme-light .nontech .chip{ background:rgba(30,164,92,.14); color:#0f6b3a; border-color:rgba(30,164,92,.28); }
+
     @media (max-width:920px){
       .grid{ grid-template-columns:1fr; }
       .card{ min-height:unset; }
@@ -1021,11 +1118,14 @@
       .hero h1{ font-size:30px; }
       .hero h2{ font-size:13px; }
       .hero-side{ gap:12px; }
+      body.normal-mode .hero-shell{ padding:0; }
+      body.normal-mode .hero h1{ font-size:22px; }
+      body.normal-mode .hero h2{ font-size:14px; }
     }
   </style>
 </head>
 <body class="theme-light">
-  <audio id="rayaAudio" src="assets/aidilfitri.mp3" preload="auto" loop autoplay playsinline></audio>
+  <audio id="rayaAudio" src="assets/aidilfitri.mp3" preload="auto" loop playsinline></audio>
   <div class="theme-fab">
     <button class="theme-switch" id="themeSwitch" type="button" aria-label="Toggle light and dark theme" title="Switch theme">
       <span class="theme-track">
@@ -1206,12 +1306,18 @@
   <script>
     const CELL_KEY = "ctp_selected_cell";
     const THEME_KEY = "ctp_theme";
+    const SEASON_END_MS = new Date("2026-04-01T00:00:00+08:00").getTime();
+    const IS_FESTIVE_ACTIVE = Date.now() < SEASON_END_MS;
     const themeSwitch = document.getElementById("themeSwitch");
     const rayaAudio = document.getElementById("rayaAudio");
     const audioPlayBtn = document.getElementById("audioPlayBtn");
     const audioStopBtn = document.getElementById("audioStopBtn");
     const audioNextBtn = document.getElementById("audioNextBtn");
     const audioStatus = document.getElementById("audioStatus");
+    const heroSection = document.querySelector(".hero");
+    const supportTitle = document.querySelector(".support h3");
+    const supportText = document.querySelector(".support p");
+    const tickerTag = document.querySelector(".ticker-tag");
     const AUDIO_PLAYLIST = [
       { src: "assets/aidilfitri.mp3", label: "Aidilfitri Raya" }
     ];
@@ -1221,11 +1327,40 @@
     const backdrop = document.getElementById("backdrop");
     const openBtn = document.getElementById("drawerToggle");
     const closeBtn = document.getElementById("drawerClose");
-    const ANNOUNCEMENTS = [
-      { priority: 100, text: "Selamat Hari Raya Aidilfitri dan Maaf Zahir Batin daripada warga Cawangan Teknik & Pemeriksaan." },
-      { priority: 95, text: "Sila pastikan anda memilih sel dan borang yang betul sebelum menghantar permohonan pemeriksaan." },
-      { priority: 85, text: "Jika terdapat isu akses atau penyelarasan jadual sepanjang musim perayaan, hubungi pentadbir dengan segera." }
-    ];
+    const ANNOUNCEMENTS = IS_FESTIVE_ACTIVE
+      ? [
+          { priority: 100, text: "Selamat Hari Raya Aidilfitri dan Maaf Zahir Batin daripada warga Cawangan Teknik & Pemeriksaan." },
+          { priority: 95, text: "Sila pastikan anda memilih sel dan borang yang betul sebelum menghantar permohonan pemeriksaan." },
+          { priority: 85, text: "Jika terdapat isu akses atau penyelarasan jadual sepanjang musim perayaan, hubungi pentadbir dengan segera." }
+        ]
+      : [
+          { priority: 100, text: "Sila pastikan anda memilih sel dan borang yang betul mengikut keperluan pemeriksaan anda." },
+          { priority: 90, text: "Semak SOP dan garis panduan yang telah disediakan sebelum menghantar permohonan." },
+          { priority: 80, text: "Sebarang permasalah boleh berhubung terus dengan SSjn Zaidi Abdullah." }
+        ];
+
+    function applySeasonalMode(){
+      if(IS_FESTIVE_ACTIVE) return;
+      document.body.classList.add("normal-mode");
+      if(heroSection){
+        heroSection.innerHTML = `
+          <div class="logos">
+            <img src="assets/icon1.png" alt="Jata Negara" />
+            <img src="assets/icon2.png" alt="MINDEF" />
+          </div>
+          <h1>Cawangan Teknik & Pemeriksaan</h1>
+          <h2>Sistem Pemantauan Pemeriksaan</h2>
+          <p>Portal berpusat untuk pengurusan data, pemantauan pemeriksaan dan analisis prestasi.</p>
+        `;
+      }
+      if(supportTitle) supportTitle.textContent = "Perlukan Bantuan? Hubungi Kami";
+      if(supportText) supportText.textContent = "Jika terdapat kekeliruan sel atau isu penghantaran borang, hubungi pentadbir segera.";
+      if(tickerTag) tickerTag.textContent = "Peringatan";
+      if(rayaAudio){
+        rayaAudio.pause();
+        rayaAudio.currentTime = 0;
+      }
+    }
 
     function applyTheme(theme){
       const mode = theme === "light" ? "light" : "dark";
@@ -1240,7 +1375,7 @@
     function initTheme(){
       let stored = "";
       try{ stored = localStorage.getItem(THEME_KEY) || ""; }catch(e){}
-      applyTheme(stored || "light");
+      applyTheme(stored || (IS_FESTIVE_ACTIVE ? "light" : "dark"));
       if(themeSwitch){
         themeSwitch.addEventListener("click", () => {
           const isDark = document.body.classList.contains("theme-dark");
@@ -1339,6 +1474,13 @@
     }
 
     function initRayaAudio(){
+      if(!IS_FESTIVE_ACTIVE){
+        if(rayaAudio){
+          rayaAudio.pause();
+          rayaAudio.currentTime = 0;
+        }
+        return;
+      }
       const track = syncAudioTrack();
       if(!rayaAudio || !track) return;
       setAudioStatus(`Sedia dimainkan: ${track.label}`);
@@ -1415,6 +1557,7 @@
 
     document.addEventListener("click", handleRoutingClick);
 
+    applySeasonalMode();
     initTheme();
     initRayaAudio();
     initTicker();

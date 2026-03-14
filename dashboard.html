@@ -93,6 +93,134 @@
     body.theme-light .input,
     body.theme-light .select{ background: var(--surface-mid); }
 
+    body.normal-mode{
+      --bg:#0b0f14;
+      --panel:#0f1620;
+      --panel2:#0c121a;
+      --text:#e7eef8;
+      --muted:#9fb0c6;
+      --line:rgba(255,255,255,.08);
+      --accent:#3aa0ff;
+      --good:#23c26b;
+      --warn:#ffb020;
+      --bad:#ff4d4d;
+      --shadow:0 20px 60px rgba(0,0,0,.45);
+      --bg-grad-1: rgba(58,160,255,.18);
+      --bg-grad-2: rgba(35,194,107,.12);
+      --topbar-bg: rgba(11,15,20,.72);
+      --surface-soft: rgba(255,255,255,.03);
+      --surface-mid: rgba(0,0,0,.22);
+      --surface-strong: rgba(0,0,0,.35);
+      --surface-hover: rgba(255,255,255,.06);
+      --surface-elev: rgba(0,0,0,.18);
+      --table-head-bg: rgba(255,255,255,.02);
+      --table-row-border: rgba(255,255,255,.06);
+      --overlay: rgba(0,0,0,.55);
+      --drawer-start: rgba(15,22,32,.98);
+      --drawer-end: rgba(12,18,26,.98);
+      --popup-bg: rgba(15,22,32,.98);
+      --popup-border: rgba(255,255,255,.08);
+      --accent-soft: rgba(58,160,255,.12);
+      --accent-soft-hover: rgba(58,160,255,.18);
+      --chart-bg: rgba(255,255,255,.02);
+      --chart-axis: rgba(255,255,255,.08);
+      --chart-grid: rgba(255,255,255,.06);
+      --chart-tick: rgba(231,238,248,.65);
+      --chart-value: rgba(231,238,248,.82);
+      --chart-label: rgba(159,176,198,.85);
+      --chart-bar-stroke: rgba(255,255,255,.10);
+    }
+
+    body.normal-mode.theme-light{
+      --bg:#e9eef5;
+      --panel:#f9fcff;
+      --panel2:#f2f7fd;
+      --text:#0f1a2b;
+      --muted:#4e5f79;
+      --line:rgba(15,23,42,.14);
+      --accent:#0d8ef2;
+      --good:#18a455;
+      --warn:#d18a05;
+      --bad:#d93d3d;
+      --shadow:0 20px 60px rgba(8,26,56,.18);
+      --bg-grad-1: rgba(13,142,242,.18);
+      --bg-grad-2: rgba(16,185,129,.12);
+      --topbar-bg: rgba(233,238,245,.8);
+      --surface-soft: rgba(255,255,255,.7);
+      --surface-mid: rgba(255,255,255,.85);
+      --surface-strong: rgba(15,23,42,.18);
+      --surface-hover: rgba(15,23,42,.08);
+      --surface-elev: rgba(255,255,255,.72);
+      --table-head-bg: rgba(255,255,255,.88);
+      --table-row-border: rgba(15,23,42,.12);
+      --overlay: rgba(8,26,56,.28);
+      --drawer-start: rgba(249,252,255,.98);
+      --drawer-end: rgba(242,247,253,.98);
+      --popup-bg: rgba(249,252,255,.98);
+      --popup-border: rgba(15,23,42,.14);
+      --accent-soft: rgba(13,142,242,.14);
+      --accent-soft-hover: rgba(13,142,242,.22);
+      --chart-bg: rgba(255,255,255,.9);
+      --chart-axis: rgba(15,23,42,.25);
+      --chart-grid: rgba(15,23,42,.12);
+      --chart-tick: rgba(15,23,42,.72);
+      --chart-value: rgba(15,23,42,.9);
+      --chart-label: rgba(37,52,77,.8);
+      --chart-bar-stroke: rgba(15,23,42,.2);
+    }
+
+    body.normal-mode .raya-banner,
+    body.normal-mode .audio-panel{
+      display:none !important;
+    }
+    body.normal-mode .menu-hamburger:hover,
+    body.normal-mode .menu-hamburger.is-open,
+    body.normal-mode .menu-link:hover{
+      border-color:rgba(58,160,255,.4);
+    }
+    body.normal-mode.theme-dark .theme-track{
+      border-color:rgba(76,140,255,.3);
+    }
+    body.normal-mode.theme-dark .theme-icon-moon{
+      filter: drop-shadow(0 0 6px rgba(92,164,255,.95)) drop-shadow(0 0 14px rgba(92,164,255,.7));
+    }
+    body.normal-mode .tab.active{
+      border-color:rgba(58,160,255,.25);
+    }
+    body.normal-mode .stat::after{
+      background: radial-gradient(circle at 30% 30%, rgba(58,160,255,.25), transparent 60%);
+    }
+    body.normal-mode .ticker-pill{
+      border-color:rgba(58,160,255,.25);
+    }
+    body.normal-mode .ticker.is-new .ticker-text{
+      color:#bfe4ff;
+    }
+    body.normal-mode .ticker.is-new .ticker-pill{
+      border-color:rgba(58,160,255,.45);
+      background:rgba(58,160,255,.2);
+      color:#bfe4ff;
+    }
+    body.normal-mode .person .photo-wrap{
+      background:
+        radial-gradient(220px 120px at 30% 20%, rgba(58,160,255,.18), transparent 60%),
+        radial-gradient(220px 120px at 70% 80%, rgba(35,194,107,.10), transparent 60%),
+        rgba(255,255,255,.02);
+    }
+    body.normal-mode .sch-day:hover{
+      border-color:rgba(58,160,255,.35);
+    }
+    body.normal-mode .sch-day.today{
+      box-shadow: inset 0 0 0 1px rgba(58,160,255,.45);
+    }
+    body.normal-mode .sch-day.selected{
+      border-color:rgba(58,160,255,.55);
+      box-shadow: 0 0 0 1px rgba(58,160,255,.35) inset, 0 8px 22px rgba(58,160,255,.18);
+    }
+    body.normal-mode .sch-dot-progress{
+      background:#3aa0ff;
+    }
+
 
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
@@ -1942,7 +2070,7 @@
 </head>
 
 <body class="theme-light">
-  <audio id="rayaAudio" src="assets/aidilfitri.mp3" preload="auto" loop autoplay playsinline></audio>
+  <audio id="rayaAudio" src="assets/aidilfitri.mp3" preload="auto" loop playsinline></audio>
   <header class="topbar">
     <div class="topbar-inner">
       <div class="top-left">
@@ -2553,6 +2681,8 @@
     const $statDone = $("#statDone");
     const $jobsTicker = $("#jobsTicker");
     const $jobsTickerText = $("#jobsTickerText");
+    const $jobsTickerLabel = $("#jobsTicker .ticker-label");
+    const $rayaBanner = $(".raya-banner");
 
     const $dTitle = $("#dTitle");
     const $dSub = $("#dSub");
@@ -2633,6 +2763,13 @@
     const $profileContent = $("#profileContent");
     const $closeProfileModal = $("#closeProfileModal");
     const THEME_KEY = "ctp_theme";
+    const SEASON_END_MS = new Date("2026-04-01T00:00:00+08:00").getTime();
+    const IS_FESTIVE_ACTIVE = Date.now() < SEASON_END_MS;
+    const PRIMARY_ACCENT = IS_FESTIVE_ACTIVE ? "#1da35c" : "#3aa0ff";
+    const SECONDARY_ACCENT = IS_FESTIVE_ACTIVE ? "#67c97f" : "#23c26b";
+    const HIGHLIGHT_ACCENT = IS_FESTIVE_ACTIVE ? "#d7a447" : "#ffb020";
+    const BAR_GRADIENT_START = IS_FESTIVE_ACTIVE ? "rgba(29,163,92,.55)" : "rgba(58,160,255,.55)";
+    const BAR_GRADIENT_END = IS_FESTIVE_ACTIVE ? "rgba(215,164,71,.24)" : "rgba(35,194,107,.28)";
 
     function applyTheme(theme){
       const mode = theme === "light" ? "light" : "dark";
@@ -2649,7 +2786,7 @@
       try{
         stored = localStorage.getItem(THEME_KEY) || "";
       }catch(e){}
-      applyTheme(stored || "light");
+      applyTheme(stored || (IS_FESTIVE_ACTIVE ? "light" : "dark"));
       if($themeSwitch){
         $themeSwitch.addEventListener("click", () => {
           const isDark = document.body.classList.contains("theme-dark");
@@ -2665,6 +2802,23 @@
           }
         });
       }
+    }
+
+    function applySeasonalMode(){
+      if(IS_FESTIVE_ACTIVE) return;
+      document.body.classList.add("normal-mode");
+      if($rayaBanner){
+        $rayaBanner.hidden = true;
+        $rayaBanner.setAttribute("aria-hidden", "true");
+      }
+      if($jobsTickerLabel) $jobsTickerLabel.textContent = "Latest Jobs";
+      if($newJobText) $newJobText.textContent = "New: 0";
+      if($rayaAudio){
+        $rayaAudio.autoplay = false;
+        $rayaAudio.pause();
+        $rayaAudio.currentTime = 0;
+      }
+      setAudioStatus("Audio Raya tidak aktif.");
     }
 
     function currentAudioTrack(){
@@ -2687,6 +2841,11 @@
     }
 
     async function tryPlayRayaAudio(){
+      if(!IS_FESTIVE_ACTIVE){
+        stopRayaAudio();
+        setAudioStatus("Audio Raya tidak aktif.");
+        return false;
+      }
       const track = syncAudioTrack();
       if(!$rayaAudio || !track) return false;
       try{
@@ -2709,6 +2868,7 @@
     }
 
     function nextRayaAudio(){
+      if(!IS_FESTIVE_ACTIVE) return Promise.resolve(false);
       if(!AUDIO_PLAYLIST.length) return Promise.resolve(false);
       audioTrackIndex = (audioTrackIndex + 1) % AUDIO_PLAYLIST.length;
       if($rayaAudio) $rayaAudio.currentTime = 0;
@@ -2716,6 +2876,15 @@
     }
 
     function initRayaAudio(){
+      if(!IS_FESTIVE_ACTIVE){
+        if($rayaAudio){
+          $rayaAudio.autoplay = false;
+          $rayaAudio.pause();
+          $rayaAudio.currentTime = 0;
+        }
+        setAudioStatus("Audio Raya tidak aktif.");
+        return;
+      }
       const track = syncAudioTrack();
       if(!$rayaAudio || !track) return;
       setAudioStatus(`Sedia dimainkan: ${track.label}`);
@@ -2909,10 +3078,15 @@ function formatDate(raw){
     function updateLatestJobTicker(list){
       if(!$jobsTicker || !$jobsTickerText) return;
       const rayaReminder = "Selamat Hari Raya Aidilfitri | Berhati-hati di jalan raya";
+      if($jobsTickerLabel){
+        $jobsTickerLabel.textContent = IS_FESTIVE_ACTIVE ? "Sorotan Raya" : "Latest Jobs";
+      }
       if(!Array.isArray(list) || list.length === 0){
-        $jobsTickerText.innerHTML = `<span class="ticker-pill">${escapeHtml(rayaReminder)}</span>`;
+        const emptyText = IS_FESTIVE_ACTIVE ? rayaReminder : "No jobs available";
+        $jobsTickerText.innerHTML = `<span class="ticker-pill">${escapeHtml(emptyText)}</span>`;
         $jobsTicker.classList.remove("is-new");
         if($newJobBadge) $newJobBadge.style.display = "none";
+        if($newJobText && !IS_FESTIVE_ACTIVE) $newJobText.textContent = "New: 0";
         LAST_JOB_IDS = new Set();
         return;
       }
@@ -2920,7 +3094,9 @@ function formatDate(raw){
       const hadPrev = LAST_JOB_IDS.size > 0;
       const newOnes = hadPrev ? list.filter(j => !LAST_JOB_IDS.has(safe(j.jobId))) : [];
       const chosen = latestJobsByDate(newOnes.length ? newOnes : list, 3);
-      const label = newOnes.length ? `${rayaReminder} | Job Baharu` : rayaReminder;
+      const label = IS_FESTIVE_ACTIVE
+        ? (newOnes.length ? `${rayaReminder} | Job Baharu` : rayaReminder)
+        : (newOnes.length ? "Latest new jobs" : "Latest jobs");
 
       const items = chosen.map(j => {
         const loc = `${safe(j.daerah)}, ${safe(j.negeri)}`.replace(/^,\s*|,\s*$/g, "");
@@ -2934,10 +3110,11 @@ function formatDate(raw){
       $jobsTicker.classList.toggle("is-new", newOnes.length > 0);
       if($newJobBadge && $newJobText){
         if(newOnes.length > 0){
-          $newJobText.textContent = `Job Baharu: ${newOnes.length}`;
+          $newJobText.textContent = IS_FESTIVE_ACTIVE ? `Job Baharu: ${newOnes.length}` : `New: ${newOnes.length}`;
           $newJobBadge.style.display = "inline-flex";
         } else {
           $newJobBadge.style.display = "none";
+          if(!IS_FESTIVE_ACTIVE) $newJobText.textContent = "New: 0";
         }
       }
 
@@ -3824,7 +4001,7 @@ const tatItems = [
 
 // Palette for distinct bar colors (Used for Inspectors)
     const PALETTE = [
-      "#1da35c", "#67c97f", "#d7a447", "#ff4d4d", "#a855f7",
+      PRIMARY_ACCENT, SECONDARY_ACCENT, HIGHLIGHT_ACCENT, "#ff4d4d", "#a855f7",
       "#ec4899", "#14b8a6", "#f97316", "#6366f1", "#8b5cf6",
       "#10b981", "#3b82f6"
     ];
@@ -3896,8 +4073,8 @@ const tatItems = [
             ctx.fillStyle = it.color;
         } else {
             const grad = ctx.createLinearGradient(0, y, 0, y + bh);
-            grad.addColorStop(0, "rgba(29,163,92,.55)");
-            grad.addColorStop(1, "rgba(215,164,71,.24)");
+            grad.addColorStop(0, BAR_GRADIENT_START);
+            grad.addColorStop(1, BAR_GRADIENT_END);
             ctx.fillStyle = grad;
         }
 
@@ -4607,9 +4784,9 @@ const tatItems = [
         pinItems.forEach(({job, pos})=>{
           const marker = L.circleMarker(pos, {
             radius: 9,
-            color: "#1da35c",
+            color: PRIMARY_ACCENT,
             weight: 2,
-            fillColor: "#1da35c",
+            fillColor: PRIMARY_ACCENT,
             fillOpacity: 0.82
           });
           marker.bindPopup(pinPopupHtml(job), { maxWidth: 360, closeButton: true });
@@ -4627,6 +4804,7 @@ const tatItems = [
 
     // ===== Added: keep existing job filters, while schedule remains independent =====
 
+    applySeasonalMode();
     initTheme();
     initRayaAudio();
     setToday();
