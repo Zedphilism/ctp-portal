@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Senarai Gunasama 1 & 2 — CT&P Non Teknikal</title>
+  <title>Senarai Gunasama 1 &amp; 2 | CT&amp;P Non Teknikal</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -32,7 +32,7 @@
       transition: opacity .2s;
     }
     header .back:hover { opacity: 1; }
-    header .back::before { content: "←"; font-size: 15px; }
+    header .back::before { content: "\2190"; font-size: 15px; }
 
     header h1 {
       font-size: clamp(20px, 4vw, 28px);
@@ -137,7 +137,7 @@
       color: #8ec9a0;
     }
     .sub-item::before {
-      content: "•  ";
+      content: "\2022  ";
       color: #67c97f;
       font-size: 10px;
     }
@@ -156,21 +156,174 @@
       td.jenis { width: auto; }
       thead th, td { padding: 8px 10px; font-size: 12.5px; }
     }
+    :root{--bg:#072b1d;--panel:#0c3a28;--panel2:#0a3222;--text:#f5fff6;--muted:#bfd8c6;--line:rgba(224,255,232,.14);--shadow:0 24px 70px rgba(0,0,0,.32);--radius:24px;--accent:#67c97f;--gold:#d7a447;--glass:rgba(255,255,255,.04);--glass-strong:rgba(255,255,255,.08)}
+    body.theme-light{--bg:#f5fbf1;--panel:#ffffff;--panel2:#edf7eb;--text:#153625;--muted:#5b7665;--line:rgba(18,79,48,.12);--shadow:0 18px 48px rgba(16,63,38,.12);--accent:#4ea768;--gold:#bf8a2d;--glass:rgba(255,255,255,.82);--glass-strong:rgba(255,255,255,.94)}
+    html{scroll-behavior:smooth}
+    body{margin:0;min-height:100vh;padding:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--text);background:radial-gradient(920px 560px at 18% 8%, rgba(50,161,92,.18), transparent 60%),radial-gradient(860px 540px at 82% 18%, rgba(215,164,71,.16), transparent 52%),linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)),var(--bg);overflow-x:hidden;position:relative}
+    body::before{content:"";position:fixed;inset:-40px;pointer-events:none;z-index:0;background:radial-gradient(closest-side at 50% 42%, rgba(0,0,0,0) 55%, rgba(0,0,0,.24) 100%)}
+    body.theme-light::before{background:radial-gradient(closest-side at 50% 45%, rgba(255,255,255,0) 62%, rgba(20,64,39,.08) 100%)}
+    body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.035;background-image:repeating-linear-gradient(0deg, rgba(255,255,255,.06) 0px, rgba(255,255,255,.06) 1px, transparent 2px, transparent 4px),repeating-linear-gradient(90deg, rgba(215,164,71,.05) 0px, rgba(215,164,71,.05) 1px, transparent 2px, transparent 8px);mix-blend-mode:overlay}
+    a{color:inherit;text-decoration:none}
+    a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+    .theme-fab{position:fixed;top:18px;left:18px;z-index:220;display:flex;align-items:center}
+    .theme-switch{border:0;padding:0;background:transparent;cursor:pointer;line-height:0}
+    .theme-track{position:relative;width:86px;height:40px;border-radius:999px;display:block;overflow:hidden;border:1px solid rgba(255,255,255,.12);background:linear-gradient(165deg,#7d848e 0%,#4c525d 100%);box-shadow:inset 0 2px 2px rgba(255,255,255,.14), inset 0 -6px 12px rgba(0,0,0,.35), 0 7px 14px rgba(0,0,0,.25);transition:background .28s ease,border-color .28s ease,box-shadow .28s ease}
+    .theme-track::before{content:"";position:absolute;inset:3px;border-radius:999px;background:linear-gradient(180deg,#757d88 0%,#5a616d 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.16), inset 0 -3px 6px rgba(0,0,0,.24);z-index:1}
+    .theme-thumb{position:absolute;top:4px;left:4px;width:37px;height:32px;border-radius:999px;z-index:2;background:linear-gradient(180deg,#8b929d 0%,#5c6470 100%);box-shadow:inset 0 1px 1px rgba(255,255,255,.25), inset 0 -2px 5px rgba(0,0,0,.28), 0 4px 8px rgba(0,0,0,.3);transition:left .28s ease,background .28s ease}
+    .theme-icon{position:absolute;top:50%;transform:translateY(-50%);width:16px;height:16px;color:rgba(255,255,255,.5);z-index:3;transition:color .28s ease,filter .28s ease,opacity .28s ease;pointer-events:none}
+    .theme-icon svg{width:100%;height:100%;display:block;fill:currentColor}
+    .theme-icon-sun{left:12px}.theme-icon-moon{right:12px}
+    body.theme-light .theme-thumb{left:4px}
+    body.theme-light .theme-icon-sun{color:#fff;filter:drop-shadow(0 0 6px rgba(255,255,255,.9));opacity:1}
+    body.theme-light .theme-icon-moon{color:rgba(199,226,205,.75);opacity:.6}
+    body.theme-dark .theme-thumb{left:45px}
+    body.theme-dark .theme-icon-sun{color:rgba(255,255,255,.45);opacity:.55}
+    body.theme-dark .theme-icon-moon{color:#e7fff0;filter:drop-shadow(0 0 6px rgba(110,205,132,.95));opacity:1}
+    .theme-switch:focus-visible .theme-track{outline:2px solid var(--accent);outline-offset:2px}
+    .wrap{position:relative;z-index:1;width:min(1120px,calc(100% - 28px));margin:0 auto;padding:96px 0 56px}
+    .hero-shell,.guide-panel,.section,.footer-shell{border:1px solid var(--line);background:linear-gradient(180deg, color-mix(in srgb,var(--panel),transparent 0%), color-mix(in srgb,var(--panel2),transparent 0%));box-shadow:var(--shadow);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+    .hero-shell{position:relative;overflow:hidden;border-radius:calc(var(--radius) + 4px);padding:32px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(300px,.9fr);gap:24px;margin-bottom:22px}
+    .hero-shell::before{content:"";position:absolute;inset:0;background:radial-gradient(380px 220px at 100% 0%, rgba(215,164,71,.14), transparent 70%),radial-gradient(500px 280px at 0% 100%, rgba(103,201,127,.14), transparent 72%);pointer-events:none}
+    .hero-copy,.hero-side{position:relative;z-index:1}
+    .hero-copy{display:flex;flex-direction:column;gap:18px}
+    .eyebrow,.section-kicker{display:inline-flex;align-items:center;gap:10px;width:max-content;max-width:100%;padding:7px 12px;border-radius:999px;border:1px solid rgba(103,201,127,.24);background:rgba(103,201,127,.12);color:var(--text);font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+    .section-kicker{margin-bottom:12px;color:var(--accent)}
+    .hero h1,.section h2,.guide-panel h2{margin:0;letter-spacing:-.03em;line-height:1.06}
+    .hero h1{font-size:clamp(30px,5vw,48px)}
+    .section h2,.guide-panel h2{font-size:clamp(22px,3vw,30px)}
+    .hero p,.guide-card p,.section p,.highlight-note{margin:0;color:var(--muted);line-height:1.7}
+    .hero p{max-width:700px;font-size:15px}
+    .hero-actions,.jump-nav,.section-tags{display:flex;flex-wrap:wrap;gap:12px}
+    .btn,.chip-link,.chip{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:var(--glass);color:var(--text);font-size:12px;font-weight:800;letter-spacing:.02em;transition:transform .18s ease,background .18s ease,border-color .18s ease}
+    .btn{min-height:46px;padding:11px 16px;font-size:14px}
+    .btn:hover,.chip-link:hover{transform:translateY(-1px);border-color:rgba(103,201,127,.34);background:var(--glass-strong)}
+    .btn-primary{background:rgba(103,201,127,.16);border-color:rgba(103,201,127,.3)}
+    .chip-accent{background:rgba(215,164,71,.14);border-color:rgba(215,164,71,.24);color:color-mix(in srgb,var(--text),var(--gold) 28%)}
+    .highlight-card,.guide-card,.stat-card{border:1px solid var(--line);background:rgba(255,255,255,.04)}
+    body.theme-light .highlight-card,body.theme-light .guide-card,body.theme-light .stat-card{background:rgba(255,255,255,.88)}
+    .highlight-card{width:100%;border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:18px}
+    .highlight-top{display:flex;flex-wrap:wrap;gap:10px}
+    .stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+    .stat-card{border-radius:18px;padding:16px 14px;min-height:116px;display:flex;flex-direction:column;justify-content:space-between;gap:10px}
+    .stat-card strong{font-size:34px;line-height:1;letter-spacing:-.04em}
+    .stat-card span{color:var(--muted);font-size:13px;line-height:1.5;font-weight:700}
+    .highlight-note{padding-top:4px;border-top:1px solid var(--line);font-size:13px}
+    .guide-panel,.section,.footer-shell{border-radius:var(--radius);padding:24px}
+    .guide-panel{margin-bottom:22px}
+    .guide-grid{margin-top:18px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    .guide-card{border-radius:20px;padding:18px}
+    .guide-card h3{margin:0 0 10px;font-size:17px;line-height:1.3}
+    .section{margin:0 auto 22px;max-width:none}
+    .section-head{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:18px}
+    .section-head p{margin-top:10px;font-size:14px}
+    .table-shell{overflow:auto;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+    body.theme-light .table-shell{background:rgba(255,255,255,.78)}
+    table{width:100%;min-width:760px;border-collapse:separate;border-spacing:0;font-size:14px}
+    thead tr{background:rgba(103,201,127,.14)}
+    body.theme-light thead tr{background:rgba(78,167,104,.1)}
+    thead th{padding:14px 16px;text-align:left;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);border-bottom:1px solid var(--line);white-space:nowrap}
+    tbody tr{transition:background .18s ease}
+    tbody tr:hover{background:rgba(103,201,127,.06)}
+    td{padding:16px;vertical-align:top;border-bottom:1px solid var(--line);color:var(--text);line-height:1.65}
+    tbody tr:last-child td{border-bottom:none}
+    td.bil{width:96px;font-weight:900;color:var(--accent);white-space:nowrap}
+    td.jenis{width:260px;font-weight:800}
+    td.desc{color:color-mix(in srgb,var(--text),var(--muted) 34%)}
+    .sub-item{display:flex;align-items:flex-start;gap:10px;padding:3px 0}
+    .sub-item::before{content:"";width:6px;height:6px;flex:0 0 auto;border-radius:999px;margin-top:.62em;background:var(--accent);box-shadow:0 0 0 4px rgba(103,201,127,.12)}
+    footer{max-width:none;text-align:left;padding-top:0;border-top:none}
+    .footer-shell{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 20px;font-size:13px;color:var(--muted)}
+    .footer-shell strong{color:var(--text)}
+    section[id]{scroll-margin-top:96px}
+    @media (max-width:960px){.hero-shell{grid-template-columns:1fr}.guide-grid{grid-template-columns:1fr}.section-head{flex-direction:column}}
+    @media (max-width:780px){.wrap{width:min(100% - 20px,1120px);padding:88px 0 40px}.hero-shell,.guide-panel,.section,.footer-shell{padding:20px;border-radius:22px}.stat-grid{grid-template-columns:1fr}.table-shell{overflow:visible;border:none;background:transparent}table,tbody,tr,td{display:block;width:100%}table{min-width:0}thead{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}tbody{display:grid;gap:14px}tbody tr{border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.04);box-shadow:0 14px 28px rgba(0,0,0,.12);padding:16px}body.theme-light tbody tr{background:rgba(255,255,255,.92)}tbody tr:hover{background:rgba(103,201,127,.08)}td{padding:0;border:none;display:grid;grid-template-columns:minmax(88px,104px) 1fr;gap:12px}td + td{margin-top:10px}td::before{display:block;color:var(--muted);font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}td:nth-child(1)::before{content:"Bil"}td:nth-child(2)::before{content:"Jenis"}td:nth-child(3)::before{content:"Deskripsi"}td.bil,td.jenis{width:auto}}
+    @media (max-width:520px){.theme-fab{top:14px;left:14px}.hero h1{font-size:30px}.btn,.chip-link,.chip{width:100%}td{grid-template-columns:1fr;gap:6px}}
   </style>
 </head>
-<body>
+<body class="theme-light">
 
-<header>
-  <a class="back" href="index.html">Kembali ke Halaman Utama</a>
-  <h1>Senarai Gunasama 1 &amp; 2</h1>
-  <p>Rujukan skop item pemeriksaan bagi Sel Non Teknikal — Cawangan Teknik &amp; Pemeriksaan (CT&amp;P)</p>
-  <span class="badge">Rujukan Operasi</span>
-</header>
+  <div class="theme-fab">
+    <button class="theme-switch" id="themeSwitch" type="button" aria-label="Toggle light and dark theme" title="Switch theme">
+      <span class="theme-track">
+        <span class="theme-thumb"></span>
+        <span class="theme-icon theme-icon-sun" aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="presentation"><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0-5a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1zm10-6a1 1 0 0 1-1 1h-2a1 1 0 1 1 0-2h2a1 1 0 0 1 1 1zM7 12a1 1 0 0 1-1 1H4a1 1 0 1 1 0-2h2a1 1 0 0 1 1 1zm11.07-6.66a1 1 0 0 1 0 1.42l-1.41 1.41a1 1 0 1 1-1.42-1.41l1.42-1.42a1 1 0 0 1 1.41 0zM8.76 15.24a1 1 0 0 1 0 1.41l-1.42 1.42a1 1 0 0 1-1.41-1.42l1.41-1.41a1 1 0 0 1 1.42 0zm0-8.48a1 1 0 0 1-1.42 0L5.93 5.34a1 1 0 0 1 1.41-1.41l1.42 1.41a1 1 0 0 1 0 1.42zm8.49 8.48 1.41 1.41a1 1 0 1 1-1.41 1.42l-1.42-1.42a1 1 0 1 1 1.42-1.41z"></path></svg>
+        </span>
+        <span class="theme-icon theme-icon-moon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="presentation"><path d="M20.71 14.29A9 9 0 0 1 9.71 3.29a1 1 0 0 0-1.24-1.24A11 11 0 1 0 22 15.53a1 1 0 0 0-1.29-1.24z"></path></svg>
+        </span>
+      </span>
+    </button>
+  </div>
 
-<!-- ── SENARAI GUNASAMA 1 ─────────────────────────────── -->
-<div class="section">
-  <div class="section-title">Senarai Gunasama 1</div>
-  <table>
+  <main class="wrap">
+    <section class="hero" aria-label="Rujukan Senarai Gunasama">
+      <div class="hero-shell">
+        <div class="hero-copy">
+          <span class="eyebrow">Rujukan Operasi Sel Non Teknikal</span>
+          <h1>Senarai Gunasama 1 &amp; 2</h1>
+          <p>Halaman ini disusun semula supaya selari dengan UI portal semasa dan lebih mudah digunakan untuk semakan skop item, pemadanan kategori, serta navigasi ke aliran kerja non teknikal.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="index.html">Kembali ke Portal</a>
+            <a class="btn" href="dashboardtwo.html">Buka Dashboard Non Teknikal</a>
+          </div>
+          <nav class="jump-nav" aria-label="Lompat ke seksyen rujukan">
+            <a class="chip-link" href="#panduan">Panduan Ringkas</a>
+            <a class="chip-link" href="#gunasama1">Gunasama 1</a>
+            <a class="chip-link" href="#gunasama2">Gunasama 2</a>
+          </nav>
+        </div>
+        <aside class="hero-side">
+          <div class="highlight-card">
+            <div class="highlight-top">
+              <span class="chip">Paparan Dikemas Kini</span>
+              <span class="chip chip-accent">Mesra Mudah Alih</span>
+            </div>
+            <div class="stat-grid" aria-label="Ringkasan rujukan">
+              <article class="stat-card"><strong>9</strong><span>Kategori rujukan untuk Gunasama 1</span></article>
+              <article class="stat-card"><strong>25</strong><span>Kategori rujukan untuk Gunasama 2</span></article>
+              <article class="stat-card"><strong>34</strong><span>Jumlah kategori item untuk semakan cepat</span></article>
+            </div>
+            <p class="highlight-note">Gunakan halaman ini untuk semakan awal sebelum membuka borang atau dashboard supaya pemetaan Gunasama 1 dan 2 lebih konsisten.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="guide-panel" id="panduan" aria-labelledby="panduanTitle">
+      <span class="section-kicker">Panduan Ringkas</span>
+      <h2 id="panduanTitle">Semak skop dengan lebih cepat</h2>
+      <div class="guide-grid">
+        <article class="guide-card">
+          <h3>Kenal pasti kumpulan</h3>
+          <p>Gunasama 1 lebih tertumpu kepada pakaian, tekstil, kasut, webbing dan item am berkaitan pemakaian atau bekalan individu.</p>
+        </article>
+        <article class="guide-card">
+          <h3>Bandingkan deskripsi</h3>
+          <p>Jika item berada di bawah kumpulan am, rujuk senarai pecahan di lajur deskripsi untuk padanan yang paling hampir.</p>
+        </article>
+        <article class="guide-card">
+          <h3>Teruskan ke aliran kerja</h3>
+          <p>Selepas semakan, kembali ke portal atau dashboard non teknikal untuk borang permohonan, pemantauan job dan analitik.</p>
+        </article>
+      </div>
+    </section>
+
+<!-- â”€â”€ SENARAI GUNASAMA 1 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <section class="section" id="gunasama1" aria-labelledby="gunasama1Title">
+      <div class="section-head">
+        <div>
+          <span class="section-kicker">Kategori Rujukan</span>
+          <h2 id="gunasama1Title">Senarai Gunasama 1</h2>
+          <p>Meliputi pakaian, tekstil, kasut, stocking, beg, webbing, ponco dan item am berkaitan kegunaan individu.</p>
+        </div>
+        <div class="section-tags" aria-label="Tag Gunasama 1">
+          <span class="chip">9 kategori</span>
+          <span class="chip chip-accent">Pakaian, tekstil &amp; item am</span>
+        </div>
+      </div>
+      <div class="table-shell">
+        <table aria-label="Senarai Gunasama 1">
     <thead>
       <tr>
         <th>Bil</th>
@@ -217,37 +370,37 @@
       <tr>
         <td class="bil">2.0</td>
         <td class="jenis">Semua jenis kain / tekstil</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">3.0</td>
         <td class="jenis">Semua jenis kasut</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">4.0</td>
         <td class="jenis">Semua jenis stocking</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">5.0</td>
         <td class="jenis">Beg tangan</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">6.0</td>
         <td class="jenis">Semua jenis tali pinggang</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">7.0</td>
         <td class="jenis">Semua jenis peralatan webbing</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">8.0</td>
         <td class="jenis">Ponco</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">9.0</td>
@@ -261,13 +414,25 @@
         </td>
       </tr>
     </tbody>
-  </table>
-</div>
+        </table>
+      </div>
+    </section>
 
-<!-- ── SENARAI GUNASAMA 2 ─────────────────────────────── -->
-<div class="section">
-  <div class="section-title">Senarai Gunasama 2</div>
-  <table>
+<!-- â”€â”€ SENARAI GUNASAMA 2 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <section class="section" id="gunasama2" aria-labelledby="gunasama2Title">
+      <div class="section-head">
+        <div>
+          <span class="section-kicker">Kategori Rujukan</span>
+          <h2 id="gunasama2Title">Senarai Gunasama 2</h2>
+          <p>Meliputi perabot bukan kayu, produk kayu, khemah, shelter, bekalan pejabat, aksesori komputer, cat dan item am sokongan.</p>
+        </div>
+        <div class="section-tags" aria-label="Tag Gunasama 2">
+          <span class="chip">25 kategori</span>
+          <span class="chip chip-accent">Perabot, bekalan &amp; sokongan</span>
+        </div>
+      </div>
+      <div class="table-shell">
+        <table aria-label="Senarai Gunasama 2">
     <thead>
       <tr>
         <th>Bil</th>
@@ -306,107 +471,107 @@
       <tr>
         <td class="bil">3.0</td>
         <td class="jenis">Semua jenis khemah</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">4.0</td>
         <td class="jenis">Semua jenis shelter</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">5.0</td>
         <td class="jenis">Semua jenis vehicle canopy</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">6.0</td>
         <td class="jenis">Bag kit</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">7.0</td>
         <td class="jenis">Strecher</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">8.0</td>
         <td class="jenis">Aluminium Folding bed</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">9.0</td>
         <td class="jenis">Vehicle document holder</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">10.0</td>
         <td class="jenis">Cover water proof</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">11.0</td>
         <td class="jenis">Hammock bed</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">12.0</td>
         <td class="jenis">Tilam &amp; bantal</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">13.0</td>
         <td class="jenis">Kusyen settee</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">14.0</td>
         <td class="jenis">Cadar, sarung bantal &amp; sarung kusyen</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">15.0</td>
         <td class="jenis">Blanket</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">16.0</td>
         <td class="jenis">Semua jenis alat tulis</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">17.0</td>
         <td class="jenis">Semua jenis kertas</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">18.0</td>
         <td class="jenis">Semua jenis aksesori komputer</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">19.0</td>
         <td class="jenis">Semua jenis parachute</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">20.0</td>
         <td class="jenis">Semua jenis cat</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">21.0</td>
         <td class="jenis">Thinner</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">22.0</td>
         <td class="jenis">Red Oxide Primer</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">23.0</td>
         <td class="jenis">Semua jenis minyak</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
       <tr>
         <td class="bil">24.0</td>
@@ -425,15 +590,53 @@
       <tr>
         <td class="bil">25.0</td>
         <td class="jenis">Makanan kuda</td>
-        <td class="desc">—</td>
+        <td class="desc">&mdash;</td>
       </tr>
     </tbody>
-  </table>
-</div>
+        </table>
+      </div>
+    </section>
 
-<footer>
-  Cawangan Teknik &amp; Pemeriksaan (CT&amp;P) — Sel Non Teknikal &nbsp;|&nbsp; Rujukan dalaman sahaja
-</footer>
+    <footer>
+      <div class="footer-shell" id="footerShell">
+        <span><strong>Cawangan Teknik &amp; Pemeriksaan (CT&amp;P)</strong> &middot; Sel Non Teknikal</span>
+        <span>Rujukan dalaman untuk semakan skop item Gunasama 1 dan Gunasama 2</span>
+      </div>
+    </footer>
 
+  </main>
+
+  <script>
+    const THEME_KEY = "ctp_theme";
+    const themeSwitch = document.getElementById("themeSwitch");
+    function applyTheme(theme){
+      const mode = theme === "dark" ? "dark" : "light";
+      document.body.classList.toggle("theme-light", mode === "light");
+      document.body.classList.toggle("theme-dark", mode === "dark");
+      if(themeSwitch){
+        themeSwitch.setAttribute("aria-pressed", mode === "dark" ? "true" : "false");
+      }
+    }
+
+    function initTheme(){
+      let stored = "";
+      try{
+        stored = localStorage.getItem(THEME_KEY) || "";
+      }catch(error){}
+      applyTheme(stored || "light");
+      if(themeSwitch){
+        themeSwitch.addEventListener("click", () => {
+          const next = document.body.classList.contains("theme-dark") ? "light" : "dark";
+          applyTheme(next);
+          try{
+            localStorage.setItem(THEME_KEY, next);
+          }catch(error){}
+        });
+      }
+    }
+
+    initTheme();
+  </script>
 </body>
 </html>
+
