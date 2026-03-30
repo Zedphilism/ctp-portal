@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Senarai Gunasama 1 & 2 — CT&P Non Teknikal</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #0d1a12;
+      color: #d4f0de;
+      min-height: 100vh;
+      padding: 32px 16px 64px;
+    }
+
+    header {
+      max-width: 900px;
+      margin: 0 auto 36px;
+    }
+
+    header .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #67c97f;
+      text-decoration: none;
+      margin-bottom: 20px;
+      opacity: .85;
+      transition: opacity .2s;
+    }
+    header .back:hover { opacity: 1; }
+    header .back::before { content: "←"; font-size: 15px; }
+
+    header h1 {
+      font-size: clamp(20px, 4vw, 28px);
+      font-weight: 800;
+      color: #b6ffcc;
+      letter-spacing: -.5px;
+    }
+    header p {
+      margin-top: 6px;
+      font-size: 13.5px;
+      color: #7abf8e;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background: rgba(103,201,127,.18);
+      border: 1px solid rgba(103,201,127,.4);
+      color: #b6ffcc;
+    }
+
+    .section {
+      max-width: 900px;
+      margin: 0 auto 48px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #67c97f;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(103,201,127,.25);
+      letter-spacing: -.3px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      background: rgba(255,255,255,.03);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(103,201,127,.15);
+    }
+
+    thead tr {
+      background: rgba(103,201,127,.15);
+    }
+
+    thead th {
+      padding: 11px 14px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: #67c97f;
+      border-bottom: 1px solid rgba(103,201,127,.2);
+    }
+
+    tbody tr {
+      border-bottom: 1px solid rgba(103,201,127,.08);
+      transition: background .15s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(103,201,127,.07); }
+
+    td {
+      padding: 9px 14px;
+      vertical-align: top;
+      color: #cdecd8;
+    }
+
+    td.bil {
+      font-weight: 700;
+      color: #67c97f;
+      white-space: nowrap;
+      width: 56px;
+    }
+
+    td.jenis {
+      font-weight: 600;
+      color: #e0ffe9;
+      width: 220px;
+    }
+
+    td.desc {
+      color: #aad6ba;
+    }
+
+    .sub-item {
+      display: block;
+      padding: 2px 0;
+      font-size: 13px;
+      color: #8ec9a0;
+    }
+    .sub-item::before {
+      content: "•  ";
+      color: #67c97f;
+      font-size: 10px;
+    }
+
+    footer {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+      font-size: 12px;
+      color: #4a7a5c;
+      padding-top: 20px;
+      border-top: 1px solid rgba(103,201,127,.12);
+    }
+
+    @media (max-width: 600px) {
+      td.jenis { width: auto; }
+      thead th, td { padding: 8px 10px; font-size: 12.5px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="index.html">Kembali ke Halaman Utama</a>
+  <h1>Senarai Gunasama 1 &amp; 2</h1>
+  <p>Rujukan skop item pemeriksaan bagi Sel Non Teknikal — Cawangan Teknik &amp; Pemeriksaan (CT&amp;P)</p>
+  <span class="badge">Rujukan Operasi</span>
+</header>
+
+<!-- ── SENARAI GUNASAMA 1 ─────────────────────────────── -->
+<div class="section">
+  <div class="section-title">Senarai Gunasama 1</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Bil</th>
+        <th>Jenis Barang / Item</th>
+        <th>Deskripsi Barang / Item</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="bil">1.0</td>
+        <td class="jenis">Pakaian (Head-to-toe)</td>
+        <td class="desc">
+          <span class="sub-item">Seluar &amp; baju No.3 TDM</span>
+          <span class="sub-item">Seluar &amp; baju No.1 TDM</span>
+          <span class="sub-item">Seluar &amp; baju celoreng</span>
+          <span class="sub-item">Seluar &amp; baju No.3 TUDM</span>
+          <span class="sub-item">Seluar &amp; baju No.1 TUDM</span>
+          <span class="sub-item">Jungle hat</span>
+          <span class="sub-item">Overall</span>
+          <span class="sub-item">Ballistic helmet cover</span>
+          <span class="sub-item">Rain coat</span>
+          <span class="sub-item">Beret, hat, cap</span>
+          <span class="sub-item">Songkok</span>
+          <span class="sub-item">Samping</span>
+          <span class="sub-item">Pakaian kalis api Bomba TD</span>
+          <span class="sub-item">Life Jacket</span>
+          <span class="sub-item">Lencana Pasukan &amp; pingat</span>
+          <span class="sub-item">Lencana Pangkat</span>
+          <span class="sub-item">Lanyard</span>
+          <span class="sub-item">Pakaian Kalis peluru</span>
+          <span class="sub-item">Pakaian Juruteknik TUDM</span>
+          <span class="sub-item">Jersey Pull over</span>
+          <span class="sub-item">Tuala Mandi</span>
+          <span class="sub-item">Label Nama &amp; Kor</span>
+          <span class="sub-item">Selimpang sambrown</span>
+          <span class="sub-item">Luminious Jacket</span>
+          <span class="sub-item">Ballistic Helmet</span>
+          <span class="sub-item">Tracksuit TDM</span>
+          <span class="sub-item">Tracksuit TUDM</span>
+          <span class="sub-item">Pakaian No.2 Bush Jacket TDM</span>
+          <span class="sub-item">Pakaian No.2 Alfa TLDM</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="bil">2.0</td>
+        <td class="jenis">Semua jenis kain / tekstil</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">3.0</td>
+        <td class="jenis">Semua jenis kasut</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">4.0</td>
+        <td class="jenis">Semua jenis stocking</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">5.0</td>
+        <td class="jenis">Beg tangan</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">6.0</td>
+        <td class="jenis">Semua jenis tali pinggang</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">7.0</td>
+        <td class="jenis">Semua jenis peralatan webbing</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">8.0</td>
+        <td class="jenis">Ponco</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">9.0</td>
+        <td class="jenis">Am 2</td>
+        <td class="desc">
+          <span class="sub-item">Kelambu</span>
+          <span class="sub-item">Sand bag jute</span>
+          <span class="sub-item">Cotton rag</span>
+          <span class="sub-item">Plastic water container</span>
+          <span class="sub-item">Aksesori pakaian</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ── SENARAI GUNASAMA 2 ─────────────────────────────── -->
+<div class="section">
+  <div class="section-title">Senarai Gunasama 2</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Bil</th>
+        <th>Jenis Barang / Item</th>
+        <th>Deskripsi Barang / Item</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="bil">1.0</td>
+        <td class="jenis">Produk Bukan Kayu</td>
+        <td class="desc">
+          <span class="sub-item">Perabot Pejabat (bukan berasaskan kayu)</span>
+          <span class="sub-item">Settee rotan</span>
+          <span class="sub-item">Kerusi plastik</span>
+          <span class="sub-item">Kabinet, rak &amp; gerobok besi</span>
+          <span class="sub-item">Katil besi</span>
+          <span class="sub-item">Langsir &amp; blind</span>
+          <span class="sub-item">Tong sampah</span>
+          <span class="sub-item">Kerusi berasaskan kain</span>
+          <span class="sub-item">Bakul rotan</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="bil">2.0</td>
+        <td class="jenis">Produk Kayu</td>
+        <td class="desc">
+          <span class="sub-item">Perabot rumah keluarga</span>
+          <span class="sub-item">Perabot pejabat (berasaskan kayu)</span>
+          <span class="sub-item">Table GS</span>
+          <span class="sub-item">Military Coffin</span>
+          <span class="sub-item">Plywood</span>
+          <span class="sub-item">Kayu bergergaji</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="bil">3.0</td>
+        <td class="jenis">Semua jenis khemah</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">4.0</td>
+        <td class="jenis">Semua jenis shelter</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">5.0</td>
+        <td class="jenis">Semua jenis vehicle canopy</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">6.0</td>
+        <td class="jenis">Bag kit</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">7.0</td>
+        <td class="jenis">Strecher</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">8.0</td>
+        <td class="jenis">Aluminium Folding bed</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">9.0</td>
+        <td class="jenis">Vehicle document holder</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">10.0</td>
+        <td class="jenis">Cover water proof</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">11.0</td>
+        <td class="jenis">Hammock bed</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">12.0</td>
+        <td class="jenis">Tilam &amp; bantal</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">13.0</td>
+        <td class="jenis">Kusyen settee</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">14.0</td>
+        <td class="jenis">Cadar, sarung bantal &amp; sarung kusyen</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">15.0</td>
+        <td class="jenis">Blanket</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">16.0</td>
+        <td class="jenis">Semua jenis alat tulis</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">17.0</td>
+        <td class="jenis">Semua jenis kertas</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">18.0</td>
+        <td class="jenis">Semua jenis aksesori komputer</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">19.0</td>
+        <td class="jenis">Semua jenis parachute</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">20.0</td>
+        <td class="jenis">Semua jenis cat</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">21.0</td>
+        <td class="jenis">Thinner</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">22.0</td>
+        <td class="jenis">Red Oxide Primer</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">23.0</td>
+        <td class="jenis">Semua jenis minyak</td>
+        <td class="desc">—</td>
+      </tr>
+      <tr>
+        <td class="bil">24.0</td>
+        <td class="jenis">Am 1</td>
+        <td class="desc">
+          <span class="sub-item">Alat Hidangan</span>
+          <span class="sub-item">Pengilat logam &amp; kasut</span>
+          <span class="sub-item">Sarung kotak &amp; plastik</span>
+          <span class="sub-item">Foot powder</span>
+          <span class="sub-item">Panji-panji &amp; bendera</span>
+          <span class="sub-item">Mess tin &amp; water bottle</span>
+          <span class="sub-item">Berus kasut</span>
+          <span class="sub-item">Camouflage net</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="bil">25.0</td>
+        <td class="jenis">Makanan kuda</td>
+        <td class="desc">—</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<footer>
+  Cawangan Teknik &amp; Pemeriksaan (CT&amp;P) — Sel Non Teknikal &nbsp;|&nbsp; Rujukan dalaman sahaja
+</footer>
+
+</body>
+</html>

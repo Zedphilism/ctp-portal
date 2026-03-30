@@ -676,6 +676,21 @@
       box-shadow:0 0 12px rgba(255,180,77,.5);
     }
 
+    .build-tag.new-operational{
+      border-color:rgba(103,201,127,.5);
+      background:rgba(103,201,127,.18);
+      color:#b6ffcc;
+    }
+    .build-tag.new-operational::before{
+      background:#67c97f;
+      box-shadow:0 0 12px rgba(103,201,127,.6);
+    }
+    body.theme-light .build-tag.new-operational{
+      background:rgba(30,164,92,.14);
+      color:#0b5c32;
+      border-color:rgba(30,164,92,.36);
+    }
+
     .chip{
       margin-top:8px;
       display:inline-flex;
@@ -1245,7 +1260,7 @@
 
       <article class="card nontech">
         <h2>Sel Non Teknikal</h2>
-        <span class="build-tag">Under Construction</span>
+        <span class="build-tag new-operational">NEW &amp; OPERATIONAL</span>
         <span class="chip">Skop Non Teknikal</span>
 
         <p class="section-label">Jenis Pemeriksaan</p>
@@ -1256,12 +1271,12 @@
         </ul>
 
         <div class="forms" aria-label="Borang Sel Non Teknikal">
-          <a href="#" aria-disabled="true">Borang Gunasama 1: [LINK AKAN DITAMBAH]</a>
-          <a href="#" aria-disabled="true">Borang Gunasama 2: [LINK AKAN DITAMBAH]</a>
-          <a href="#" aria-disabled="true">Borang FAT (Non Teknikal): [LINK AKAN DITAMBAH]</a>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSfOnkHCjIrhwaolAX_LR0Xv644GsKYjHFJRBAyR6N4btwqItA/viewform?usp=sharing&ouid=116666925478114456158" target="_blank" rel="noopener">Borang Gunasama 1</a>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSfOnkHCjIrhwaolAX_LR0Xv644GsKYjHFJRBAyR6N4btwqItA/viewform?usp=sharing&ouid=116666925478114456158" target="_blank" rel="noopener">Borang Gunasama 2</a>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSfOnkHCjIrhwaolAX_LR0Xv644GsKYjHFJRBAyR6N4btwqItA/viewform?usp=sharing&ouid=116666925478114456158" target="_blank" rel="noopener">Borang FAT (Non Teknikal)</a>
         </div>
 
-        <div class="scope-note">Flow data, rujukan operasi, dan tatacara FAT non teknikal: <strong>[ISI OLEH PENTADBIR]</strong></div>
+        <div class="scope-note">Flow data, rujukan operasi, dan tatacara FAT non teknikal: <a href="senarai-gunasama.html" target="_blank" rel="noopener"><strong>Rujukan Senarai Gunasama 1 dan 2</strong></a></div>
 
         <div class="cta">
           <button class="btn-liquid" data-cell="bukan_teknikal" data-target="dashboardtwo.html"><span>Masuk Sel Non Teknikal</span></button>
@@ -1440,8 +1455,8 @@
         dot.style.background = "#5ba76d";
         return;
       }
-      status.textContent = "Tiada sel dipilih untuk sesi ini.";
-      dot.style.background = "#799181";
+      status.textContent = "Sel aktif semasa: Sel Teknikal & Sel Non Teknikal";
+      dot.style.background = "#67c97f";
     }
 
     async function tryPlayRayaAudio(){
