@@ -3208,41 +3208,77 @@ function mapRowToJob(row, sourceTab){
         };
     }
 
+    function extractApiJobs(response){
+      return (response && response.ok && Array.isArray(response.jobs)) ? response.jobs : [];
+    }
+
+    async function fetchJsonSafe(url){
+      try{
+        const res = await fetch(url, {
+          method: "GET",
+          cache: "no-store"
+        });
+        return await res.json();
+      }catch(err){
+        return { ok:false, error:String(err || "Fetch failed") };
+      }
+    }
+
+    function inferApiRowTab(row){
+      const sourceHint = normalizeText(pick(row, ["_sheet", "sheet", "sheetName", "source", "tab", "Source", "Source Tab"]));
+      const jobId = safe(pick(row, ["Job ID", "JobID", "jobId", "JOB ID", "ID"])).toUpperCase();
+
+      if(sourceHint.includes("fat") || jobId.startsWith("FAT-")) return "fat";
+      if(sourceHint.includes("wdp") || jobId.startsWith("WDP-")) return "wdp";
+      if(sourceHint.includes("permohonan") || sourceHint.includes("ctp") || jobId.startsWith("CTP-")) return "permohonan";
+      return "";
+    }
+
+    function jobsForTab(list, tabName){
+      return (Array.isArray(list) ? list : []).filter(row => inferApiRowTab(row) === tabName);
+    }
+
 async function loadData() {
   setBadge("loading", "Loading");
   try {
     const base = WEB_APP_URL + (WEB_APP_URL.includes("?") ? "&" : "?");
+    const requestStamp = Date.now();
 
     // 1. Fetch CTP (Permohonan) Jobs
-    const reqJobsCTP = fetch(base + "action=listJobs&tab=permohonan&t=" + Date.now(), {
-      method: "GET",
-      cache: "no-store"
-    }).then(r => r.json());
+    const reqJobsCTP = fetchJsonSafe(base + "action=listJobs&tab=permohonan&t=" + requestStamp);
 
     // 2. Fetch WDP Jobs
-    const reqJobsWDP = fetch(base + "action=listJobs&tab=wdp&t=" + Date.now(), {
-      method: "GET",
-      cache: "no-store"
-    }).then(r => r.json());
+    const reqJobsWDP = fetchJsonSafe(base + "action=listJobs&tab=wdp&t=" + requestStamp);
 
     // 3. Fetch FAT Jobs (NEW)
-    const reqJobsFAT = fetch(base + "action=listJobs&tab=fat&t=" + Date.now(), {
-      method: "GET",
-      cache: "no-store"
-    }).then(r => r.json());
+    const reqJobsFAT = fetchJsonSafe(base + "action=listJobs&tab=fat&t=" + requestStamp);
 
     // 4. Fetch Inspectors
-    const reqInsp = fetch(base + "action=listInspectors&t=" + Date.now(), {
-      method: "GET",
-      cache: "no-store"
-    }).then(r => r.json());
+    const reqInsp = fetchJsonSafe(base + "action=listInspectors&t=" + requestStamp);
 
     // Wait for all 4 requests
     const [resCTP, resWDP, resFAT, resInsp] = await Promise.all([reqJobsCTP, reqJobsWDP, reqJobsFAT, reqInsp]);
 
-    const ctpJobs = (resCTP && resCTP.ok && Array.isArray(resCTP.jobs)) ? resCTP.jobs : [];
-    const wdpJobs = (resWDP && resWDP.ok && Array.isArray(resWDP.jobs)) ? resWDP.jobs : [];
-    const fatJobs = (resFAT && resFAT.ok && Array.isArray(resFAT.jobs)) ? resFAT.jobs : []; // <--- Handle FAT results
+    let ctpJobs = extractApiJobs(resCTP);
+    let wdpJobs = extractApiJobs(resWDP);
+    let fatJobs = extractApiJobs(resFAT);
+
+    if(!fatJobs.length){
+      const resAllJobs = await fetchJsonSafe(base + "action=listJobs&t=" + Date.now());
+      const allJobs = extractApiJobs(resAllJobs);
+      if(allJobs.length){
+        if(!ctpJobs.length) ctpJobs = jobsForTab(allJobs, "permohonan");
+        if(!wdpJobs.length) wdpJobs = jobsForTab(allJobs, "wdp");
+        fatJobs = jobsForTab(allJobs, "fat");
+        if(fatJobs.length){
+          console.warn("Recovered FAT jobs from generic listJobs fallback.", { count: fatJobs.length });
+        } else {
+          console.warn("FAT jobs still empty after generic listJobs fallback.", { resFAT, resAllJobs });
+        }
+      } else {
+        console.warn("FAT jobs request returned no rows and generic listJobs fallback was unavailable.", { resFAT, resAllJobs });
+      }
+    }
 
     if (!ctpJobs.length && !wdpJobs.length && !fatJobs.length) {
       console.warn("No jobs found across all tabs.");

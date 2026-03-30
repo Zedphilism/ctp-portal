@@ -2234,8 +2234,12 @@
 
   <script>
     const NONTEK_DATA_READY = true;
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyxCAyLYS0xlUtYOcocOZLF26QgajKc_Dj6ODTYer05WkpHXfpPiidjYxuMR7lHnlXkfA/exec";
-    const WEB_APP_SHEET_ID = "120kexRPIJPwAxK1kr0E68-8mxVKdzcCd5RUJPIH4ekQ";
+    // ▼ REPLACE with the deployed URL of codetwo.gs (Extensions → Apps Script → Deploy → Web App)
+    // After pasting codetwo.gs into the Apps Script project bound to sheet
+    // https://docs.google.com/spreadsheets/d/120kexRPIJPwAxK1kr0E68-8mxVKdzcCd5RUJPIH4ekQ
+    // deploy as a new Web App and paste the /exec URL here.
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxQL__kTFa-I64J5QsBoRLRuaPB5rX5Sud2GO0KxpNJVurG9Z3wi6P8wHJdWuzCgZw0NA/exec";
+    const WEB_APP_SHEET_ID = "120kexRPIJPwAxK1kr0E68-8mxVKdzcCd5RUJPIH4ekQ"; // ✓ correct sheet
 
   let JOBS = [];                 // All tabs (for Jobs table, schedule, map, etc.)
   let JOBS_PERMOHONAN = [];      // Gunasama 1 baseline (for Analytics + TAT)
@@ -2449,18 +2453,18 @@
     // ===== PHOTO LOOKUP MAP (Keeps your local assets, maps them to API names) =====
     // Format: "EXACT NAME FROM SHEET": "path/to/photo.jpg"
     const PHOTO_MAP = {
-      "NUR FADHILAH BINTI ZULKEPLI": "assets/inspectors/INS_A2_01.jpeg",
-      "JAY AZRIN BIN CHE YAHAYA": "assets/inspectors/INS_A2_02.jpeg",
-      "AMIR AFIZIE BIN DAUD": "assets/inspectors/INS_A2_03.jpeg",
-      "SHAFEE BIN ISHAK": "assets/inspectors/INS_A2_04.jpeg",
-      "MOHD AIZAT BIN AYOB": "assets/inspectors/INS_A2_05.jpeg",
-      "MOHAMAD FAZWAN BIN ZAKARIA": "assets/inspectors/INS_A2_06.jpeg",
-      "MUHAMMAD FAIZAL BIN BATALUMI": "assets/inspectors/INS_A2_07.jpeg",
-      "AMIR SYAIFUDIN BIN ISMAIL": "assets/inspectors/INS_A2_08.jpeg",
-      "MOHAMAD ZAIDI BIN ABDULLAH": "assets/inspectors/INS_A2_09.jpeg",
-      "NAZIRUL HAFIZ BIN ABD SHUKOR": "assets/inspectors/INS_A2_10.jpeg",
-      "MUHAMMAD IZZAT BIN ABU ZAHARIN": "assets/inspectors/INS_A2_11.jpeg",
-      "MOHAMAD SHARUL IZAM BIN MOHD HAIZENMAN": "assets/inspectors/INS_A2_12.jpeg"
+      "NUR FADHILAH BINTI ZULKEPLI": "assets/inspectortwo/INS_A2_01.jpeg",
+      "JAY AZRIN BIN CHE YAHAYA": "assets/inspectortwo/INS_A2_02.jpeg",
+      "AMIR AFIZIE BIN DAUD": "assets/inspectortwo/INS_A2_03.jpeg",
+      "SHAFEE BIN ISHAK": "assets/inspectortwo/INS_A2_04.jpeg",
+      "MOHD AIZAT BIN AYOB": "assets/inspectortwo/INS_A2_05.jpeg",
+      "MOHAMAD FAZWAN BIN ZAKARIA": "assets/inspectortwo/INS_A2_06.jpeg",
+      "MUHAMMAD FAIZAL BIN BATALUMI": "assets/inspectortwo/INS_A2_07.jpeg",
+      "AMIR SYAIFUDIN BIN ISMAIL": "assets/inspectortwo/INS_A2_08.jpeg",
+      "MOHAMAD ZAIDI BIN ABDULLAH": "assets/inspectortwo/INS_A2_09.jpeg",
+      "NAZIRUL HAFIZ BIN ABD SHUKOR": "assets/inspectortwo/INS_A2_10.jpeg",
+      "MUHAMMAD IZZAT BIN ABU ZAHARIN": "assets/inspectortwo/INS_A2_11.jpeg",
+      "MOHAMAD SHARUL IZAM BIN MOHD HAIZENMAN": "assets/inspectortwo/INS_A2_12.jpeg"
     };
 
     // Map full names to the short display format you requested
@@ -2626,15 +2630,16 @@ function formatDate(raw){
 function mapRowToJob(row, sourceTab){
       const jobId = pick(row, ["Job ID","JobID","jobId","JOB ID","ID"]);
       const unit = pick(row, ["Nama pasukan / unit","Nama Pasukan / Unit","Unit","Pasukan","Nama Unit","nama unit"]);
-      const jenis = pick(row, ["Jenis pemeriksaan","Jenis Pemeriksaan","jenis","Type","Jenis"]);
+      const jenis  = pick(row, ["Jenis pemeriksaan","Jenis Pemeriksaan","jenis","Type","Jenis"]);
+      const lokasi = pick(row, ["Lokasi Pemeriksaan","Lokasi pemeriksaan","Lokasi FAT","Lokasi"]);
       const daerah = pick(row, ["Daerah","daerah"]);
       const negeri = pick(row, ["Negeri","negeri"]);
-      const zon = pick(row, ["Zon","zon"]);
+      const zon    = pick(row, ["Zon","zon"]);
       
-      // Date fields
-      const tarikhTugasan = pick(row, ["Tarikh Penugasan","Tarikh ditugaskan","Assigned Date","Tarikh","tarikh"]);
-      const endDate = pick(row, ["End Date", "Tarikh Tamat", "EndDate"]); // <--- NEW
-      const timestamp = pick(row, ["Timestamp", "Tarikh Permohonan"]);    // <--- NEW
+      // Date fields — exact column headers confirmed from sheet
+      const tarikhTugasan = pick(row, ["Assigned Date","Tarikh Penugasan","Tarikh ditugaskan","Tarikh","tarikh"]);
+      const endDate       = pick(row, ["End Date","Tarikh Tamat","EndDate"]);
+      const timestamp     = pick(row, ["Timestamp","Tarikh Permohonan"]);
 
       const status = normalizeStatus(pick(row, ["Status","status"]));
       const priority = pick(row, ["Priority","Keutamaan","priority"]);
@@ -2644,22 +2649,35 @@ function mapRowToJob(row, sourceTab){
 
       const structRaw = pick(row, ["Inspector Structured Data", "Structured Data", "json", "Data Pemeriksaan"]);
 
+      // Lab & result fields (dashboardtwo-specific)
+      const tarikhHantarCTP    = pick(row, ["Tarikh hantar sampel ke makmal CT&P","Tarikh Hantar Sampel CT&P","Tarikh Sampel CTP","Sampel CTP"]);
+      const tarikhHantarSTRIDE = pick(row, ["Tarikh hantar sample ke makmal STRIDE","Tarikh Hantar Sampel STRIDE","Tarikh Sampel STRIDE","Sampel STRIDE"]);
+      const tarikhTerimaLaporan= pick(row, ["Tarikh terima laporan makmal","Tarikh Terima Laporan","Tarikh Laporan Makmal","Terima Laporan"]);
+      const reportResult       = pick(row, ["Report Result","Keputusan Laporan","Hasil Laporan","Result"]);
+      const tarikhPemeriksaan  = pick(row, ["Tarikh Pemeriksaan","Tarikh pemeriksaan","Inspection Date"]);
+
       return {
         sourceTab: safe(sourceTab || ""),
         jobId: safe(jobId),
         unit: safe(unit),
         jenis: safe(jenis),
+        lokasi: safe(lokasi),
         daerah: safe(daerah),
         negeri: safe(negeri),
         zon: safe(zon),
         tarikhTugasan: safe(tarikhTugasan),
-        endDate: safe(endDate),       // <--- NEW
-        timestamp: safe(timestamp),   // <--- NEW
+        endDate: safe(endDate),
+        timestamp: safe(timestamp),
         status: safe(status),
         priority: safe(priority),
         assigned1: safe(assigned1),
         assigned2: safe(assigned2),
-        inspectorData: safe(structRaw), 
+        inspectorData: safe(structRaw),
+        tarikhHantarCTP: safe(tarikhHantarCTP),
+        tarikhHantarSTRIDE: safe(tarikhHantarSTRIDE),
+        tarikhTerimaLaporan: safe(tarikhTerimaLaporan),
+        reportResult: safe(reportResult),
+        tarikhPemeriksaan: safe(tarikhPemeriksaan),
         _raw: row
       };
     }
@@ -2739,59 +2757,47 @@ async function loadData() {
       return lastRes || { ok:false, jobs:[] };
     }
 
-    // 1. Fetch Pemeriksaan Gunasama 1 Jobs
-    const reqJobsGS1 = fetchJobsForTabCandidates(["Pemeriksaan Gunasama 1", "gunasama1", "pg1", "GS1"]);
+    // 1. Fetch GUNASAMA jobs (single tab — GS1 + GS2 merged)
+    const reqJobsGS = fetchJobsForTabCandidates(["GUNASAMA", "gunasama"]);
 
-    // 2. Fetch Pemeriksaan Gunasama 2 Jobs
-    const reqJobsGS2 = fetchJobsForTabCandidates(["Pemeriksaan Gunasama 2", "gunasama2", "pg2", "GS2"]);
-
-    // 3. Fetch FAT Jobs
+    // 2. Fetch FAT Jobs
     const reqJobsFAT = fetchJobsForTabCandidates(["FAT", "fat"]);
 
-    // 4. Fetch Inspectors
+    // 3. Fetch Inspectors
     const reqInsp = fetch(base + "action=listInspectors&t=" + Date.now(), {
       method: "GET",
       cache: "no-store"
     }).then(r => r.json());
 
-    // Wait for all 4 requests
-    const [resGS1, resGS2, resFAT, resInsp] = await Promise.all([reqJobsGS1, reqJobsGS2, reqJobsFAT, reqInsp]);
+    // Wait for all 3 requests
+    const [resGS, resFAT, resInsp] = await Promise.all([reqJobsGS, reqJobsFAT, reqInsp]);
 
-    const unsupportedApi = [resGS1, resGS2, resFAT, resInsp]
+    const unsupportedApi = [resGS, resFAT, resInsp]
       .some(x => x && safe(x.error).toLowerCase().includes("unknown action"));
     if(unsupportedApi){
       renderNonTekSetupState("API setup belum lengkap");
       return;
     }
 
-    const gs1Jobs = (resGS1 && resGS1.ok && Array.isArray(resGS1.jobs)) ? resGS1.jobs : [];
-    const gs2Jobs = (resGS2 && resGS2.ok && Array.isArray(resGS2.jobs)) ? resGS2.jobs : [];
-    const fatJobs = (resFAT && resFAT.ok && Array.isArray(resFAT.jobs)) ? resFAT.jobs : []; // <--- Handle FAT results
+    const gsJobs  = (resGS  && resGS.ok  && Array.isArray(resGS.jobs))  ? resGS.jobs  : [];
+    const fatJobs = (resFAT && resFAT.ok && Array.isArray(resFAT.jobs)) ? resFAT.jobs : [];
 
-    if (!gs1Jobs.length && !gs2Jobs.length && !fatJobs.length) {
+    if (!gsJobs.length && !fatJobs.length) {
       console.warn("No jobs found across all tabs.");
     }
 
+    // Map tabs
+    const gsMapped = gsJobs
+      .map(r => mapRowToJob(r, "GUNASAMA"))
+      .filter(j => safe(j.jobId) !== "");
 
+    const fatMapped = fatJobs
+      .map(r => mapRowToJob(r, "FAT"))
+      .filter(j => safe(j.jobId) !== "");
 
-    // Combine all three lists
-// Map each tab separately (so we can filter analytics correctly)
-const ctpMapped = gs1Jobs
-  .map(r => mapRowToJob(r, "Pemeriksaan Gunasama 1"))
-  .filter(j => safe(j.jobId) !== "");
-
-const wdpMapped = gs2Jobs
-  .map(r => mapRowToJob(r, "Pemeriksaan Gunasama 2"))
-  .filter(j => safe(j.jobId) !== "");
-
-const fatMapped = fatJobs
-  .map(r => mapRowToJob(r, "FAT"))
-  .filter(j => safe(j.jobId) !== "");
-
-// JOBS = everything (for Jobs view)
-JOBS = dedupeByJobId(ctpMapped.concat(wdpMapped).concat(fatMapped));
-// Analytics/TAT baseline from Pemeriksaan Gunasama 1
-JOBS_PERMOHONAN = dedupeByJobId(ctpMapped);
+    // JOBS = everything; JOBS_PERMOHONAN = Gunasama only (for Analytics/TAT)
+    JOBS = dedupeByJobId(gsMapped.concat(fatMapped));
+    JOBS_PERMOHONAN = dedupeByJobId(gsMapped);
 
 
 if (resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)) {
@@ -3089,20 +3095,26 @@ function openDrawer(job){
         : formatDate(job.tarikhTugasan);
 
       // --- RENDER JOB INFO ---
+      // Tarikh Pemeriksaan: prefer direct column value, fall back to inspector structured data
+      const tarikhPemeriksaanFinal = job.tarikhPemeriksaan
+        ? formatDate(job.tarikhPemeriksaan)
+        : tarikhPemeriksaanDisplay;
+
       $kvJob.innerHTML = [
-        kvRow("Job ID", job.jobId),
         kvRow("Tarikh Permohonan", formatDate(job.timestamp)),
         kvRow("Unit / Pasukan", job.unit),
-        kvRow("Jenis Pemeriksaan", job.jenis),
         kvRow("Priority", job.priority),
         kvRow("Status", job.status),
-        kvRow("Tarikh Penugasan", dateRange),
-        kvRow("Tarikh Pemeriksaan", tarikhPemeriksaanDisplay),
-        kvRow("TAT Compliance", tatDisplay) // <--- NEW FIELD
+        kvRow("Tarikh Hantar Sampel ke Makmal CT&P", formatDate(job.tarikhHantarCTP)),
+        kvRow("Tarikh Hantar Sampel ke Makmal STRIDE", formatDate(job.tarikhHantarSTRIDE)),
+        kvRow("Tarikh Terima Laporan Makmal", formatDate(job.tarikhTerimaLaporan)),
+        kvRow("Report Result", job.reportResult || "-"),
+        kvRow("Tarikh Pemeriksaan", tarikhPemeriksaanFinal)
       ].join("");
 
       // 2. Location
       $kvLoc.innerHTML = [
+        kvRow("Lokasi Pemeriksaan", job.lokasi),
         kvRow("Daerah", job.daerah),
         kvRow("Negeri", job.negeri),
         kvRow("Zon", job.zon)
