@@ -2651,9 +2651,9 @@ function mapRowToJob(row, sourceTab){
       const structRaw = pick(row, ["Inspector Structured Data", "Structured Data", "json", "Data Pemeriksaan"]);
 
       // Lab & result fields (dashboardtwo-specific)
-      const tarikhHantarCTP    = pick(row, ["Tarikh hantar sampel ke makmal CT&P","Tarikh Hantar Sampel CT&P","Tarikh Sampel CTP","Sampel CTP"]);
-      const tarikhHantarSTRIDE = pick(row, ["Tarikh hantar sample ke makmal STRIDE","Tarikh Hantar Sampel STRIDE","Tarikh Sampel STRIDE","Sampel STRIDE"]);
-      const tarikhTerimaLaporan= pick(row, ["Tarikh terima laporan makmal","Tarikh Terima Laporan","Tarikh Laporan Makmal","Terima Laporan"]);
+      const tarikhHantarCTP    = pick(row, ["Tarikh Hantar Sampel Ke Makmal CT&P","Tarikh Hantar Sampel ke Makmal CT&P","Tarikh hantar sampel ke makmal CT&P","Tarikh Hantar Sampel CT&P","Tarikh Sampel CTP","Sampel CTP"]);
+      const tarikhHantarSTRIDE = pick(row, ["Tarikh Hantar Sampel ke Makmal STRIDE","Tarikh Hantar Sampel Ke Makmal STRIDE","Tarikh hantar sample ke makmal STRIDE","Tarikh Hantar Sampel STRIDE","Tarikh Sampel STRIDE","Sampel STRIDE"]);
+      const tarikhTerimaLaporan= pick(row, ["Tarikh Terima Laporan Makmal CT&P/STRIDE","Tarikh terima laporan makmal","Tarikh Terima Laporan","Tarikh Laporan Makmal","Terima Laporan"]);
       const reportResult       = pick(row, ["Report Result","Keputusan Laporan","Hasil Laporan","Result"]);
       const tarikhPemeriksaan  = pick(row, ["Tarikh Pemeriksaan","Tarikh pemeriksaan","Inspection Date"]);
 
@@ -3108,7 +3108,7 @@ function openDrawer(job){
         kvRow("Status", job.status),
         kvRow("Tarikh Hantar Sampel ke Makmal CT&P", formatDate(job.tarikhHantarCTP)),
         kvRow("Tarikh Hantar Sampel ke Makmal STRIDE", formatDate(job.tarikhHantarSTRIDE)),
-        kvRow("Tarikh Terima Laporan Makmal", formatDate(job.tarikhTerimaLaporan)),
+        kvRow("Tarikh Terima Laporan Makmal CT&P/STRIDE", formatDate(job.tarikhTerimaLaporan)),
         kvRow("Report Result", job.reportResult || "-"),
         kvRow("Tarikh Pemeriksaan", tarikhPemeriksaanFinal)
       ].join("");
