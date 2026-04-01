@@ -769,6 +769,47 @@
       min-height:52px;
     }
 
+    .card-lead{
+      margin:14px 0 0;
+      color:var(--text);
+      opacity:.9;
+      font-size:13px;
+      line-height:1.55;
+    }
+
+    .focus-grid{
+      width:100%;
+      margin-top:14px;
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .focus-item{
+      padding:12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      min-height:96px;
+    }
+
+    .focus-item strong{
+      display:block;
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.9px;
+      font-weight:900;
+      color:var(--text);
+    }
+
+    .focus-item span{
+      display:block;
+      margin-top:6px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.45;
+    }
+
     .cta{
       margin-top:auto;
       display:flex;
@@ -776,6 +817,13 @@
       align-items:flex-start;
       gap:8px;
       padding-top:12px;
+    }
+
+    .cta-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      width:100%;
     }
 
     .btn-liquid{
@@ -857,6 +905,33 @@
       --liquid-soft:rgba(162,196,84,.26);
       --btn-glow:rgba(215,236,161,.78);
       --btn-shadow:rgba(104,176,77,.24);
+    }
+
+    .btn-outline{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:46px;
+      padding:11px 16px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      text-decoration:none;
+      font-size:13px;
+      font-weight:900;
+      letter-spacing:.2px;
+      transition:transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .2s ease;
+    }
+
+    .btn-outline:hover{
+      transform:translateY(-1px);
+    }
+
+    .nontech .btn-outline:hover{
+      border-color:rgba(103,201,127,.44);
+      background:rgba(103,201,127,.12);
+      box-shadow:0 0 0 1px rgba(103,201,127,.14) inset, 0 10px 24px rgba(104,176,77,.16);
     }
 
     .tiny-note{ font-size:11px; color:var(--muted); line-height:1.45; }
@@ -1011,6 +1086,10 @@
     body.theme-light .scope-note,
     body.theme-light .notice{ background:rgba(255,255,255,.62); }
 
+    body.theme-light .focus-item{ background:rgba(255,255,255,.62); }
+    body.theme-light .card-lead{ color:var(--text); opacity:1; }
+    body.theme-light .btn-outline{ background:rgba(255,255,255,.72); }
+
     body.theme-light .tech .chip{
       background:rgba(20,139,79,.12);
       color:#0f6f3f;
@@ -1133,6 +1212,8 @@
     @media (max-width:920px){
       .grid{ grid-template-columns:1fr; }
       .card{ min-height:unset; }
+      .focus-grid{ grid-template-columns:1fr; }
+      .cta-row{ flex-direction:column; align-items:stretch; }
       .wrap{ padding-top:88px; }
       .hero-shell{ grid-template-columns:1fr; padding:22px; }
       .hero h1{ font-size:30px; }
@@ -1242,24 +1323,41 @@
         <span class="build-tag new-operational">NEW &amp; OPERATIONAL</span>
         <span class="chip">Skop Non Teknikal</span>
 
-        <p class="section-label">Jenis Pemeriksaan</p>
-        <ul>
-          <li>Pemeriksaan Gunasama 1</li>
-          <li>Pemeriksaan Gunasama 2</li>
-          <li>Pemeriksaan Penerimaan Akhir (FAT)</li>
-        </ul>
+        <p class="card-lead">
+          Ruang operasi utama untuk pemantauan tugasan, penyelarasan pemeriksa, analitik, jadual kerja,
+          dan tindakan pentadbiran khusus bagi aliran Sel Non Teknikal.
+        </p>
 
-        <div class="forms" aria-label="Borang Sel Non Teknikal">
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLSfOnkHCjIrhwaolAX_LR0Xv644GsKYjHFJRBAyR6N4btwqItA/viewform?usp=sharing&ouid=116666925478114456158" target="_blank" rel="noopener">Borang Gunasama 1</a>
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLSfOnkHCjIrhwaolAX_LR0Xv644GsKYjHFJRBAyR6N4btwqItA/viewform?usp=sharing&ouid=116666925478114456158" target="_blank" rel="noopener">Borang Gunasama 2</a>
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLSfOnkHCjIrhwaolAX_LR0Xv644GsKYjHFJRBAyR6N4btwqItA/viewform?usp=sharing&ouid=116666925478114456158" target="_blank" rel="noopener">Borang FAT (Non Teknikal)</a>
+        <div class="scope-note">
+          Dashboard dan admin action untuk sel ini menggunakan aliran data berasingan daripada Sel Teknikal,
+          supaya semakan, penugasan, dan tindakan susulan boleh dibuat dengan lebih tersusun.
         </div>
 
-        <div class="scope-note">Flow data, rujukan operasi, dan tatacara FAT non teknikal: <a href="senarai-gunasama.html" target="_blank" rel="noopener"><strong>Rujukan Senarai Gunasama 1 dan 2</strong></a></div>
+        <div class="focus-grid">
+          <div class="focus-item">
+            <strong>Dashboard Operasi</strong>
+            <span>Lihat job aktif, status semasa, jadual, peta, direktori pemeriksa, dan analytics dalam satu tempat.</span>
+          </div>
+          <div class="focus-item">
+            <strong>Admin Action</strong>
+            <span>Buka panel tindakan pentadbiran untuk mengurus aliran kerja bukan teknikal melalui Apps Script khusus.</span>
+          </div>
+          <div class="focus-item">
+            <strong>Data Berasingan</strong>
+            <span>Sel ini menggunakan sumber data dan paparan dashboard tersendiri agar urusan bukan teknikal kekal teratur.</span>
+          </div>
+          <div class="focus-item">
+            <strong>Akses Pantas</strong>
+            <span>Masuk terus ke dashboard atau buka tindakan pentadbiran tanpa perlu melalui borang pada halaman ini.</span>
+          </div>
+        </div>
 
         <div class="cta">
-          <button class="btn-liquid" data-cell="bukan_teknikal" data-target="dashboardtwo.html"><span>Masuk Sel Non Teknikal</span></button>
-          <span class="tiny-note">Dashboard sel non teknikal menggunakan tema hijau dan sumber data berasingan.</span>
+          <div class="cta-row">
+            <button class="btn-liquid" data-cell="bukan_teknikal" data-target="dashboardtwo.html"><span>Go to Dashboard</span></button>
+            <a class="btn-outline" href="https://script.google.com/macros/s/AKfycbxQL__kTFa-I64J5QsBoRLRuaPB5rX5Sud2GO0KxpNJVurG9Z3wi6P8wHJdWuzCgZw0NA/exec" target="_blank" rel="noopener">Go to Admin Action</a>
+          </div>
+          <span class="tiny-note">Halaman ini kini memfokuskan akses cepat ke dashboard dan tindakan pentadbiran Sel Non Teknikal.</span>
         </div>
       </article>
     </section>
