@@ -1,0 +1,964 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>How The CT&amp;P Inspection System Works</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg:#f4ede1;
+      --bg-soft:#efe5d4;
+      --paper:rgba(255,253,248,.82);
+      --line:rgba(17,24,39,.10);
+      --ink:#162131;
+      --muted:#5f6b7a;
+      --navy:#102542;
+      --forest:#1f6a4f;
+      --gold:#c88a32;
+      --clay:#c75d3d;
+      --shadow:0 24px 60px rgba(16,37,66,.12);
+      --radius:26px;
+    }
+
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+
+    body{
+      margin:0;
+      color:var(--ink);
+      font-family:"Manrope", system-ui, sans-serif;
+      background:
+        radial-gradient(900px 560px at 10% 0%, rgba(64,120,216,.15), transparent 58%),
+        radial-gradient(760px 540px at 88% 8%, rgba(31,106,79,.16), transparent 56%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    strong{ color:inherit; }
+
+    .page{
+      width:min(1180px, calc(100% - 32px));
+      margin:28px auto 72px;
+    }
+
+    .topbar{
+      position:sticky;
+      top:16px;
+      z-index:20;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:20px;
+      padding:14px 18px;
+      border:1px solid rgba(255,255,255,.45);
+      border-radius:999px;
+      background:rgba(255,253,248,.72);
+      backdrop-filter:blur(18px);
+      box-shadow:0 16px 38px rgba(16,37,66,.08);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .brand-mark{
+      width:42px;
+      height:42px;
+      display:grid;
+      place-items:center;
+      border-radius:14px;
+      background:linear-gradient(145deg, var(--navy), var(--forest));
+      color:#fff;
+      font-weight:800;
+      letter-spacing:.08em;
+      box-shadow:0 14px 30px rgba(16,37,66,.22);
+    }
+
+    .brand-copy strong{
+      display:block;
+      font-size:14px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .brand-copy span{
+      display:block;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .top-links{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .pill-link{
+      padding:10px 14px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,.56);
+      color:var(--muted);
+      font-size:13px;
+      font-weight:700;
+      transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+    }
+
+    .pill-link:hover{
+      transform:translateY(-1px);
+      border-color:rgba(16,37,66,.18);
+      box-shadow:0 10px 24px rgba(16,37,66,.08);
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:minmax(0, 1.15fr) minmax(320px, .85fr);
+      gap:22px;
+      margin-bottom:22px;
+    }
+
+    .hero-copy,
+    .hero-map,
+    .section,
+    .email-shell{
+      border:1px solid rgba(255,255,255,.45);
+      border-radius:var(--radius);
+      background:var(--paper);
+      backdrop-filter:blur(14px);
+      box-shadow:var(--shadow);
+    }
+
+    .hero-copy{
+      padding:34px 34px 30px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.84), rgba(255,251,244,.72)),
+        linear-gradient(135deg, rgba(31,106,79,.10), rgba(200,138,50,.08));
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(16,37,66,.07);
+      color:var(--navy);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .hero h1,
+    .section-head h2,
+    .hero-map h2,
+    .compare-card h3{
+      font-family:"Fraunces", Georgia, serif;
+      letter-spacing:-.04em;
+    }
+
+    .hero h1{
+      margin:18px 0 14px;
+      font-size:clamp(2.5rem, 4.5vw, 4.5rem);
+      line-height:.97;
+      max-width:11ch;
+    }
+
+    .hero p,
+    .section-head p,
+    .card p,
+    .flow-step p,
+    .process-step p,
+    .logic-card p,
+    .footer{
+      color:var(--muted);
+      line-height:1.72;
+    }
+
+    .hero p{
+      margin:0;
+      max-width:60ch;
+      font-size:1.03rem;
+    }
+
+    .hero-actions,
+    .hero-tags,
+    .file-map,
+    .email-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+
+    .hero-actions{ margin-top:22px; }
+    .hero-tags{ margin-top:22px; gap:10px; }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:48px;
+      padding:0 18px;
+      border-radius:16px;
+      font-size:14px;
+      font-weight:800;
+      transition:transform .16s ease, box-shadow .16s ease;
+    }
+
+    .btn:hover{ transform:translateY(-1px); }
+    .btn-primary{ background:linear-gradient(145deg, var(--navy), #173b69); color:#fff; box-shadow:0 16px 28px rgba(16,37,66,.20); }
+    .btn-secondary{ border:1px solid var(--line); background:rgba(255,255,255,.68); color:var(--ink); }
+
+    .tag,
+    .compare-label,
+    .file-chip,
+    .email-subject{
+      display:inline-flex;
+      align-items:center;
+      padding:9px 12px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+    }
+
+    .tag{
+      border:1px solid rgba(16,37,66,.08);
+      background:rgba(255,255,255,.62);
+      color:var(--muted);
+    }
+
+    .hero-map{
+      padding:26px;
+      display:grid;
+      gap:16px;
+      align-content:start;
+      background:linear-gradient(180deg, rgba(16,37,66,.94) 0%, rgba(21,43,74,.92) 100%);
+      color:#f5f7fb;
+    }
+
+    .hero-map h2{
+      margin:0;
+      font-size:2rem;
+      line-height:1.04;
+    }
+
+    .hero-map p{
+      margin:0;
+      color:rgba(245,247,251,.74);
+      line-height:1.7;
+    }
+
+    .map-panel,
+    .card,
+    .flow-step,
+    .compare-card,
+    .process-step,
+    .logic-card{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.72);
+    }
+
+    .map-panel{
+      padding:18px;
+      border-radius:20px;
+      background:rgba(255,255,255,.08);
+      border-color:rgba(255,255,255,.10);
+    }
+
+    .mini-label{
+      display:block;
+      margin-bottom:12px;
+      color:rgba(255,255,255,.62);
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+
+    .lane-grid,
+    .backbone,
+    .overview-grid,
+    .output-grid,
+    .logic-grid,
+    .flow,
+    .compare,
+    .process,
+    .process-track{
+      display:grid;
+      gap:16px;
+    }
+
+    .lane-grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; }
+    .lane{ padding:14px; border-radius:16px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.09); }
+    .lane strong, .backbone li strong{ display:block; font-size:15px; margin-bottom:4px; }
+    .lane span, .backbone li span{ display:block; color:rgba(245,247,251,.72); font-size:13px; line-height:1.55; }
+
+    .backbone{
+      list-style:none;
+      padding:0;
+      margin:0;
+      gap:10px;
+    }
+
+    .backbone li{
+      display:grid;
+      grid-template-columns:42px minmax(0, 1fr);
+      gap:12px;
+      align-items:start;
+      padding:14px;
+      border-radius:18px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .backbone-no,
+    .flow-no,
+    .process-no{
+      display:grid;
+      place-items:center;
+      color:#fff;
+      font-weight:800;
+    }
+
+    .backbone-no{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      background:linear-gradient(145deg, rgba(200,138,50,.92), rgba(199,93,61,.88));
+    }
+
+    .section{
+      padding:30px;
+      margin-top:20px;
+    }
+
+    .section-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:16px;
+      flex-wrap:wrap;
+      margin-bottom:22px;
+    }
+
+    .section-head h2{
+      margin:0;
+      font-size:clamp(1.85rem, 3vw, 2.7rem);
+      line-height:1.02;
+    }
+
+    .section-head p{ margin:10px 0 0; max-width:70ch; }
+    .callout{ max-width:320px; padding:14px 16px; border-radius:18px; background:rgba(16,37,66,.05); color:var(--muted); font-size:13px; line-height:1.65; }
+
+    .overview-grid,
+    .output-grid,
+    .logic-grid{ grid-template-columns:repeat(3, minmax(0, 1fr)); }
+
+    .card,
+    .flow-step,
+    .compare-card,
+    .process-step,
+    .logic-card{
+      padding:22px;
+      border-radius:24px;
+      box-shadow:0 12px 28px rgba(16,37,66,.05);
+    }
+
+    .card .kicker{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:34px;
+      height:34px;
+      padding:0 12px;
+      border-radius:999px;
+      background:rgba(16,37,66,.08);
+      color:var(--navy);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .card h3,
+    .flow-step h3,
+    .process-step h3,
+    .logic-card h3{ margin:14px 0 10px; font-size:1.04rem; line-height:1.35; }
+
+    .flow{ grid-template-columns:repeat(6, minmax(0, 1fr)); gap:12px; }
+
+    .flow-step{
+      position:relative;
+      min-height:250px;
+      background:linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,250,242,.76));
+    }
+
+    .flow-step::after{
+      content:"";
+      position:absolute;
+      top:50%;
+      right:-22px;
+      width:44px;
+      height:2px;
+      background:linear-gradient(90deg, rgba(16,37,66,.10), rgba(16,37,66,.35));
+      transform:translateY(-50%);
+    }
+
+    .flow-step:last-child::after{ display:none; }
+
+    .flow-no{
+      width:44px;
+      height:44px;
+      border-radius:16px;
+      background:linear-gradient(145deg, var(--forest), #2d8a67);
+      font-size:15px;
+      box-shadow:0 14px 26px rgba(31,106,79,.20);
+    }
+
+    .code-chip{
+      display:inline-flex;
+      align-items:center;
+      margin-top:14px;
+      padding:8px 10px;
+      border-radius:12px;
+      background:rgba(16,37,66,.07);
+      color:var(--navy);
+      font-size:12px;
+      font-weight:800;
+    }
+
+    .compare{ grid-template-columns:repeat(2, minmax(0, 1fr)); gap:18px; }
+    .compare-card.dashboard{ background:linear-gradient(180deg, rgba(16,37,66,.93), rgba(24,50,86,.92)); color:#f5f7fb; border-color:rgba(255,255,255,.06); }
+    .compare-card.webapp{ background:linear-gradient(180deg, rgba(31,106,79,.12), rgba(255,255,255,.78)); }
+    .compare-label{ background:rgba(255,255,255,.10); }
+    .webapp .compare-label{ background:rgba(16,37,66,.07); color:var(--navy); }
+    .compare-card h3{ margin:14px 0 10px; font-size:2rem; line-height:1.02; }
+    .compare-card p{ margin:0 0 16px; line-height:1.75; }
+    .compare-list{ list-style:none; padding:0; margin:0; display:grid; gap:10px; }
+    .compare-list li{ padding:12px 14px; border-radius:16px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.08); line-height:1.6; }
+    .webapp .compare-list li{ border-color:rgba(16,37,66,.08); background:rgba(255,255,255,.72); }
+
+    .process{ grid-template-columns:minmax(0, 1.08fr) minmax(300px, .92fr); gap:18px; }
+    .process-track{ gap:14px; }
+    .process-step{ grid-template-columns:72px minmax(0, 1fr); gap:16px; }
+    .process-no{
+      width:72px;
+      height:72px;
+      border-radius:22px;
+      background:linear-gradient(145deg, var(--gold), var(--clay));
+      font-size:1.35rem;
+      box-shadow:0 18px 30px rgba(199,93,61,.18);
+    }
+
+    .logic-card{ background:linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,250,244,.82)); }
+
+    .email-shell{
+      margin-top:20px;
+      padding:28px;
+      background:
+        radial-gradient(520px 220px at 0% 0%, rgba(64,120,216,.10), transparent 70%),
+        linear-gradient(180deg, rgba(255,255,255,.84), rgba(255,250,243,.82));
+    }
+
+    .email-note{ margin:0 0 18px; }
+    .email-subject{ margin-bottom:16px; background:rgba(16,37,66,.08); color:var(--navy); font-size:13px; text-transform:none; letter-spacing:.02em; }
+    .email-card{ overflow:hidden; max-width:760px; margin:0 auto; border-radius:22px; border:1px solid #e0e0e0; background:#fff; box-shadow:0 24px 50px rgba(16,37,66,.14); color:#333; }
+    .email-header{ padding:24px; text-align:center; color:#fff; background:#0f172a; }
+    .email-header h3{ margin:0; font-size:24px; }
+    .email-header p{ margin:6px 0 0; font-size:14px; opacity:.8; }
+    .email-body{ padding:28px 24px 24px; font-size:15px; line-height:1.72; }
+    .email-body p{ margin:0 0 14px; }
+    .email-table{ width:100%; margin:18px 0 24px; border-collapse:collapse; font-size:14px; }
+    .email-table td{ padding:12px; border-bottom:1px solid #e2e8f0; vertical-align:top; }
+    .email-table tr:nth-child(odd){ background:#f1f5f9; }
+    .email-table td:first-child{ width:34%; font-weight:800; color:#1f2937; }
+    .email-actions{ justify-content:center; margin-top:26px; }
+    .email-btn{ display:inline-flex; align-items:center; justify-content:center; min-width:190px; min-height:46px; padding:0 18px; border-radius:12px; color:#fff; font-size:14px; font-weight:800; }
+    .email-btn.orange{ background:#ea580c; }
+    .email-btn.blue{ background:#2563eb; }
+    .email-footer{ padding:16px; border-top:1px solid #e2e8f0; background:#f8fafc; color:#64748b; font-size:12px; text-align:center; }
+
+    .file-map{ gap:10px; margin-top:16px; }
+    .file-chip{ border:1px solid var(--line); background:rgba(255,255,255,.68); color:var(--ink); font-size:13px; text-transform:none; letter-spacing:0; }
+    .footer{ margin-top:24px; padding:18px 20px; border:1px solid var(--line); border-radius:22px; background:rgba(255,255,255,.58); }
+
+    @media (max-width: 1100px){
+      .hero, .process, .compare{ grid-template-columns:1fr; }
+      .overview-grid, .output-grid, .logic-grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+      .flow{ grid-template-columns:repeat(3, minmax(0, 1fr)); }
+      .flow-step:nth-child(3)::after, .flow-step:nth-child(6)::after{ display:none; }
+    }
+
+    @media (max-width: 760px){
+      .page{ width:min(100% - 20px, 100%); margin:16px auto 44px; }
+      .topbar{ position:static; border-radius:28px; padding:16px; }
+      .top-links{ justify-content:flex-start; }
+      .hero-copy, .hero-map, .section, .email-shell{ padding:22px; }
+      .hero h1{ max-width:none; }
+      .lane-grid, .overview-grid, .output-grid, .logic-grid, .flow{ grid-template-columns:1fr; }
+      .flow-step::after{ display:none; }
+      .process-step{ grid-template-columns:1fr; }
+      .process-no{ width:58px; height:58px; border-radius:18px; }
+      .email-table, .email-table tbody, .email-table tr, .email-table td{ display:block; width:100%; }
+      .email-table td{ border-bottom:none; padding:10px 0; }
+      .email-table tr{ padding:10px 0; border-bottom:1px solid #e2e8f0; }
+      .email-table td:first-child{ width:auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">CTP</div>
+        <div class="brand-copy">
+          <strong>System Explainer</strong>
+          <span>How the CT&amp;P portal, dashboard, web app, sheets, documents, and email workflow fit together.</span>
+        </div>
+      </div>
+      <nav class="top-links" aria-label="Quick links">
+        <a class="pill-link" href="index.html">Portal Home</a>
+        <a class="pill-link" href="dashboard.html">Technical Dashboard</a>
+        <a class="pill-link" href="dashboardtwo.html">Non-Technical Dashboard</a>
+        <a class="pill-link" href="#email">Assignment Email</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">CT&amp;P inspection operations</span>
+        <h1>How this system works, end to end.</h1>
+        <p>
+          This page explains the actual operating model used in the repo: applicants submit Google Forms, records are stored in Google Sheets,
+          supervisors assign inspectors through the web app, inspectors execute and update jobs, and dashboards provide live monitoring, schedule,
+          analytics, map, and workload visibility.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#workflow">See The Workflow</a>
+          <a class="btn btn-secondary" href="#assignment">Inspector Assignment Logic</a>
+        </div>
+        <div class="hero-tags">
+          <span class="tag">Sel Teknikal</span>
+          <span class="tag">Sel Non Teknikal</span>
+          <span class="tag">Dashboard</span>
+          <span class="tag">Supervisor Web App</span>
+          <span class="tag">Google Sheets</span>
+          <span class="tag">Drive + Email</span>
+        </div>
+      </div>
+
+      <aside class="hero-map">
+        <div>
+          <h2>Two operating lanes, one core pattern.</h2>
+          <p>
+            The project supports <strong>Sel Teknikal</strong> and <strong>Sel Non Teknikal</strong>. They use separate dashboards, web app variants,
+            Apps Script endpoints, and sheet sources, but both follow the same assignment and inspection lifecycle.
+          </p>
+        </div>
+
+        <div class="map-panel">
+          <span class="mini-label">Operating lanes</span>
+          <div class="lane-grid">
+            <div class="lane">
+              <strong>Sel Teknikal</strong>
+              <span>Technical inspections, technical dashboard, technical Apps Script backend.</span>
+            </div>
+            <div class="lane">
+              <strong>Sel Non Teknikal</strong>
+              <span>Non-technical inspections, separate dashboard theme and separate backend endpoint.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="map-panel">
+          <span class="mini-label">System backbone</span>
+          <ul class="backbone">
+            <li>
+              <div class="backbone-no">1</div>
+              <div>
+                <strong>Google Forms + Sheets</strong>
+                <span>Requests land in sheets such as Permohonan, WDP, FAT, and the inspector roster lives in Pemeriksa.</span>
+              </div>
+            </li>
+            <li>
+              <div class="backbone-no">2</div>
+              <div>
+                <strong>Apps Script backend</strong>
+                <span>Processes assignments, conflict checks, notifications, evidence, document generation, and status refresh.</span>
+              </div>
+            </li>
+            <li>
+              <div class="backbone-no">3</div>
+              <div>
+                <strong>Dashboards + Web App</strong>
+                <span>Dashboards are for monitoring. The web app is for operational work, assignment, and inspector execution.</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section" id="overview">
+      <div class="section-head">
+        <div>
+          <h2>System components</h2>
+          <p>
+            Each part of the portal has a clear role. The landing page selects the working lane, the dashboard summarizes and monitors,
+            and the web app is where assignments, execution updates, evidence, and documents are handled.
+          </p>
+        </div>
+        <div class="callout">
+          Separate script URLs are configured for technical and non-technical operations, so each lane can read from its own data source while keeping
+          a familiar user experience.
+        </div>
+      </div>
+
+      <div class="overview-grid">
+        <article class="card">
+          <span class="kicker">01</span>
+          <h3>Landing portal</h3>
+          <p><strong>index.html</strong> lets the user choose Sel Teknikal or Sel Non Teknikal before opening the correct dashboard and API base.</p>
+        </article>
+        <article class="card">
+          <span class="kicker">02</span>
+          <h3>Dashboard layer</h3>
+          <p><strong>dashboard.html</strong> and <strong>dashboardtwo.html</strong> focus on visibility: jobs list, inspector directory, analytics, schedule, map, and summary cards.</p>
+        </article>
+        <article class="card">
+          <span class="kicker">03</span>
+          <h3>Supervisor web app</h3>
+          <p><strong>google/webapp.html</strong> and <strong>googletwo/webaptwo.html</strong> provide the operational workspace for assigning jobs, checking conflicts, and generating documents.</p>
+        </article>
+        <article class="card">
+          <span class="kicker">04</span>
+          <h3>Apps Script backend</h3>
+          <p><strong>google/code.gs</strong> and <strong>googletwo/codetwo.gs</strong> handle assignment logic, notifications, evidence upload, document generation, and schedule data.</p>
+        </article>
+        <article class="card">
+          <span class="kicker">05</span>
+          <h3>Google Drive outputs</h3>
+          <p>Drive is used for generated documents such as <em>Borang Tugas Rasmi</em>, plus stored evidence and per-inspector folder organization.</p>
+        </article>
+        <article class="card">
+          <span class="kicker">06</span>
+          <h3>Email notifications</h3>
+          <p>The backend sends one email when a new request arrives for supervisor attention, and another HTML email when inspectors are assigned.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="workflow">
+      <div class="section-head">
+        <div>
+          <h2>End-to-end workflow</h2>
+          <p>
+            This is the practical sequence the system follows today, based on the implemented frontend and backend logic in the repository.
+          </p>
+        </div>
+      </div>
+
+      <div class="flow">
+        <article class="flow-step">
+          <div class="flow-no">1</div>
+          <h3>Request is submitted</h3>
+          <p>A user fills in a Google Form for the relevant inspection stream. The response lands in the corresponding Google Sheet row.</p>
+          <div class="code-chip">Google Form -&gt; Sheet row</div>
+        </article>
+
+        <article class="flow-step">
+          <div class="flow-no">2</div>
+          <h3>Supervisor is alerted</h3>
+          <p>The backend can send a submission email so supervisors know a new request is waiting and should be assigned.</p>
+          <div class="code-chip">sendSubmissionEmail()</div>
+        </article>
+
+        <article class="flow-step">
+          <div class="flow-no">3</div>
+          <h3>Web app loads the live workspace</h3>
+          <p>The web app requests pending jobs, available inspectors, full roster, and active schedule data from Apps Script.</p>
+          <div class="code-chip">getWebAppData()</div>
+        </article>
+
+        <article class="flow-step">
+          <div class="flow-no">4</div>
+          <h3>Supervisor assigns the job batch</h3>
+          <p>The supervisor selects jobs, enters start and end dates, chooses the lead inspector and optional second inspector, then runs assignment.</p>
+          <div class="code-chip">processAssignment()</div>
+        </article>
+
+        <article class="flow-step">
+          <div class="flow-no">5</div>
+          <h3>System writes back and notifies</h3>
+          <p>On success, the job rows are updated to <strong>Assigned</strong>, inspector names and dates are stored, roster status is refreshed, and an assignment email is sent.</p>
+          <div class="code-chip">sendAssignmentNotification()</div>
+        </article>
+
+        <article class="flow-step">
+          <div class="flow-no">6</div>
+          <h3>Inspector executes and reports</h3>
+          <p>Inspectors view their assigned jobs, update job status, upload evidence, and generate official task documents while the dashboard tracks progress.</p>
+          <div class="code-chip">updateInspectorJob()</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="dashboard">
+      <div class="section-head">
+        <div>
+          <h2>Dashboard vs web app</h2>
+          <p>
+            The repository contains both a monitoring dashboard and a supervisor web app. They use the same data model, but they serve different day-to-day needs.
+          </p>
+        </div>
+      </div>
+
+      <div class="compare">
+        <article class="compare-card dashboard">
+          <span class="compare-label">dashboard.html / dashboardtwo.html</span>
+          <h3>Dashboard</h3>
+          <p>Best for overview, monitoring, analytics, and management visibility. It answers: what is happening, where, how many, and who is loaded.</p>
+          <ul class="compare-list">
+            <li>Jobs table with search, filters, and status overview.</li>
+            <li>Inspector directory and quick workload view.</li>
+            <li>Analytics panels including status, zon, type, load, and TAT charts.</li>
+            <li>Schedule calendar that marks assigned, in-progress, and completed jobs.</li>
+            <li>Map view for operational visibility, especially in-progress inspections.</li>
+          </ul>
+        </article>
+
+        <article class="compare-card webapp">
+          <span class="compare-label">google/webapp.html / googletwo/webaptwo.html</span>
+          <h3>Operational web app</h3>
+          <p>Best for action. This is where supervisors assign work, inspect conflicts, manage roster context, and where inspectors perform execution updates.</p>
+          <ul class="compare-list">
+            <li>Supervisor Assignment Workspace with two-step job selection and assignment flow.</li>
+            <li>Schedule and roster panes for planning and availability checks.</li>
+            <li>Inspector Execution panel for status update and evidence upload.</li>
+            <li>Dokumen section for generating <em>Borang Tugas Rasmi</em>.</li>
+            <li>Reference section for browsing uploaded surat permohonan by month.</li>
+            <li>Optional AI Copilot tools for cluster suggestions and WhatsApp text generation.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="assignment">
+      <div class="section-head">
+        <div>
+          <h2>Inspector assignment logic</h2>
+          <p>
+            The assignment flow is implemented in the supervisor web app and backed by Apps Script. Assignment is not just a UI action:
+            it validates date conflicts, updates inspector availability, logs the action, and triggers notification email delivery.
+          </p>
+        </div>
+      </div>
+
+      <div class="process">
+        <div class="process-track">
+          <article class="process-step">
+            <div class="process-no">1</div>
+            <div>
+              <h3>Pending jobs are loaded from the request sheets</h3>
+              <p>The supervisor workspace pulls pending jobs from <strong>Permohonan</strong>, <strong>WDP</strong>, and <strong>FAT</strong>. Jobs are treated as pending when status is blank or contains <strong>Pending</strong>.</p>
+            </div>
+          </article>
+
+          <article class="process-step">
+            <div class="process-no">2</div>
+            <div>
+              <h3>Supervisor selects jobs, dates, and inspectors</h3>
+              <p>Step 1 is job selection. Step 2 captures the assignment window, lead inspector, and optional second inspector. A lead inspector and start date are required.</p>
+            </div>
+          </article>
+
+          <article class="process-step">
+            <div class="process-no">3</div>
+            <div>
+              <h3>Conflict detection runs before saving</h3>
+              <p><strong>getInspectorConflicts_()</strong> compares the requested date window against all active jobs already associated with the same inspector. If any overlap exists, the assignment is blocked.</p>
+            </div>
+          </article>
+
+          <article class="process-step">
+            <div class="process-no">4</div>
+            <div>
+              <h3>Successful assignment updates the source data</h3>
+              <p>The backend writes <strong>Assigned</strong> into the job row, saves start and end dates, stores both assigned inspectors, logs the event, and gathers unit and location details for the outgoing email.</p>
+            </div>
+          </article>
+
+          <article class="process-step">
+            <div class="process-no">5</div>
+            <div>
+              <h3>Inspector availability is refreshed</h3>
+              <p>If the start date is today or within the active date range, the inspector can become <strong>Sedang Bertugas</strong>. Future assignments set <strong>Telah Ditugaskan</strong>. Otherwise the inspector returns to <strong>Aktif</strong>.</p>
+            </div>
+          </article>
+
+          <article class="process-step">
+            <div class="process-no">6</div>
+            <div>
+              <h3>Execution updates keep the lifecycle moving</h3>
+              <p>Inspectors later update their job to statuses such as <strong>In Progress</strong> or <strong>Completed</strong>, and the backend can save structured inspection notes and upload evidence.</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="logic-grid">
+          <article class="logic-card">
+            <h3>Status flow</h3>
+            <p>The operational lifecycle typically moves from <strong>Pending</strong> to <strong>Assigned</strong> to <strong>In Progress</strong>, then to <strong>Completed</strong> or <strong>Cancelled</strong>.</p>
+          </article>
+          <article class="logic-card">
+            <h3>Schedule scope</h3>
+            <p>The schedule view includes jobs that are <strong>Assigned</strong>, <strong>In Progress</strong>, or <strong>Completed</strong>, so supervisors can see the active and recent date footprint.</p>
+          </article>
+          <article class="logic-card">
+            <h3>Reassignment</h3>
+            <p>Reassigning a job reruns conflict checks, updates the inspector names and dates, and refreshes status for both the old and new inspectors.</p>
+          </article>
+          <article class="logic-card">
+            <h3>Cancellation</h3>
+            <p>Cancelling a job sets the row to <strong>Cancelled</strong> and refreshes inspector availability so the roster no longer shows a stale assignment.</p>
+          </article>
+          <article class="logic-card">
+            <h3>Inspector reports</h3>
+            <p>Execution updates can store structured JSON containing a brief report, extracted inspection date, inspector name, and submission timestamp.</p>
+          </article>
+          <article class="logic-card">
+            <h3>Notification target</h3>
+            <p>Assignment email recipients are resolved from the inspector roster sheet by matching the inspector name to the stored email address.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="email-shell" id="email">
+      <div class="section-head">
+        <div>
+          <h2>Rendered assignment email example</h2>
+          <p class="email-note">
+            The card below mirrors the structure of the HTML email built by <strong>sendAssignmentNotification()</strong>.
+            The data here is sample content, but the layout follows the live implementation: dark header, summary table, and action buttons.
+          </p>
+        </div>
+      </div>
+
+      <div class="email-subject">Subject: Arahan Penugasan: Rejimen Semboyan DiRaja (08/04/2026 - 10/04/2026)</div>
+
+      <div class="email-card">
+        <div class="email-header">
+          <h3>Arahan Penugasan</h3>
+          <p>Sel Teknikal CT&amp;P</p>
+        </div>
+        <div class="email-body">
+          <p>Assalamualaikum <strong>SSjn Zaidi</strong> &amp; <strong>SSjn Amir Syaifudin</strong>,</p>
+          <p>Anda telah ditugaskan untuk menjalankan pemeriksaan berikut:</p>
+
+          <table class="email-table" aria-label="Rendered inspector assignment email">
+            <tr>
+              <td>Tarikh</td>
+              <td>08/04/2026 - 10/04/2026</td>
+            </tr>
+            <tr>
+              <td>Jenis Pemeriksaan</td>
+              <td>Pemeriksaan Alat Ganti Kenderaan ATM, FAT</td>
+            </tr>
+            <tr>
+              <td>Lokasi / Unit</td>
+              <td>Rejimen Semboyan DiRaja<br />Bahagian Senggara Aset</td>
+            </tr>
+            <tr>
+              <td>Daerah / Negeri</td>
+              <td>Port Dickson, Seremban (Negeri Sembilan)</td>
+            </tr>
+            <tr>
+              <td>Deskripsi Peralatan</td>
+              <td>Alternator, starter motor, set bateri, dokumen penerimaan akhir</td>
+            </tr>
+          </table>
+
+          <div class="email-actions">
+            <a class="email-btn orange" href="#outputs">Surat Permohonan</a>
+            <a class="email-btn blue" href="dashboard.html">Buka Spreadsheet</a>
+          </div>
+        </div>
+        <div class="email-footer">
+          Ini adalah emel janaan komputer. Tidak perlu dibalas.
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="outputs">
+      <div class="section-head">
+        <div>
+          <h2>Outputs, documents, and supporting features</h2>
+          <p>
+            Beyond assignment itself, the system also supports inspector execution, evidence handling, document generation, and reference browsing.
+            These pieces turn the portal from a tracker into an operational workflow tool.
+          </p>
+        </div>
+      </div>
+
+      <div class="output-grid">
+        <article class="card">
+          <span class="kicker">Docs</span>
+          <h3>Borang Tugas Rasmi</h3>
+          <p>The Dokumen section can generate the official task document for the selected inspector and assigned job set using Drive-backed output folders.</p>
+        </article>
+        <article class="card">
+          <span class="kicker">Drive</span>
+          <h3>Evidence upload</h3>
+          <p>Inspectors can upload evidence files from the execution panel. The backend accepts base64 upload payloads and stores them with the job context.</p>
+        </article>
+        <article class="card">
+          <span class="kicker">Ref</span>
+          <h3>Reference library</h3>
+          <p>The Reference tab helps the team browse uploaded surat permohonan documents by month, applicant, unit, or phone number.</p>
+        </article>
+        <article class="card">
+          <span class="kicker">Plan</span>
+          <h3>Schedule and roster</h3>
+          <p>Schedule shows the date footprint of active work, while roster highlights who is active, assigned, or currently on duty.</p>
+        </article>
+        <article class="card">
+          <span class="kicker">Exec</span>
+          <h3>Inspector execution panel</h3>
+          <p>Each inspector can review only their assigned jobs, choose a focused job, submit status changes, and continue evidence and report work from one place.</p>
+        </article>
+        <article class="card">
+          <span class="kicker">AI</span>
+          <h3>AI Copilot</h3>
+          <p>For authorized accounts, the supervisor workspace can generate cluster suggestions and WhatsApp-ready assignment text from the current selection.</p>
+        </article>
+      </div>
+
+      <div class="file-map" aria-label="Relevant files">
+        <a class="file-chip" href="index.html">index.html</a>
+        <a class="file-chip" href="dashboard.html">dashboard.html</a>
+        <a class="file-chip" href="dashboardtwo.html">dashboardtwo.html</a>
+        <a class="file-chip" href="google/webapp.html">google/webapp.html</a>
+        <a class="file-chip" href="googletwo/webaptwo.html">googletwo/webaptwo.html</a>
+        <a class="file-chip" href="google/code.gs">google/code.gs</a>
+        <a class="file-chip" href="googletwo/codetwo.gs">googletwo/codetwo.gs</a>
+      </div>
+    </section>
+
+    <div class="footer">
+      This explainer is based on the implemented flow in the current repository, including the dashboard pages, the Apps Script web app, and the email template used for inspector assignment notifications.
+    </div>
+  </div>
+</body>
+</html>

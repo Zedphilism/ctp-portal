@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Portal CT&P | Pilih Sel</title>
-  <meta name="description" content="Halaman pemilihan Sel Teknikal atau Sel Non Teknikal di bawah Cawangan Teknik & Pemeriksaan." />
+  <title>Portal CT&P | Sel Teknikal</title>
+  <meta name="description" content="Halaman akses Sel Teknikal di bawah Cawangan Teknik & Pemeriksaan." />
   <style>
     :root{
       --bg:#072b1d;
@@ -604,6 +604,11 @@
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
       gap:14px;
+    }
+
+    .grid.grid-single{
+      grid-template-columns:minmax(0, 620px);
+      justify-content:center;
     }
 
     .card{
@@ -1231,7 +1236,7 @@
       </div>
     </section>
 
-    <section class="grid" aria-label="Pilihan sel">
+    <section class="grid grid-single" aria-label="Akses Sel Teknikal">
       <article class="card tech">
         <h2>Sel Teknikal</h2>
         <span class="chip">Skop Teknikal</span>
@@ -1257,32 +1262,6 @@
           <span class="tiny-note">Dashboard semasa (aktif) adalah untuk aliran ini.</span>
         </div>
       </article>
-
-      <article class="card nontech">
-        <h2>Sel Non Teknikal</h2>
-        <span class="build-tag new-operational">NEW &amp; OPERATIONAL</span>
-        <span class="chip">Skop Non Teknikal</span>
-
-        <p class="section-label">Jenis Pemeriksaan</p>
-        <ul>
-          <li>Pemeriksaan Gunasama 1</li>
-          <li>Pemeriksaan Gunasama 2</li>
-          <li>Pemeriksaan Penerimaan Akhir (FAT)</li>
-        </ul>
-
-        <div class="forms" aria-label="Borang Sel Non Teknikal">
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLSfOnkHCjIrhwaolAX_LR0Xv644GsKYjHFJRBAyR6N4btwqItA/viewform?usp=sharing&ouid=116666925478114456158" target="_blank" rel="noopener">Borang Gunasama 1</a>
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLSfOnkHCjIrhwaolAX_LR0Xv644GsKYjHFJRBAyR6N4btwqItA/viewform?usp=sharing&ouid=116666925478114456158" target="_blank" rel="noopener">Borang Gunasama 2</a>
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLSfOnkHCjIrhwaolAX_LR0Xv644GsKYjHFJRBAyR6N4btwqItA/viewform?usp=sharing&ouid=116666925478114456158" target="_blank" rel="noopener">Borang FAT (Non Teknikal)</a>
-        </div>
-
-        <div class="scope-note">Flow data, rujukan operasi, dan tatacara FAT non teknikal: <a href="senarai-gunasama.html" target="_blank" rel="noopener"><strong>Rujukan Senarai Gunasama 1 dan 2</strong></a></div>
-
-        <div class="cta">
-          <button class="btn-liquid" data-cell="bukan_teknikal" data-target="dashboardtwo.html"><span>Masuk Sel Non Teknikal</span></button>
-          <span class="tiny-note">Dashboard sel non teknikal menggunakan tema hijau dan sumber data berasingan.</span>
-        </div>
-      </article>
     </section>
 
     <section class="support">
@@ -1295,7 +1274,7 @@
 
     <div class="cell-badge" id="cellStatus">
       <span class="dot"></span>
-      <span id="cellStatusText">Tiada sel dipilih untuk sesi ini.</span>
+      <span id="cellStatusText">Portal aktif: Sel Teknikal.</span>
     </div>
   </main>
 
@@ -1308,7 +1287,7 @@
     <div class="d-body">
       <div class="drawer-label">Menu</div>
       <a class="drawer-link" href="dashboard.html">Dashboard Sel Teknikal</a>
-      <a class="drawer-link" href="dashboardtwo.html">Dashboard Sel Non Teknikal</a>
+      <a class="drawer-link" href="how-it-works.html">How The System Works</a>
       <a class="drawer-link" href="about.html">Tentang Kami</a>
       <a class="drawer-link" href="guide.html">Garis Panduan</a>
       <a class="drawer-link" href="https://wa.me/qr/QPQSVVZHMP22L1" target="_blank" rel="noopener">Hubungi Pentadbir</a>
@@ -1444,18 +1423,14 @@
     function setStatusText(){
       const status = document.getElementById("cellStatusText");
       const dot = document.querySelector(".cell-badge .dot");
-      const selected = localStorage.getItem(CELL_KEY);
+      const selected = localStorage.getItem(CELL_KEY) || "teknikal";
+      if(!localStorage.getItem(CELL_KEY)) localStorage.setItem(CELL_KEY, "teknikal");
       if(selected === "teknikal"){
         status.textContent = "Sel aktif semasa: Sel Teknikal";
         dot.style.background = "#148b4f";
         return;
       }
-      if(selected === "bukan_teknikal"){
-        status.textContent = "Sel aktif semasa: Sel Non Teknikal";
-        dot.style.background = "#5ba76d";
-        return;
-      }
-      status.textContent = "Sel aktif semasa: Sel Teknikal & Sel Non Teknikal";
+      status.textContent = "Portal aktif: Sel Teknikal";
       dot.style.background = "#67c97f";
     }
 
