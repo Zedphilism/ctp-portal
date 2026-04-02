@@ -2561,10 +2561,27 @@ function parseInspectorData(raw){
   }
 }
 
+function normalizeStructuredKey(key){
+  return safe(key).toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
 function structuredFieldValue(raw, keys){
   const data = parseInspectorData(raw);
   for(const key of (keys || [])){
     if(safe(data[key])) return data[key];
+  }
+  const wanted = new Set((keys || []).map(normalizeStructuredKey).filter(Boolean));
+  if(!wanted.size) return "";
+  for(const [key, value] of Object.entries(data || {})){
+    if(!safe(value)) continue;
+    if(wanted.has(normalizeStructuredKey(key))) return value;
+  }
+  return "";
+}
+
+function firstNonBlankText(values){
+  for(const value of (Array.isArray(values) ? values : [values])){
+    if(safe(value)) return value;
   }
   return "";
 }
@@ -2585,7 +2602,9 @@ function resolveReportNotes(job){
     "Maklum Balas",
     "Ulasan Pemeriksa",
     "Ulasan",
-    "Catatan Pemeriksa"
+    "Catatan Pemeriksa",
+    "reportNotes",
+    "reportText"
   ]));
 }
 
@@ -2597,7 +2616,9 @@ function resolveInspectionDate(job){
   return safe(structuredFieldValue(job?.inspectorData, [
     "Tarikh Pemeriksaan",
     "Tarikh pemeriksaan",
-    "Inspection Date"
+    "Inspection Date",
+    "tarikhPemeriksaan",
+    "inspectionDate"
   ]));
 }
 
@@ -2711,15 +2732,77 @@ function mapRowToJob(row, sourceTab){
       const assigned1 = pick(row, ["Assigned Inspector 1","Pemeriksa 1","Inspector 1","Pemeriksa Teknikal 1","Pemeriksa Bukan Teknikal 1","Assigned 1"]);
       const assigned2 = pick(row, ["Assigned Inspector 2","Pemeriksa 2","Inspector 2","Pemeriksa Teknikal 2","Pemeriksa Bukan Teknikal 2","Assigned 2"]);
 
-      const structRaw = pick(row, ["Inspector Structured Data", "Structured Data", "json", "Data Pemeriksaan"]);
+      const structRaw = pick(row, ["Inspector Structured Data", "Structured Data", "inspectorData", "json", "Data Pemeriksaan"]);
+      const inspectorData = safe(structRaw);
 
       // Lab & result fields (dashboardtwo-specific)
-      const tarikhHantarCTP    = pick(row, ["Tarikh Hantar Sampel Ke Makmal CT&P","Tarikh Hantar Sampel ke Makmal CT&P","Tarikh hantar sampel ke makmal CT&P","Tarikh Hantar Sampel CT&P","Tarikh Sampel CTP","Sampel CTP"]);
-      const tarikhHantarSTRIDE = pick(row, ["Tarikh Hantar Sampel ke Makmal STRIDE","Tarikh Hantar Sampel Ke Makmal STRIDE","Tarikh hantar sample ke makmal STRIDE","Tarikh Hantar Sampel STRIDE","Tarikh Sampel STRIDE","Sampel STRIDE"]);
-      const tarikhTerimaLaporan= pick(row, ["Tarikh Terima Laporan Makmal CT&P/STRIDE","Tarikh terima laporan makmal","Tarikh Terima Laporan","Tarikh Laporan Makmal","Terima Laporan"]);
-      const reportResult       = pick(row, ["Report Result","Keputusan Laporan","Hasil Laporan","Result"]);
-      const reportNotes        = pick(row, ["Maklumbalas","Maklum Balas","Ulasan Pemeriksa","Ulasan","Catatan Pemeriksa"]);
-      const tarikhPemeriksaan  = pick(row, ["Tarikh Pemeriksaan","Tarikh pemeriksaan","Inspection Date"]);
+      const reportNotes = firstNonBlankText([
+        pick(row, ["Maklumbalas","Maklum Balas","Ulasan Pemeriksa","Ulasan","Catatan Pemeriksa","reportNotes","reportText"]),
+        structuredFieldValue(inspectorData, [
+          "Laporan Ringkas",
+          "Maklumbalas",
+          "Maklum Balas",
+          "Ulasan Pemeriksa",
+          "Ulasan",
+          "Catatan Pemeriksa",
+          "reportNotes",
+          "reportText"
+        ])
+      ]);
+      const tarikhPemeriksaan = firstNonBlankText([
+        pick(row, ["Tarikh Pemeriksaan","Tarikh pemeriksaan","Inspection Date","tarikhPemeriksaan","inspectionDate"]),
+        extractInspectionDateFromNotes(reportNotes),
+        structuredFieldValue(inspectorData, [
+          "Tarikh Pemeriksaan",
+          "Tarikh pemeriksaan",
+          "Inspection Date",
+          "tarikhPemeriksaan",
+          "inspectionDate"
+        ])
+      ]);
+      const tarikhHantarCTP = firstNonBlankText([
+        pick(row, ["Tarikh Hantar Sampel Ke Makmal CT&P","Tarikh Hantar Sampel ke Makmal CT&P","Tarikh hantar sampel ke makmal CT&P","Tarikh Hantar Sampel CT&P","Tarikh Sampel CTP","Sampel CTP","labSentCtp"]),
+        structuredFieldValue(inspectorData, [
+          "Tarikh Hantar Sampel Ke Makmal CT&P",
+          "Tarikh Hantar Sampel ke Makmal CT&P",
+          "Tarikh Hantar Sampel CT&P",
+          "Tarikh Sampel CTP",
+          "Sampel CTP",
+          "labSentCtp"
+        ])
+      ]);
+      const tarikhHantarSTRIDE = firstNonBlankText([
+        pick(row, ["Tarikh Hantar Sampel ke Makmal STRIDE","Tarikh Hantar Sampel Ke Makmal STRIDE","Tarikh hantar sample ke makmal STRIDE","Tarikh Hantar Sampel STRIDE","Tarikh Sampel STRIDE","Sampel STRIDE","labSentStride"]),
+        structuredFieldValue(inspectorData, [
+          "Tarikh Hantar Sampel ke Makmal STRIDE",
+          "Tarikh Hantar Sampel Ke Makmal STRIDE",
+          "Tarikh Hantar Sampel STRIDE",
+          "Tarikh Sampel STRIDE",
+          "Sampel STRIDE",
+          "labSentStride"
+        ])
+      ]);
+      const tarikhTerimaLaporan = firstNonBlankText([
+        pick(row, ["Tarikh Terima Laporan Makmal CT&P/STRIDE","Tarikh terima laporan makmal","Tarikh Terima Laporan","Tarikh Laporan Makmal","Terima Laporan","labReportReceived"]),
+        structuredFieldValue(inspectorData, [
+          "Tarikh Terima Laporan Makmal CT&P/STRIDE",
+          "Tarikh terima laporan makmal",
+          "Tarikh Terima Laporan",
+          "Tarikh Laporan Makmal",
+          "Terima Laporan",
+          "labReportReceived"
+        ])
+      ]);
+      const reportResult = firstNonBlankText([
+        pick(row, ["Report Result","Keputusan Laporan","Hasil Laporan","Result","reportResult"]),
+        structuredFieldValue(inspectorData, [
+          "Report Result",
+          "Keputusan Laporan",
+          "Hasil Laporan",
+          "Result",
+          "reportResult"
+        ])
+      ]);
 
       return {
         sourceTab: safe(sourceTab || ""),
@@ -2737,7 +2820,7 @@ function mapRowToJob(row, sourceTab){
         priority: safe(priority),
         assigned1: safe(assigned1),
         assigned2: safe(assigned2),
-        inspectorData: safe(structRaw),
+        inspectorData: inspectorData,
         tarikhHantarCTP: safe(tarikhHantarCTP),
         tarikhHantarSTRIDE: safe(tarikhHantarSTRIDE),
         tarikhTerimaLaporan: safe(tarikhTerimaLaporan),
@@ -3137,16 +3220,20 @@ function openDrawer(job){
       const tarikhPemeriksaanFinal = inspectionDateRaw ? formatDate(inspectionDateRaw) : tarikhPemeriksaanDisplay;
       const tarikhHantarCTP = resolveDrawerStructuredValue(job, job.tarikhHantarCTP, [
         "Tarikh Hantar Sampel Ke Makmal CT&P",
-        "Tarikh Hantar Sampel ke Makmal CT&P"
+        "Tarikh Hantar Sampel ke Makmal CT&P",
+        "labSentCtp"
       ]);
       const tarikhHantarSTRIDE = resolveDrawerStructuredValue(job, job.tarikhHantarSTRIDE, [
-        "Tarikh Hantar Sampel ke Makmal STRIDE"
+        "Tarikh Hantar Sampel ke Makmal STRIDE",
+        "labSentStride"
       ]);
       const tarikhTerimaLaporan = resolveDrawerStructuredValue(job, job.tarikhTerimaLaporan, [
-        "Tarikh Terima Laporan Makmal CT&P/STRIDE"
+        "Tarikh Terima Laporan Makmal CT&P/STRIDE",
+        "labReportReceived"
       ]);
       const reportResultValue = resolveDrawerStructuredValue(job, job.reportResult, [
-        "Report Result"
+        "Report Result",
+        "reportResult"
       ]);
 
       $kvJob.innerHTML = [
