@@ -2550,6 +2550,69 @@ function formatDate(raw){
   return d.toLocaleDateString("en-GB", { day:"2-digit", month:"2-digit", year:"numeric" });
 }
 
+function parseInspectorData(raw){
+  const s = safe(raw);
+  if(!s || s === "{}") return {};
+  try{
+    const data = JSON.parse(s);
+    return (data && typeof data === "object") ? data : {};
+  }catch(e){
+    return {};
+  }
+}
+
+function structuredFieldValue(raw, keys){
+  const data = parseInspectorData(raw);
+  for(const key of (keys || [])){
+    if(safe(data[key])) return data[key];
+  }
+  return "";
+}
+
+function extractInspectionDateFromNotes(raw){
+  const text = safe(raw);
+  if(!text) return "";
+  const tagged = text.match(/tarikh pemeriksaan[^0-9]*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/i);
+  if(tagged && tagged[1]) return tagged[1];
+  const loose = text.match(/(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/);
+  return loose ? loose[1] : "";
+}
+
+function resolveReportNotes(job){
+  return safe(job?.reportNotes) || safe(structuredFieldValue(job?.inspectorData, [
+    "Laporan Ringkas",
+    "Maklumbalas",
+    "Maklum Balas",
+    "Ulasan Pemeriksa",
+    "Ulasan",
+    "Catatan Pemeriksa"
+  ]));
+}
+
+function resolveInspectionDate(job){
+  const direct = safe(job?.tarikhPemeriksaan);
+  if(direct) return direct;
+  const noteDate = extractInspectionDateFromNotes(resolveReportNotes(job));
+  if(noteDate) return noteDate;
+  return safe(structuredFieldValue(job?.inspectorData, [
+    "Tarikh Pemeriksaan",
+    "Tarikh pemeriksaan",
+    "Inspection Date"
+  ]));
+}
+
+function resolveDrawerStructuredValue(job, directValue, keys){
+  const direct = safe(directValue);
+  if(direct) return direct;
+  return safe(structuredFieldValue(job?.inspectorData, keys));
+}
+
+function formatMultilineTextHtml(raw){
+  const text = safe(raw);
+  if(!text) return "";
+  return escapeHtml(text).replace(/\r?\n/g, "<br>");
+}
+
     function jobDisplayDate(job){
       const ts = parseDateSmart(job.timestamp);
       if(ts) return formatDate(ts);
@@ -2655,6 +2718,7 @@ function mapRowToJob(row, sourceTab){
       const tarikhHantarSTRIDE = pick(row, ["Tarikh Hantar Sampel ke Makmal STRIDE","Tarikh Hantar Sampel Ke Makmal STRIDE","Tarikh hantar sample ke makmal STRIDE","Tarikh Hantar Sampel STRIDE","Tarikh Sampel STRIDE","Sampel STRIDE"]);
       const tarikhTerimaLaporan= pick(row, ["Tarikh Terima Laporan Makmal CT&P/STRIDE","Tarikh terima laporan makmal","Tarikh Terima Laporan","Tarikh Laporan Makmal","Terima Laporan"]);
       const reportResult       = pick(row, ["Report Result","Keputusan Laporan","Hasil Laporan","Result"]);
+      const reportNotes        = pick(row, ["Maklumbalas","Maklum Balas","Ulasan Pemeriksa","Ulasan","Catatan Pemeriksa"]);
       const tarikhPemeriksaan  = pick(row, ["Tarikh Pemeriksaan","Tarikh pemeriksaan","Inspection Date"]);
 
       return {
@@ -2678,6 +2742,7 @@ function mapRowToJob(row, sourceTab){
         tarikhHantarSTRIDE: safe(tarikhHantarSTRIDE),
         tarikhTerimaLaporan: safe(tarikhTerimaLaporan),
         reportResult: safe(reportResult),
+        reportNotes: safe(reportNotes),
         tarikhPemeriksaan: safe(tarikhPemeriksaan),
         _raw: row
       };
@@ -3050,43 +3115,16 @@ function openDrawer(job){
       $dSub.textContent = `${job.unit} | ${job.jenis}`.replace(/^\s*\|\s*|\s*\|\s*$/g, "");
 
       // --- DATE & TAT LOGIC ---
-      let tarikhPemeriksaanDisplay = "Pemeriksaan belum dilaksanakan";
+      const inspectionDateRaw = resolveInspectionDate(job);
+      let tarikhPemeriksaanDisplay = inspectionDateRaw ? formatDate(inspectionDateRaw) : "Pemeriksaan belum dilaksanakan";
       let tatDisplay = "-"; // Default if data is missing
 
-      // Parse Inspector Data to get Tarikh Pemeriksaan
-      if (job.inspectorData && job.inspectorData.trim() !== "{}" && job.inspectorData.trim() !== "") {
-        try {
-          const data = JSON.parse(job.inspectorData);
-          // Find key containing "tarikh" (case insensitive)
-          const dateKey = Object.keys(data).find(k => k.toLowerCase().includes("tarikh"));
-          
-          if (dateKey && data[dateKey]) {
-             // 1. Set Display Date
-             tarikhPemeriksaanDisplay = formatDate(data[dateKey]);
-
-             // 2. Calculate TAT (Inspection Date - Application Date)
-             if(job.timestamp){
-            const appDate = parseDateSmart(job.timestamp);
-            const inspDate = parseDateSmart(data[dateKey]);
-
-            if(appDate && inspDate){
-            const diffTime = inspDate.getTime() - appDate.getTime();
-            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-            tatDisplay = `${diffDays} days`;
-            }
-
-                
-                if(appDate && inspDate){
-                    // Calculate difference in milliseconds
-                    const diffTime = inspDate - appDate; 
-                    // Convert to days (rounded down)
-                    const diff = Math.floor((inspDate.getTime() - appDate.getTime()) / 86400000);
-                    tatDisplay = `${diffDays} days`;
-                }
-             }
-          }
-        } catch(e) {
-          console.error("TAT Calculation Error", e);
+      if(job.timestamp && inspectionDateRaw){
+        const appDate = parseDateSmart(job.timestamp);
+        const inspDate = parseDateSmart(inspectionDateRaw);
+        if(appDate && inspDate){
+          const diffDays = Math.floor((inspDate.getTime() - appDate.getTime()) / 86400000);
+          tatDisplay = `${diffDays} days`;
         }
       }
 
@@ -3096,20 +3134,30 @@ function openDrawer(job){
         : formatDate(job.tarikhTugasan);
 
       // --- RENDER JOB INFO ---
-      // Tarikh Pemeriksaan: prefer direct column value, fall back to inspector structured data
-      const tarikhPemeriksaanFinal = job.tarikhPemeriksaan
-        ? formatDate(job.tarikhPemeriksaan)
-        : tarikhPemeriksaanDisplay;
+      const tarikhPemeriksaanFinal = inspectionDateRaw ? formatDate(inspectionDateRaw) : tarikhPemeriksaanDisplay;
+      const tarikhHantarCTP = resolveDrawerStructuredValue(job, job.tarikhHantarCTP, [
+        "Tarikh Hantar Sampel Ke Makmal CT&P",
+        "Tarikh Hantar Sampel ke Makmal CT&P"
+      ]);
+      const tarikhHantarSTRIDE = resolveDrawerStructuredValue(job, job.tarikhHantarSTRIDE, [
+        "Tarikh Hantar Sampel ke Makmal STRIDE"
+      ]);
+      const tarikhTerimaLaporan = resolveDrawerStructuredValue(job, job.tarikhTerimaLaporan, [
+        "Tarikh Terima Laporan Makmal CT&P/STRIDE"
+      ]);
+      const reportResultValue = resolveDrawerStructuredValue(job, job.reportResult, [
+        "Report Result"
+      ]);
 
       $kvJob.innerHTML = [
         kvRow("Tarikh Permohonan", formatDate(job.timestamp)),
         kvRow("Unit / Pasukan", job.unit),
         kvRow("Priority", job.priority),
         kvRow("Status", job.status),
-        kvRow("Tarikh Hantar Sampel ke Makmal CT&P", formatDate(job.tarikhHantarCTP)),
-        kvRow("Tarikh Hantar Sampel ke Makmal STRIDE", formatDate(job.tarikhHantarSTRIDE)),
-        kvRow("Tarikh Terima Laporan Makmal CT&P/STRIDE", formatDate(job.tarikhTerimaLaporan)),
-        kvRow("Report Result", job.reportResult || "-"),
+        kvRow("Tarikh Hantar Sampel ke Makmal CT&P", formatDate(tarikhHantarCTP)),
+        kvRow("Tarikh Hantar Sampel ke Makmal STRIDE", formatDate(tarikhHantarSTRIDE)),
+        kvRow("Tarikh Terima Laporan Makmal CT&P/STRIDE", formatDate(tarikhTerimaLaporan)),
+        kvRow("Report Result", reportResultValue || "-"),
         kvRow("Tarikh Pemeriksaan", tarikhPemeriksaanFinal)
       ].join("");
 
@@ -3138,44 +3186,19 @@ function openDrawer(job){
         kvRowHtml("Inspector 2", renderInsLink(job.assigned2))  // CHANGED TO kvRowHtml
       ].join("");
 
-      // 4. HASIL PEMERIKSAAN (Structured Data)
+      // 4. HASIL PEMERIKSAAN (Report Notes only)
       const $docSection = document.querySelector("#docList").parentElement; 
       $docSection.querySelector("h3").textContent = "HASIL PEMERIKSAAN";
       
+      const reportNotes = resolveReportNotes(job);
       let htmlContent = "";
       
-      if (job.inspectorData && job.inspectorData.trim() !== "{}" && job.inspectorData.trim() !== "") {
-        try {
-          const data = JSON.parse(job.inspectorData);
-          
-          const submitDate = data.submitDate ? new Date(data.submitDate).toLocaleString() : "";
-          
-          // Cleanup keys for display
-          const displayData = {...data};
-          delete displayData.submitDate;
-          delete displayData.inspectorStatus;
-
-          const otherRows = Object.entries(displayData).map(([key, val]) => {
-            let label = key.replace("Dyn_q_", "").replace(/^./, str => str.toUpperCase());
-            let displayVal = val;
-            if (!val) displayVal = "-";
-            return kvRow(label, displayVal);
-          });
-          
-          htmlContent = `
-            <div style="display:flex; flex-direction:column; gap:8px;">
-              ${otherRows.join("")} 
-              ${submitDate ? `
-                <div style="margin-top:12px; padding-top:10px; border-top:1px solid var(--line); color:var(--muted); font-size:11px; text-align:right;">
-                  <em>Submitted: ${submitDate}</em>
-                </div>
-              ` : ""}
-            </div>
-          `;
-          
-        } catch (e) {
-          htmlContent = `<div style="color:var(--warn); font-size:12px;">Data formatting error.</div>`;
-        }
+      if (reportNotes) {
+        htmlContent = `
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            ${kvRowHtml("Report Notes", formatMultilineTextHtml(reportNotes))}
+          </div>
+        `;
       } else {
         htmlContent = `<div style="color:var(--muted); font-size:12px; font-style:italic;">Belum ada laporan pemeriksaan.</div>`;
       }
@@ -3440,14 +3463,7 @@ tatJobs.forEach(j => {
   if(!j.timestamp) return;
   const appDate = parseDateSmart(j.timestamp);
 
-  let inspDate = null;
-  if (j.inspectorData && j.inspectorData.trim() !== "{}" && j.inspectorData.trim() !== "") {
-    try {
-      const data = JSON.parse(j.inspectorData);
-      const k = Object.keys(data).find(key => key.toLowerCase().includes("tarikh"));
-      if(k && data[k]) inspDate = parseDateSmart(data[k]);
-    } catch(e){}
-  }
+  const inspDate = parseDateSmart(resolveInspectionDate(j));
 
   if(!inspDate) return;
 
