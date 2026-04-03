@@ -3145,6 +3145,7 @@ function mapRowToJob(row, sourceTab){
       const jobId = pick(row, ["Job ID","JobID","jobId","JOB ID","ID"]);
       const unit = pick(row, ["Nama pasukan / unit","Nama Pasukan / Unit","Unit","Pasukan","Nama Unit","nama unit"]);
       const jenis = pick(row, ["Jenis pemeriksaan","Jenis Pemeriksaan","jenis","Type","Jenis"]);
+      const jenisAlatGanti = pick(row, ["Jenis Alat Ganti", "Jenis alat ganti"]);
       const daerah = pick(row, ["Daerah","daerah"]);
       const negeri = pick(row, ["Negeri","negeri"]);
       const zon = pick(row, ["Zon","zon"]);
@@ -3167,6 +3168,7 @@ function mapRowToJob(row, sourceTab){
         jobId: safe(jobId),
         unit: safe(unit),
         jenis: safe(jenis),
+        jenisAlatGanti: safe(jenisAlatGanti),
         daerah: safe(daerah),
         negeri: safe(negeri),
         zon: safe(zon),
@@ -3599,6 +3601,7 @@ function openDrawer(job){
       const dateRange = (job.tarikhTugasan && job.endDate) 
         ? `${formatDate(job.tarikhTugasan)} - ${formatDate(job.endDate)}` 
         : formatDate(job.tarikhTugasan);
+      const isCtpJob = normalizeText(job.sourceTab) === "permohonan" || safe(job.jobId).toUpperCase().startsWith("CTP-");
 
       // --- RENDER JOB INFO ---
       $kvJob.innerHTML = [
@@ -3606,6 +3609,7 @@ function openDrawer(job){
         kvRow("Tarikh Permohonan", formatDate(job.timestamp)),
         kvRow("Unit / Pasukan", job.unit),
         kvRow("Jenis Pemeriksaan", job.jenis),
+        ...(isCtpJob && job.jenisAlatGanti ? [kvRow("Jenis Alat Ganti", job.jenisAlatGanti)] : []),
         kvRow("Priority", job.priority),
         kvRow("Status", job.status),
         kvRow("Tarikh Penugasan", dateRange),
