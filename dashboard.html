@@ -2258,10 +2258,20 @@
 
             <select class="select" id="statusFilter" title="Filter by status">
               <option value="">All Status</option>
+              <option value="Assigned">Assigned</option>
               <option value="Pending">Pending</option>
               <option value="In Progress">In Progress</option>
               <option value="Completed">Completed</option>
               <option value="Cancelled">Cancelled</option>
+            </select>
+
+            <select class="select" id="zonFilter" title="Filter by zon">
+              <option value="">All Zon</option>
+              <option value="Utara">Utara</option>
+              <option value="Selatan">Selatan</option>
+              <option value="Pantai Timur">Pantai Timur</option>
+              <option value="Tengah">Tengah</option>
+              <option value="Sabah/Sarawak">Sabah/Sarawak</option>
             </select>
 
             <select class="select" id="monthFilter" title="Filter by month">
@@ -2664,6 +2674,7 @@
     const $count = $("#count");
     const $q = $("#q");
     const $status = $("#statusFilter");
+    const $zon = $("#zonFilter");
     const $month = $("#monthFilter");
     const $refresh = $("#refresh");
 
@@ -2949,6 +2960,17 @@
 
     function safe(v){ return (v ?? "").toString().trim(); }
     function normalizeText(s){ return safe(s).toLowerCase().replace(/\s+/g," ").trim(); }
+
+    function normalizeZone(raw){
+      const s = normalizeText(raw).replace(/\s*\/\s*/g, "/");
+      if(!s) return "";
+      if(s === "utara") return "Utara";
+      if(s === "selatan") return "Selatan";
+      if(s === "pantai timur") return "Pantai Timur";
+      if(s === "tengah") return "Tengah";
+      if(s === "sabah/sarawak" || s === "sabah sarawak") return "Sabah/Sarawak";
+      return safe(raw);
+    }
     function escapeHtml(s){
       return String(s ?? "").replace(/[&<>"']/g, c => ({
         "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
@@ -3133,6 +3155,7 @@ function formatDate(raw){
     function normalizeStatus(raw){
       const s = safe(raw).toLowerCase();
       if(!s) return "";
+      if((/\bassigned\b/.test(s) && !s.includes("unassigned")) || s.includes("ditugas")) return "Assigned";
       if(s.includes("pending") || s.includes("baharu") || s.includes("baru")) return "Pending";
       if(s.includes("progress") || s.includes("sedang") || s.includes("jalan")) return "In Progress";
       if(s.includes("complete") || s.includes("selesai") || s.includes("tamat")) return "Completed";
@@ -3365,10 +3388,12 @@ if (resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)) {
     function getVisibleJobs(){
       const q = safe($q.value);
       const st = safe($status.value);
+      const zon = safe($zon ? $zon.value : "");
       const m = safe($month ? $month.value : "");
 
       let list = [...JOBS];
       if(st) list = list.filter(j => safe(j.status) === st);
+      if(zon) list = list.filter(j => normalizeZone(j.zon) === zon);
       if(q) list = list.filter(j => matches(j, q));
       if(m !== ""){
         const mi = parseInt(m, 10);
@@ -3387,9 +3412,11 @@ if (resInsp && resInsp.ok && Array.isArray(resInsp.inspectors)) {
     function getVisiblePermohonanJobs(){
   const q = safe($q.value);
   const st = safe($status.value);
+  const zon = safe($zon ? $zon.value : "");
 
   let list = [...JOBS_PERMOHONAN];
   if(st) list = list.filter(j => safe(j.status) === st);
+  if(zon) list = list.filter(j => normalizeZone(j.zon) === zon);
   if(q) list = list.filter(j => matches(j, q));
   return list;
 }
@@ -4162,6 +4189,11 @@ const tatItems = [
       if($viewTime.classList.contains("active")) renderSchedule();
     });
     $status.addEventListener("change", () => {
+      renderJobs();
+      rebuildDirectory();
+      if($viewTime.classList.contains("active")) renderSchedule();
+    });
+    if($zon) $zon.addEventListener("change", () => {
       renderJobs();
       rebuildDirectory();
       if($viewTime.classList.contains("active")) renderSchedule();
