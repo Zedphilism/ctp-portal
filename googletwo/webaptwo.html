@@ -1,0 +1,3218 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CT&P Inspection Portal</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          boxShadow: {
+            soft: "0 12px 40px rgba(0,0,0,.25)",
+            glow: "0 0 0 1px rgba(255,255,255,.06), 0 30px 80px rgba(0,0,0,.35)"
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --panel:#0f1620;
+      --panel2:#0c121a;
+      --line:rgba(255,255,255,.08);
+      --text:#e7eef8;
+      --muted:#9fb0c6;
+      --accent:#3aa0ff;
+      --surface-soft: rgba(255,255,255,.04);
+      --surface-mid: rgba(255,255,255,.06);
+      --surface-hover: rgba(255,255,255,.09);
+
+      --ok:#23c26b;
+      --warn:#ffb020;
+      --bad:#ff4d4d;
+
+      --shadow:0 20px 60px rgba(0,0,0,.45);
+      --radius:14px;
+    }
+
+    [data-theme="darkA"]{
+      --bg:#0b0f14;
+      --panel:#0f1620;
+      --panel2:#0c121a;
+      --line:rgba(255,255,255,.08);
+      --text:#e7eef8;
+      --muted:#9fb0c6;
+      --accent:#3aa0ff;
+      --surface-soft: rgba(255,255,255,.04);
+      --surface-mid: rgba(255,255,255,.06);
+      --surface-hover: rgba(255,255,255,.09);
+    }
+
+    [data-theme="lightB"]{
+      --bg:#edf3fb;
+      --panel:#f8fbff;
+      --panel2:#f1f6fd;
+      --line:rgba(9,28,54,.14);
+      --text:#0f1c2b;
+      --muted:#5f7187;
+      --accent:#2f87dc;
+      --surface-soft: rgba(255,255,255,.72);
+      --surface-mid: rgba(255,255,255,.86);
+      --surface-hover: rgba(255,255,255,.96);
+      --shadow:0 12px 35px rgba(10,35,66,.14);
+    }
+
+    /* === ANNOUNCEMENT TICKER (NEW JOB) === */
+    .announce-wrap{
+      position:absolute;
+      right:10px;
+      left:10px;
+      top:-14px;
+      height:28px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background: color-mix(in srgb, var(--panel), transparent 10%);
+      box-shadow: 0 14px 30px rgba(0,0,0,.35);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
+      display:none;
+      align-items:center;
+      overflow:hidden;
+      padding:0 10px;
+    }
+
+    .announce-dot{
+      width:8px; height:8px;
+      border-radius:999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(58,160,255,.14);
+      flex:0 0 auto;
+      margin-right:10px;
+    }
+
+    .announce-track{
+      position:relative;
+      flex:1 1 auto;
+      overflow:hidden;
+      height:18px;
+    }
+
+    .announce-text{
+      position:absolute;
+      white-space:nowrap;
+      will-change:transform;
+      font-weight:900;
+      font-size:12px;
+      letter-spacing:.2px;
+      color: var(--text);
+      transform: translateX(110%);
+      animation: announce-marquee 14s linear infinite;
+    }
+
+    @keyframes announce-marquee{
+      0%   { transform: translateX(110%); }
+      100% { transform: translateX(-110%); }
+    }
+
+    body{
+      background:
+        radial-gradient(1200px 600px at 15% -10%, rgba(58,160,255,.14), transparent 55%),
+        radial-gradient(900px 500px at 90% 10%, rgba(35,194,107,.10), transparent 50%),
+        var(--bg);
+      background-attachment: fixed;
+      color: var(--text);
+    }
+
+    .muted{ color: var(--muted); }
+
+    .glass{
+      border-radius: calc(var(--radius) + 6px);
+      background: color-mix(in srgb, var(--panel), transparent 0%);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
+    }
+
+    .glass2{
+      border-radius: var(--radius);
+      background: var(--panel2);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
+    }
+
+    .btn{
+      border: 1px solid var(--line);
+      background: var(--surface-soft);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight: 800;
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      transition: .15s ease;
+      color: var(--text);
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      background: var(--surface-hover);
+      border-color: rgba(58,160,255,.35);
+      opacity:.98;
+    }
+    .btn:active{ transform: translateY(0px); opacity:.90; }
+
+    .btn[disabled]{
+      opacity:.45;
+      cursor:not-allowed;
+      transform:none !important;
+    }
+
+    .btn-brand{
+      background: rgba(58,160,255,.20);
+      color: var(--text);
+      border: 1px solid rgba(58,160,255,.35);
+    }
+    .btn-ok{
+      background: rgba(35,194,107,.18);
+      color: var(--ok);
+      border: 1px solid rgba(35,194,107,.25);
+    }
+    .btn-bad{
+      background: rgba(255,77,77,.18);
+      color: var(--bad);
+      border: 1px solid rgba(255,77,77,.25);
+    }
+
+    .chip{
+      border:1px solid var(--line);
+      background: var(--surface-mid);
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .2px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color: var(--text);
+    }
+    .dot{
+      width:8px; height:8px; border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(58,160,255,.14);
+    }
+
+    .dd{ position: relative; width: 100%; }
+    .dd-btn{
+      width:100%;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border:1px solid var(--line);
+      background: var(--panel2);
+      font-weight:800;
+      cursor:pointer;
+      color: var(--text);
+    }
+    .dd-menu{
+      position:absolute;
+      z-index: 40;
+      top: calc(100% + 8px);
+      left:0; right:0;
+      border-radius: 14px;
+      overflow:hidden;
+      display:none;
+      border:1px solid var(--line);
+    }
+    .dd-menu.show{ display:block; }
+    .dd-item{
+      padding: 10px 12px;
+      cursor:pointer;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      background: var(--panel);
+      border-bottom:1px solid var(--line);
+      color: var(--text);
+    }
+    .dd-item:hover{ background: color-mix(in srgb, var(--accent), transparent 88%); }
+    .dd-item:last-child{ border-bottom:none; }
+    [data-theme="lightB"] .dd-item{ background:#ffffff; }
+
+    .modal-backdrop{
+      position: fixed;
+      inset:0;
+      background: rgba(0,0,0,.55);
+      z-index: 80;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 16px;
+    }
+    .modal-backdrop.show{ display:flex; }
+    textarea{ resize: vertical; }
+
+    .topbar{
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      background: color-mix(in srgb, var(--panel), transparent 2%);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+      border-radius: 0 0 16px 16px;
+    }
+    .topbar-inner{
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      min-width: 220px;
+    }
+    .brand-logo{
+      width:44px;
+      height:44px;
+      border-radius: 12px;
+      border:1px solid var(--line);
+      background:
+        radial-gradient(120% 120% at 20% 15%, rgba(58,160,255,.35) 0%, rgba(58,160,255,.05) 50%, transparent 85%),
+        linear-gradient(165deg, rgba(19,26,37,.92), rgba(10,14,20,.96));
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      box-shadow: inset 0 1px 1px rgba(255,255,255,.12), 0 8px 18px rgba(0,0,0,.35);
+    }
+    .brand-logo span{
+      font-size:13px;
+      font-weight:900;
+      letter-spacing:.7px;
+      color:#dff0ff;
+      text-shadow:0 0 10px rgba(58,160,255,.45);
+      transform: translateY(-.5px);
+    }
+    .brand-text .title{
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing:.2px;
+    }
+    .brand-text .sub{
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .nav-pills{
+      display:flex;
+      gap:6px;
+      padding:6px;
+      background: var(--surface-mid);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+    }
+    .nav-pills .btn{
+      padding: 8px 14px;
+      font-weight: 800;
+      color: var(--muted);
+    }
+    .nav-pills .btn.btn-brand{
+      color: var(--text);
+    }
+
+    *::-webkit-scrollbar{ width:10px; height:10px; }
+    *::-webkit-scrollbar-thumb{ background: rgba(255,255,255,.12); border-radius: 999px; }
+    [data-theme="lightB"] *::-webkit-scrollbar-thumb{ background: rgba(17,24,39,.12); }
+
+    .stat-card{
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::after{
+      content:"";
+      position:absolute;
+      right:-36px;
+      top:-34px;
+      width:160px;
+      height:160px;
+      border-radius: 22px;
+      transform: rotate(18deg);
+      border: 1px solid var(--line);
+      opacity: .92;
+      pointer-events: none;
+      background:
+        linear-gradient(145deg,
+          rgba(58,160,255,.20),
+          rgba(255,255,255,.03) 55%,
+          rgba(0,0,0,.20)
+        );
+    }
+    [data-theme="lightB"] .stat-card::after{
+      background:
+        linear-gradient(145deg,
+          rgba(37,99,235,.16),
+          rgba(15,23,42,.04) 55%,
+          rgba(255,255,255,.55)
+        );
+      opacity: .85;
+    }
+
+    /* === SUPERVISOR JOB ROWS (COMPACT) === */
+    .jobrow{
+      padding: 10px 12px;
+      border-radius: 14px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .jobrow:hover{ opacity:.95; }
+    .jobrow[aria-selected="true"]{
+      outline:2px solid rgba(58,160,255,.55);
+    }
+    .jobrow .chk{
+      width:18px;
+      height:18px;
+      accent-color: var(--accent);
+      cursor:pointer;
+      flex:0 0 auto;
+      margin-top: 2px;
+    }
+    .badge-new{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding: 3px 8px;
+      border-radius:999px;
+      border:1px solid rgba(58,160,255,.25);
+      background: rgba(58,160,255,.12);
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing:.2px;
+    }
+    .badge-new .mini-dot{
+      width:6px; height:6px; border-radius:999px;
+      background: var(--accent);
+      box-shadow:none;
+    }
+    .top-metrics{
+      display:flex;
+      align-items:stretch;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .metric-mini{
+      min-width:138px;
+      height:40px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background: var(--surface-mid);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      padding:0 12px;
+    }
+    .metric-mini .k{
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.55px;
+      text-transform:uppercase;
+      color:var(--muted);
+      white-space:nowrap;
+    }
+    .metric-mini .v{
+      font-size:14px;
+      font-weight:900;
+      color:var(--text);
+      line-height:1;
+    }
+    .metric-mini.warn .v{ color:var(--warn); }
+    .metric-mini.ok .v{ color:var(--ok); }
+    .metric-cta{
+      height:40px;
+      border-radius:999px;
+      padding:0 14px;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.2px;
+      text-decoration:none;
+      white-space:nowrap;
+    }
+    .btn-guide-glow{
+      position:relative;
+      overflow:hidden;
+      background: linear-gradient(120deg, rgba(56,189,248,.18) 0%, rgba(16,185,129,.16) 100%);
+      border:1px solid rgba(125,211,252,.45);
+      box-shadow:
+        0 0 0 1px rgba(125,211,252,.12) inset,
+        0 0 14px rgba(56,189,248,.35),
+        0 0 26px rgba(16,185,129,.22);
+      animation: guide-pulse 2.3s ease-in-out infinite;
+    }
+    .btn-guide-glow::after{
+      content:"";
+      position:absolute;
+      top:-2px;
+      left:-40%;
+      width:34%;
+      height:calc(100% + 4px);
+      background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.58), rgba(255,255,255,0));
+      transform: skewX(-20deg);
+      animation: guide-shine 2.2s linear infinite;
+      pointer-events:none;
+    }
+    .btn-portal{
+      background: rgba(58,160,255,.18);
+      border:1px solid rgba(58,160,255,.45);
+      box-shadow: 0 0 10px rgba(58,160,255,.22);
+    }
+    @keyframes guide-shine{
+      0% { left:-45%; }
+      100% { left:120%; }
+    }
+    @keyframes guide-pulse{
+      0%, 100% { transform: translateY(0); box-shadow: 0 0 14px rgba(56,189,248,.32), 0 0 24px rgba(16,185,129,.2); }
+      50% { transform: translateY(-1px); box-shadow: 0 0 20px rgba(56,189,248,.4), 0 0 30px rgba(16,185,129,.25); }
+    }
+
+    .ticker{
+      margin-top:10px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background: var(--surface-mid);
+      overflow:hidden;
+    }
+    .ticker-label{
+      font-size:11px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.6px;
+      white-space:nowrap;
+      font-weight:900;
+    }
+    .ticker-track{
+      position:relative;
+      flex:1;
+      overflow:hidden;
+      min-height:18px;
+    }
+    .ticker-text{
+      display:inline-block;
+      white-space:nowrap;
+      padding-left:100%;
+      animation: ticker-move 22s linear infinite;
+      font-weight:700;
+      color:var(--text);
+    }
+    .ticker-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 12px;
+      border-radius:999px;
+      border:1px solid rgba(58,160,255,.25);
+      background:rgba(58,160,255,.12);
+      color:var(--text);
+      font-weight:900;
+      letter-spacing:.1px;
+      line-height:1.2;
+      white-space:nowrap;
+    }
+    .ticker-sep{
+      color:var(--muted);
+      margin:0 8px;
+      opacity:.9;
+    }
+    .ticker.is-new .ticker-text{ animation-duration:18s; }
+    .ticker.is-new .ticker-pill{
+      border-color: rgba(58,160,255,.45);
+      background: rgba(58,160,255,.2);
+      color:#bfe4ff;
+    }
+    .ticker:hover .ticker-text{ animation-play-state: paused; }
+    @keyframes ticker-move{
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    .theme-switch{
+      border:0;
+      padding:0;
+      background:transparent;
+      cursor:pointer;
+      line-height:0;
+    }
+    .theme-track{
+      position:relative;
+      width:86px;
+      height:40px;
+      border-radius:999px;
+      display:block;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.12);
+      background: linear-gradient(165deg, #7d848e 0%, #4c525d 100%);
+      box-shadow:
+        inset 0 2px 2px rgba(255,255,255,.14),
+        inset 0 -6px 12px rgba(0,0,0,.35),
+        0 7px 14px rgba(0,0,0,.25);
+      transition: background .28s ease, border-color .28s ease, box-shadow .28s ease;
+    }
+    .theme-track::before{
+      content:"";
+      position:absolute;
+      inset:3px;
+      border-radius:999px;
+      background: linear-gradient(180deg, #757d88 0%, #5a616d 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.16), inset 0 -3px 6px rgba(0,0,0,.24);
+      z-index:1;
+    }
+    .theme-thumb{
+      position:absolute;
+      top:4px;
+      left:4px;
+      width:37px;
+      height:32px;
+      border-radius:999px;
+      z-index:2;
+      background: linear-gradient(180deg, #8b929d 0%, #5c6470 100%);
+      box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.25),
+        inset 0 -2px 5px rgba(0,0,0,.28),
+        0 4px 8px rgba(0,0,0,.3);
+      transition: left .28s ease, background .28s ease, box-shadow .28s ease;
+    }
+    .theme-icon{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      width:16px;
+      height:16px;
+      color:rgba(255,255,255,.5);
+      z-index:3;
+      transition: color .28s ease, filter .28s ease, opacity .28s ease;
+      pointer-events:none;
+    }
+    .theme-icon svg{
+      width:100%;
+      height:100%;
+      display:block;
+      fill:currentColor;
+    }
+    .theme-icon-sun{ left:12px; }
+    .theme-icon-moon{ right:12px; }
+
+    [data-theme="lightB"] .theme-thumb{
+      left:4px;
+      background: linear-gradient(180deg, #9097a1 0%, #656d79 100%);
+      box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.24),
+        inset 0 -2px 5px rgba(0,0,0,.27),
+        0 4px 8px rgba(0,0,0,.3);
+    }
+    [data-theme="lightB"] .theme-icon-sun{
+      color:#ffffff;
+      filter: drop-shadow(0 0 6px rgba(255,255,255,.9)) drop-shadow(0 0 12px rgba(255,255,255,.5));
+      opacity:1;
+    }
+    [data-theme="lightB"] .theme-icon-moon{
+      color:rgba(201,220,255,.55);
+      filter:none;
+      opacity:.6;
+    }
+    [data-theme="darkA"] .theme-track{
+      border-color: rgba(76,140,255,.3);
+      background: linear-gradient(165deg, #7a818d 0%, #49505d 100%);
+      box-shadow:
+        inset 0 2px 2px rgba(255,255,255,.12),
+        inset 0 -6px 12px rgba(0,0,0,.36),
+        0 7px 14px rgba(0,0,0,.28);
+    }
+    [data-theme="darkA"] .theme-thumb{
+      left:45px;
+      background: linear-gradient(180deg, #7f8691 0%, #58606c 100%);
+      box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.22),
+        inset 0 -2px 6px rgba(0,0,0,.3),
+        0 4px 8px rgba(0,0,0,.32);
+    }
+    [data-theme="darkA"] .theme-icon-sun{
+      color:rgba(255,255,255,.45);
+      filter:none;
+      opacity:.55;
+    }
+    [data-theme="darkA"] .theme-icon-moon{
+      color:#d8e9ff;
+      filter: drop-shadow(0 0 6px rgba(92,164,255,.95)) drop-shadow(0 0 14px rgba(92,164,255,.7));
+      opacity:1;
+    }
+    .theme-switch:focus-visible .theme-track{
+      outline:2px solid var(--accent);
+      outline-offset:2px;
+    }
+
+    input, select, textarea{
+      background: var(--surface-mid) !important;
+      color: var(--text) !important;
+      border:1px solid var(--line) !important;
+    }
+    select option, select optgroup{
+      color:#0f172a !important;
+      background:#ffffff !important;
+    }
+    table th{ color: var(--muted); font-weight:900; }
+    table td{ color: var(--text); }
+    .sr-only{
+      position:absolute !important;
+      width:1px !important;
+      height:1px !important;
+      padding:0 !important;
+      margin:-1px !important;
+      overflow:hidden !important;
+      clip:rect(0,0,0,0) !important;
+      border:0 !important;
+    }
+
+    /* Schedule (dashboard style, jobs-only) */
+    .sch-wrap{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(0, .95fr);
+      gap:12px;
+    }
+    .sch-calendar{
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:var(--panel2);
+      padding:10px;
+    }
+    .sch-toolbar{
+      margin-top:10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .sch-weekdays{
+      margin-top:10px;
+      display:grid;
+      grid-template-columns:repeat(7, minmax(0, 1fr));
+      gap:6px;
+    }
+    .sch-weekdays div{
+      text-align:center;
+      font-size:11px;
+      color:var(--muted);
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.45px;
+      padding:4px 2px;
+    }
+    .sch-days{
+      display:grid;
+      grid-template-columns:repeat(7, minmax(0, 1fr));
+      gap:6px;
+      margin-top:6px;
+    }
+    .sch-day{
+      min-height:78px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:var(--surface-mid);
+      padding:8px;
+      text-align:left;
+      color:var(--text);
+      cursor:pointer;
+      transition: border-color .12s ease, transform .08s ease, background .12s ease;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .sch-day:hover{
+      border-color:rgba(58,160,255,.35);
+      background:var(--surface-hover);
+    }
+    .sch-day:active{ transform:translateY(1px); }
+    .sch-day.out{
+      opacity:.35;
+      cursor:default;
+      pointer-events:none;
+    }
+    .sch-day.today{ box-shadow: inset 0 0 0 1px rgba(58,160,255,.45); }
+    .sch-day.selected{
+      border-color:rgba(58,160,255,.55);
+      box-shadow: 0 0 0 1px rgba(58,160,255,.35) inset, 0 8px 22px rgba(58,160,255,.18);
+    }
+    .sch-day.has-jobs{ background: color-mix(in srgb, var(--surface-mid) 80%, var(--accent) 20%); }
+    .sch-num{ font-size:12px; font-weight:900; letter-spacing:.2px; }
+    .sch-markers{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:4px;
+      margin-top:auto;
+    }
+    .sch-dot{
+      width:7px;
+      height:7px;
+      border-radius:999px;
+      display:inline-block;
+      box-shadow:0 0 0 2px rgba(255,255,255,.04);
+    }
+    .sch-dot-assigned{ background:#f59e0b; }
+    .sch-dot-progress{ background:#3aa0ff; }
+    .sch-dot-completed{ background:#22c55e; }
+    .sch-count{
+      margin-left:auto;
+      font-size:10px;
+      color:var(--muted);
+      font-weight:900;
+      letter-spacing:.3px;
+    }
+    .sch-mini-legend{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:10px;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+    }
+    .sch-mini-legend span{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+    }
+    .sch-side{
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:var(--panel2);
+      padding:10px;
+      min-height:100%;
+    }
+    .sch-day-title{
+      margin:0;
+      font-size:14px;
+      font-weight:1000;
+      letter-spacing:.2px;
+    }
+    .sch-card-list{
+      margin-top:10px;
+      display:grid;
+      gap:8px;
+    }
+    .sch-card{
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:var(--surface-mid);
+      padding:10px;
+    }
+    .sch-card-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .sch-card-id{ font-weight:1000; letter-spacing:.25px; font-size:12px; }
+    .sch-card-unit{ color:var(--text); font-size:13px; font-weight:800; margin-top:4px; }
+    .sch-card-sub{ color:var(--muted); font-size:12px; line-height:1.4; margin-top:4px; }
+    .sch-month-line{ color:var(--muted); font-size:12px; font-weight:900; }
+    .sch-status{
+      border-radius:999px;
+      padding:4px 9px;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.28px;
+      border:1px solid var(--line);
+      background:var(--surface-soft);
+      color:var(--text);
+      white-space:nowrap;
+    }
+    .sch-status.s-assigned{ border-color:rgba(245,158,11,.35); color:#fbbf24; }
+    .sch-status.s-progress{ border-color:rgba(58,160,255,.35); color:#93c5fd; }
+    .sch-status.s-completed{ border-color:rgba(34,197,94,.35); color:#86efac; }
+
+    @media (max-width: 980px){
+      .sch-wrap{ grid-template-columns:1fr; }
+      .sch-day{ min-height:70px; }
+    }
+
+    .identity-overlay{
+      position:fixed;
+      inset:0;
+      z-index:180;
+      background:rgba(0,0,0,.6);
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+    .identity-overlay.show{ display:flex; }
+    .identity-card{
+      width:min(520px, 92vw);
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:var(--panel);
+      box-shadow: var(--shadow);
+      padding:18px;
+    }
+    .identity-title{
+      font-size:18px;
+      font-weight:900;
+      letter-spacing:.2px;
+      margin:0;
+    }
+    .identity-sub{
+      color:var(--muted);
+      font-size:13px;
+      margin:6px 0 0;
+    }
+    .identity-actions{
+      margin-top:14px;
+      display:flex;
+      gap:8px;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
+  </style>
+</head>
+
+<body data-theme="darkA" class="min-h-screen">
+  <div class="max-w-[1200px] mx-auto p-4 sm:p-6">
+
+    <div class="topbar -mx-4 sm:-mx-6 px-4 sm:px-6 py-0">
+      <div class="topbar-inner px-0">
+
+        <div class="brand">
+          <div class="brand-logo" aria-label="CTP Logo"><span>CTP</span></div>
+          <div class="brand-text">
+            <div class="title">Sistem Pemantauan Pemeriksaan Sel Bukan Teknikal</div>
+            <div class="sub" id="userGreeting">Assignments, schedule, roster, execution</div>
+            <button id="btnSwitchUser" class="chip mt-2" type="button">
+              <i class="ri-user-settings-line"></i>
+              <span>Switch User</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="nav-pills">
+          <button class="btn btn-brand" data-tab="supervisor">Supervisor</button>
+          <button class="btn" data-tab="schedule">Schedule</button>
+          <button class="btn" data-tab="roster">Roster</button>
+          <button class="btn" data-tab="exec">Inspector Exec</button>
+          <button class="btn" data-tab="movement">Dokumen</button>
+          <button class="btn" data-tab="reference">Reference</button>
+        </div>
+
+        <div class="top-metrics">
+          <button id="btnTheme" class="theme-switch" aria-label="Toggle light and dark theme" title="Switch theme">
+            <span class="theme-track">
+              <span class="theme-thumb"></span>
+              <span class="theme-icon theme-icon-sun" aria-hidden="true">
+                <svg viewBox="0 0 24 24" role="presentation">
+                  <path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0-5a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1zm10-6a1 1 0 0 1-1 1h-2a1 1 0 1 1 0-2h2a1 1 0 0 1 1 1zM7 12a1 1 0 0 1-1 1H4a1 1 0 1 1 0-2h2a1 1 0 0 1 1 1zm11.07-6.66a1 1 0 0 1 0 1.42l-1.41 1.41a1 1 0 1 1-1.42-1.41l1.42-1.42a1 1 0 0 1 1.41 0zM8.76 15.24a1 1 0 0 1 0 1.41l-1.42 1.42a1 1 0 0 1-1.41-1.42l1.41-1.41a1 1 0 0 1 1.42 0zm0-8.48a1 1 0 0 1-1.42 0L5.93 5.34a1 1 0 0 1 1.41-1.41l1.42 1.41a1 1 0 0 1 0 1.42zm8.49 8.48 1.41 1.41a1 1 0 1 1-1.41 1.42l-1.42-1.42a1 1 0 1 1 1.42-1.41z"></path>
+                </svg>
+              </span>
+              <span class="theme-icon theme-icon-moon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" role="presentation">
+                  <path d="M20.71 14.29A9 9 0 0 1 9.71 3.29a1 1 0 0 0-1.24-1.24A11 11 0 1 0 22 15.53a1 1 0 0 0-1.29-1.24z"></path>
+                </svg>
+              </span>
+            </span>
+            <span id="themeLabel" class="sr-only">Theme</span>
+          </button>
+          <div class="metric-mini">
+            <span class="k">Pending</span>
+            <span id="statPending" class="v">0</span>
+          </div>
+          <div class="metric-mini warn">
+            <span class="k">Assigned / In Progress</span>
+            <span id="statAssigned" class="v">0</span>
+          </div>
+          <div class="metric-mini ok">
+            <span class="k">Inspectors Available</span>
+            <span id="statInsp" class="v">0</span>
+          </div>
+          <button id="btnPanduan" class="btn metric-cta btn-guide-glow" type="button">
+            <i class="ri-book-open-line"></i> Panduan Penggunaan
+          </button>
+          <a id="btnBukaPortal" class="btn metric-cta btn-portal" href="https://zedphilism.github.io/ctp-portal/dashboard.html">
+            <i class="ri-external-link-line"></i> Buka Portal
+          </a>
+          <button id="btnAiCopilotPage" class="btn metric-cta" type="button" title="Buka AI Copilot">
+            <i class="ri-robot-2-line"></i> AI Copilot
+          </button>
+        </div>
+
+      </div>
+      <div class="pb-4">
+        <div class="ticker" id="jobsTicker" aria-live="polite">
+          <span class="ticker-label">Pengumuman</span>
+          <div class="ticker-track">
+            <span class="ticker-text" id="jobsTickerText">Memuat pengumuman...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-5">
+
+      <!-- SUPERVISOR -->
+      <section id="view-supervisor" class="view glass p-4 sm:p-5">
+        <div class="flex items-center justify-between gap-3 flex-wrap">
+          <div>
+            <h2 class="text-lg font-extrabold">Supervisor Assignment Workspace</h2>
+            <p class="muted text-sm">Step 1 choose jobs, Step 2 assign date and inspectors</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="supStepChip1" class="chip"><span class="dot"></span>Step 1: Select Jobs</span>
+            <span id="supStepChip2" class="chip"><span class="dot"></span>Step 2: Assign</span>
+          </div>
+        </div>
+
+        <div id="aiCopilotPanel" class="mt-3 glass2 p-3 hidden">
+          <div class="flex items-center justify-between gap-2 flex-wrap">
+            <div>
+              <div class="text-xs font-bold uppercase tracking-wider muted">AI Copilot</div>
+              <div id="aiCopilotMsg" class="muted text-sm mt-1">Private mode.</div>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button id="btnAiCluster" class="btn" type="button">
+                <i class="ri-map-pin-range-line"></i> AI: Suggest Clusters
+              </button>
+              <button id="btnAiWhatsapp" class="btn" type="button">
+                <i class="ri-whatsapp-line"></i> AI: WhatsApp Text
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="supStepSelect" class="mt-4">
+          <div class="grid grid-cols-1 xl:grid-cols-12 gap-4">
+            <aside class="xl:col-span-8 glass2 p-4">
+              <div class="text-xs font-bold uppercase tracking-wider muted">Step 1</div>
+              <h3 class="text-base font-extrabold mt-1">Select Jobs</h3>
+              <p class="muted text-sm mt-1">Tick jobs to include in assignment batch.</p>
+
+              <div class="mt-3 flex items-center gap-2">
+                <div class="relative flex-1">
+                  <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 muted"></i>
+                  <input id="jobSearch" class="w-full pl-9 pr-3 py-2 rounded-xl outline-none glass2"
+                         placeholder="Search Job ID, unit, negeri, daerah..." />
+                </div>
+                <div class="chip">
+                  <span id="selCount">0</span>
+                  <span class="muted">selected</span>
+                </div>
+                <button id="btnClearSel" class="btn">Clear</button>
+              </div>
+
+              <div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div id="ddZon"></div>
+                <div id="ddNegeri"></div>
+                <div id="ddJenis"></div>
+              </div>
+
+              <div id="jobList" class="mt-3 space-y-2 max-h-[560px] overflow-auto pr-1"></div>
+            </aside>
+
+            <aside class="xl:col-span-4 glass2 p-4">
+              <div class="text-xs font-bold uppercase tracking-wider muted">Selected Preview</div>
+              <h3 class="text-base font-extrabold mt-1">Chosen Jobs</h3>
+              <p class="muted text-sm mt-1">Quick check before proceeding.</p>
+
+              <div class="mt-3 chip">
+                <span id="step1SelectedCount">0</span>
+                <span class="muted">job(s)</span>
+              </div>
+
+              <div id="selectedJobListStep1" class="mt-3 space-y-2 max-h-[460px] overflow-auto pr-1">
+                <div class="muted text-sm">No jobs selected yet.</div>
+              </div>
+
+              <button id="btnToAssignStep" class="btn btn-brand mt-4 w-full justify-center" disabled>
+                <i class="ri-arrow-right-line"></i> Next: Assign Date & Inspector
+              </button>
+            </aside>
+          </div>
+        </div>
+
+        <div id="supStepAssign" class="mt-4 hidden">
+          <section class="glass2 p-4">
+            <div class="flex items-center justify-between gap-3">
+              <div>
+                <div class="text-xs font-bold uppercase tracking-wider muted">Step 2</div>
+                <h3 class="text-base font-extrabold mt-1">Assign Date and Inspectors</h3>
+                <p class="muted text-sm mt-1">Apply to selected jobs.</p>
+              </div>
+              <button id="btnBackToSelect" class="btn"><i class="ri-arrow-left-line"></i> Back to Selection</button>
+            </div>
+
+            <div class="mt-3 flex items-center justify-between gap-3 flex-wrap">
+              <div class="chip">
+                <span id="step2SelectedCount">0</span>
+                <span class="muted">job(s) selected</span>
+              </div>
+              <button id="btnClearSel2" class="btn">Clear Selection</button>
+            </div>
+
+            <div id="selectedJobListStep2" class="mt-3 space-y-2 max-h-[180px] overflow-auto pr-1">
+              <div class="muted text-sm">No jobs selected yet.</div>
+            </div>
+
+            <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="glass2 p-3">
+                <div class="muted text-xs font-bold uppercase tracking-wider mb-2">Start Date</div>
+                <input id="assignStart" type="date" class="w-full px-3 py-2 rounded-xl glass2 outline-none" />
+              </div>
+              <div class="glass2 p-3">
+                <div class="muted text-xs font-bold uppercase tracking-wider mb-2">End Date</div>
+                <input id="assignEnd" type="date" class="w-full px-3 py-2 rounded-xl glass2 outline-none" />
+              </div>
+              <div class="glass2 p-3 sm:col-span-2">
+                <div class="muted text-xs font-bold uppercase tracking-wider mb-2">Masa (HHMM)</div>
+                <input id="assignTime" type="text" class="w-full px-3 py-2 rounded-xl glass2 outline-none" placeholder="0800" />
+              </div>
+            </div>
+
+            <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="glass2 p-3">
+                <div class="muted text-xs font-bold uppercase tracking-wider mb-2">Lead Inspector</div>
+                <select id="insp1" class="w-full px-3 py-2 rounded-xl glass2 outline-none"></select>
+              </div>
+              <div class="glass2 p-3">
+                <div class="muted text-xs font-bold uppercase tracking-wider mb-2">Second Inspector</div>
+                <select id="insp2" class="w-full px-3 py-2 rounded-xl glass2 outline-none"></select>
+              </div>
+            </div>
+
+            <div class="mt-4 flex flex-wrap gap-2">
+              <button id="btnCheckConflicts" class="btn"><i class="ri-error-warning-line"></i> Check Conflicts</button>
+              <button id="btnAssign" class="btn btn-ok"><i class="ri-check-line"></i> Assign Selected</button>
+            </div>
+
+            <div id="assignMsg" class="mt-3 muted text-sm"></div>
+          </section>
+        </div>
+      </section>
+
+      <!-- SCHEDULE -->
+      <section id="view-schedule" class="view glass p-4 sm:p-5 hidden">
+        <div class="flex items-center justify-between gap-3 flex-wrap">
+          <div>
+            <h2 class="text-lg font-extrabold">Schedule</h2>
+            <p class="muted text-sm">Tarikh bertanda menunjukkan tugasan Assigned, In Progress, atau Completed.</p>
+          </div>
+        </div>
+
+        <div class="sch-toolbar">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="muted text-xs font-bold uppercase tracking-wider">Bulan</span>
+            <select id="schMonth" class="px-3 py-2 rounded-xl glass2 outline-none"></select>
+            <button class="btn" id="schCurrentMonth" type="button">Current Month</button>
+          </div>
+          <div class="chip"><span id="schCount">0 job(s)</span></div>
+          <span id="schMonthInfo" class="sch-month-line">-</span>
+        </div>
+
+        <div class="sch-wrap">
+          <div class="sch-calendar">
+            <div class="sch-weekdays">
+              <div>Isn</div><div>Sel</div><div>Rab</div><div>Kha</div><div>Jum</div><div>Sab</div><div>Aha</div>
+            </div>
+            <div id="schGrid" class="sch-days"></div>
+            <div class="sch-mini-legend">
+              <span><i class="sch-dot sch-dot-assigned"></i>Assigned</span>
+              <span><i class="sch-dot sch-dot-progress"></i>In Progress</span>
+              <span><i class="sch-dot sch-dot-completed"></i>Completed</span>
+            </div>
+          </div>
+
+          <aside class="sch-side">
+            <h3 id="schDayTitle" class="sch-day-title">Pilih satu tarikh</h3>
+            <div id="schDayCards" class="sch-card-list">
+              <div class="muted text-sm">Klik mana-mana tarikh bertanda untuk melihat tugasan.</div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ROSTER -->
+      <section id="view-roster" class="view glass p-4 sm:p-5 hidden">
+        <div class="flex items-center justify-between gap-3 flex-wrap">
+          <div>
+            <h2 class="text-lg font-extrabold">Roster</h2>
+            <p class="muted text-sm">Inspector list pulled from Pemeriksa sheet</p>
+          </div>
+        </div>
+        <div id="rosterList" class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+      </section>
+
+      <!-- EXECUTION -->
+      <section id="view-exec" class="view glass p-4 sm:p-5 hidden">
+        <div class="flex items-center justify-between gap-3 flex-wrap">
+          <div>
+            <h2 class="text-lg font-extrabold">Inspector Execution</h2>
+            <p class="muted text-sm">My assigned jobs, status updates, and evidence upload</p>
+          </div>
+        </div>
+
+        <div class="mt-4 grid grid-cols-1 lg:grid-cols-12 gap-4">
+          <div class="lg:col-span-4 glass2 p-4">
+            <div class="muted text-xs font-bold uppercase tracking-wider mb-2">Signed In Inspector</div>
+            <div id="execCurrentUser" class="chip">
+              <i class="ri-user-3-line"></i>
+              <span class="muted">No user selected</span>
+            </div>
+            <select id="execInspector" class="hidden" aria-hidden="true" tabindex="-1"></select>
+
+            <div id="myJobs" class="mt-4 space-y-2 max-h-[520px] overflow-auto pr-1"></div>
+          </div>
+
+          <div class="lg:col-span-8 glass2 p-4">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <h3 class="text-base font-extrabold">Execution Panel</h3>
+                <p class="muted text-sm">Click a job on the left to work on it</p>
+              </div>
+              <span id="execChip" class="chip">
+                <span class="dot"></span>
+                <span class="muted">No job selected</span>
+              </span>
+            </div>
+
+            <div id="execBody" class="mt-4">
+              <div class="muted text-sm">No job selected yet.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MOVEMENT -->
+      <section id="view-movement" class="view glass p-4 sm:p-5 hidden">
+        <div class="glass2 p-5">
+          <div class="text-xl font-extrabold">Dokumen Pergerakan</div>
+          <div class="muted text-sm mt-1">
+            Borang Tugas Rasmi (LIVE). Perintah Pergerakan, Permohonan Kenderaan, WPUA masih placeholder.
+          </div>
+
+          <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="glass2 p-4">
+              <div class="muted text-xs font-bold uppercase tracking-wider">Pemeriksa</div>
+              <div id="movInspDD" class="dd mt-2"></div>
+            </div>
+
+            <div class="glass2 p-4 sm:col-span-2">
+              <div class="muted text-xs font-bold uppercase tracking-wider">Jobs Assigned</div>
+              <div id="movJobs" class="mt-3 grid grid-cols-1 gap-2"></div>
+
+              <button id="btnGenBTR" class="btn btn-brand mt-4">
+                <i class="ri-file-text-line"></i> Generate Borang Tugas Rasmi
+              </button>
+
+              <div id="movMsg" class="mt-3 muted text-sm"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- REFERENCE -->
+      <section id="view-reference" class="view glass p-4 sm:p-5 hidden">
+        <div class="flex items-center justify-between gap-3 flex-wrap">
+          <div>
+            <h2 class="text-lg font-extrabold">Reference</h2>
+            <p class="muted text-sm">Surat permohonan by month (Permohonan + WDP)</p>
+          </div>
+
+          <div class="flex items-center gap-2 flex-wrap justify-end">
+            <input
+              id="refSearch"
+              type="text"
+              class="px-3 py-2 rounded-xl glass2 outline-none min-w-[220px]"
+              placeholder="Search unit / pemohon / telefon"
+            />
+            <div class="muted text-xs font-bold uppercase tracking-wider">Month</div>
+            <select id="refMonth" class="px-3 py-2 rounded-xl glass2 outline-none"></select>
+          </div>
+        </div>
+
+        <div id="refMsg" class="mt-3 muted text-sm"></div>
+
+        <div class="mt-4 overflow-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="muted text-xs uppercase tracking-wider">
+                <th class="text-left py-2 pr-3">Timestamp</th>
+                <th class="text-left py-2 pr-3">Nama pasukan / unit</th>
+                <th class="text-left py-2 pr-3">Nama Pemohon</th>
+                <th class="text-left py-2 pr-3">No Telefon</th>
+                <th class="text-left py-2 pr-3">Tarikh Surat</th>
+                <th class="text-left py-2 pr-3">Upload surat permohonan (PDF)</th>
+                <th class="text-left py-2 pr-3">Source</th>
+              </tr>
+            </thead>
+            <tbody id="refBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div id="modal" class="modal-backdrop">
+    <div class="glass2 w-full max-w-[720px] p-5">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <div id="modalTitle" class="text-lg font-extrabold">Title</div>
+          <div id="modalSubtitle" class="muted text-sm mt-1"></div>
+        </div>
+        <button class="btn" onclick="closeModal()">
+          <i class="ri-close-line"></i>
+        </button>
+      </div>
+      <div id="modalBody" class="mt-4"></div>
+      <div id="modalActions" class="mt-4 flex flex-wrap gap-2 justify-end"></div>
+    </div>
+  </div>
+
+  <div id="identityOverlay" class="identity-overlay">
+    <div class="identity-card">
+      <h3 class="identity-title">Who are you?</h3>
+      <p class="identity-sub">Select your name to personalize Inspector Exec and Dokumen.</p>
+      <div class="mt-4">
+        <div class="muted text-xs font-bold uppercase tracking-wider mb-2">Nama Pengguna</div>
+        <select id="identityUserSelect" class="w-full px-3 py-2 rounded-xl glass2 outline-none"></select>
+      </div>
+      <div id="identityMsg" class="mt-3 muted text-sm"></div>
+      <div class="identity-actions">
+        <button id="identityContinue" class="btn btn-brand" type="button">
+          <i class="ri-arrow-right-line"></i> Continue
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let RAW = { jobs: [], inspectors: [] };
+    let selectedJobIds = new Set();
+    let focusedJobId = "";
+    let myFocusedJobId = "";
+    let EXEC_JOBS = [];
+    let evidenceMem = new Map();
+    const LAST_JOB_IDS_KEY = "ctp_seen_pending_job_ids_v2";
+    const USER_KEY = "ctp_current_user";
+    let CURRENT_USER = "";
+    let USER_OPTIONS = [];
+    let SCH_ALL_JOBS = [];
+    let SCH_MONTH_KEY = "";
+    let SCH_SELECTED_DAY = "";
+    let SCH_DAY_MAP = new Map();
+    let SUP_VISIBLE_JOBS = [];
+    let AI_COPILOT_ALLOWED = false;
+    let LAST_ASSIGN_CONTEXT = null;
+
+    const $ = (id) => document.getElementById(id);
+    function safeText(x){ return String(x ?? "").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
+    function nowFmt(){ return new Date().toLocaleString(); }
+    function parseDateSmart(v){
+      if(!v) return null;
+      if(v instanceof Date) return isNaN(v.getTime()) ? null : v;
+      const s = String(v).trim();
+      if(!s) return null;
+
+      // Prefer local dd/mm/yyyy parsing first to avoid JS locale ambiguity.
+      const m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
+      if(m){
+        const dd = Number(m[1]);
+        const mm = Number(m[2]);
+        const yyyy = Number(m[3]);
+        const hh = Number(m[4] || 12);
+        const min = Number(m[5] || 0);
+        const sec = Number(m[6] || 0);
+        if(mm >= 1 && mm <= 12 && dd >= 1 && dd <= 31){
+          const dmy = new Date(yyyy, mm - 1, dd, hh, min, sec, 0);
+          if(!isNaN(dmy.getTime())) return dmy;
+        }
+      }
+
+      const d = new Date(s);
+      return isNaN(d.getTime()) ? null : d;
+    }
+    function toDateInputValue(v){
+      const d = parseDateSmart(v);
+      if(!d) return "";
+      return [
+        d.getFullYear(),
+        String(d.getMonth() + 1).padStart(2, "0"),
+        String(d.getDate()).padStart(2, "0")
+      ].join("-");
+    }
+    function latestJobsByDate(list, count){
+      const arr = Array.isArray(list) ? list : [];
+      return arr
+        .map((j, idx) => ({
+          j,
+          idx,
+          t: (
+            parseDateSmart(j?.timestamp) ||
+            parseDateSmart(j?.tarikhTugasan) ||
+            parseDateSmart(j?.endDate) ||
+            new Date(0)
+          ).getTime()
+        }))
+        .sort((a, b) => (b.t - a.t) || (a.idx - b.idx))
+        .slice(0, count)
+        .map(x => x.j);
+    }
+    function jobDisplayDate(job){
+      const d = parseDateSmart(job?.timestamp) || parseDateSmart(job?.tarikhTugasan) || parseDateSmart(job?.endDate);
+      return d ? d.toLocaleDateString("en-GB", { day:"2-digit", month:"2-digit", year:"numeric" }) : "-";
+    }
+    function updateLatestJobTicker(jobs){
+      const wrap = $("jobsTicker");
+      const textEl = $("jobsTickerText");
+      if(!wrap || !textEl) return;
+      const allIds = (Array.isArray(jobs) ? jobs : []).map(j => String(j.id || "").trim()).filter(Boolean);
+      localStorage.setItem(LAST_JOB_IDS_KEY, JSON.stringify(Array.from(new Set(allIds)).slice(0, 300)));
+      wrap.classList.remove("is-new");
+
+      const user = String(CURRENT_USER || "").trim() || "Pengguna";
+      const announce1 = `Selamat Datang ${user}.`;
+      const announce2 = "Tip ringkas: Di tab Inspector Exec, pilih tugasan anda di sebelah kiri, kemas kini status, isi ulasan, kemudian muat naik bukti.";
+      const announce3 = "Untuk penerangan lengkap, rujuk Panduan Penggunaan.";
+
+      textEl.innerHTML = [
+        `<span class="ticker-pill">${safeText(announce1)}</span>`,
+        safeText(announce2),
+        safeText(announce3)
+      ].join(`<span class="ticker-sep">&bull;</span>`);
+    }
+
+    function syncUserDependentUI(){
+      const user = String(CURRENT_USER || "").trim();
+      const greet = $("userGreeting");
+      if(greet){
+        greet.textContent = user ? `Salam Sejahtera ${user}.` : "Assignments, schedule, roster, execution";
+      }
+
+      const execSel = $("execInspector");
+      const execUser = $("execCurrentUser");
+      if(execSel){
+        if(user){
+          const has = Array.from(execSel.options || []).some(o => String(o.value) === user);
+          if(!has){
+            const opt = document.createElement("option");
+            opt.value = user;
+            opt.textContent = user;
+            execSel.appendChild(opt);
+          }
+          execSel.value = user;
+          execSel.disabled = true;
+        }else{
+          execSel.disabled = false;
+        }
+      }
+      if(execUser){
+        execUser.innerHTML = user
+          ? `<i class="ri-user-3-line"></i><span>${safeText(user)}</span>`
+          : `<i class="ri-user-3-line"></i><span class="muted">No user selected</span>`;
+      }
+      updateLatestJobTicker(RAW.jobs || []);
+    }
+
+    function applyCurrentUser(name, persist=true){
+      const picked = String(name || "").trim();
+      CURRENT_USER = picked;
+      if(persist){
+        if(picked) localStorage.setItem(USER_KEY, picked);
+        else localStorage.removeItem(USER_KEY);
+      }
+      syncUserDependentUI();
+      if(document.getElementById("view-exec") && !$("view-exec").classList.contains("hidden") && CURRENT_USER){
+        loadMyJobs();
+      }
+      if(document.getElementById("view-movement") && !$("view-movement").classList.contains("hidden")){
+        initMovementTab();
+      }
+    }
+
+    function openIdentityOverlay(msg=""){
+      const ov = $("identityOverlay");
+      if(!ov) return;
+      ov.classList.add("show");
+      const m = $("identityMsg");
+      if(m) m.textContent = msg;
+    }
+
+    function closeIdentityOverlay(){
+      const ov = $("identityOverlay");
+      if(ov) ov.classList.remove("show");
+    }
+
+    function initUserIdentity(){
+      const sel = $("identityUserSelect");
+      if(sel){
+        sel.innerHTML = `<option value="">Loading names...</option>`;
+      }
+      google.script.run.withSuccessHandler((list)=>{
+        USER_OPTIONS = Array.isArray(list) ? list.map(x => String(x || "").trim()).filter(Boolean) : [];
+        if(sel){
+          sel.innerHTML = [`<option value="">Select your name...</option>`]
+            .concat(USER_OPTIONS.map(n=>`<option value="${safeText(n)}">${safeText(n)}</option>`))
+            .join("");
+        }
+
+        const saved = String(localStorage.getItem(USER_KEY) || "").trim();
+        if(saved && USER_OPTIONS.includes(saved)){
+          if(sel) sel.value = saved;
+          applyCurrentUser(saved, false);
+          closeIdentityOverlay();
+          return;
+        }
+        applyCurrentUser("", false);
+        openIdentityOverlay(USER_OPTIONS.length ? "" : "No inspector names found.");
+      }).withFailureHandler((err)=>{
+        openIdentityOverlay(`Unable to load user list: ${String(err)}`);
+      }).getInspectorDropdown();
+    }
+
+    /* THEME */
+    function loadTheme(){
+      const t = localStorage.getItem("ctp_theme") || "dark";
+      const norm = (t === "light" || t === "lightB") ? "lightB" : "darkA";
+      document.documentElement.setAttribute("data-theme", norm);
+      document.body.setAttribute("data-theme", norm);
+      syncThemeButton();
+    }
+    function toggleTheme(){
+      const cur = document.documentElement.getAttribute("data-theme") || "darkA";
+      const next = (cur === "darkA") ? "lightB" : "darkA";
+      document.documentElement.setAttribute("data-theme", next);
+      document.body.setAttribute("data-theme", next);
+      localStorage.setItem("ctp_theme", next === "lightB" ? "light" : "dark");
+      syncThemeButton();
+    }
+    function syncThemeButton(){
+      const cur = document.documentElement.getAttribute("data-theme") || "darkA";
+      const isDark = (cur === "darkA");
+      const label = $("themeLabel");
+      if(label) label.textContent = isDark ? "Switch to light" : "Switch to dark";
+      const btn = $("btnTheme");
+      if(btn) btn.setAttribute("aria-pressed", isDark ? "true" : "false");
+    }
+
+    /* NAV */
+    function setTab(name){
+      const map = {
+        supervisor: "view-supervisor",
+        schedule: "view-schedule",
+        roster: "view-roster",
+        exec: "view-exec",
+        movement: "view-movement",
+        reference: "view-reference"
+      };
+
+      Object.values(map).forEach(id => $(id).classList.add("hidden"));
+      $(map[name]).classList.remove("hidden");
+
+      document.querySelectorAll("[data-tab]").forEach(b=>{
+        const on = (b.getAttribute("data-tab") === name);
+        b.classList.toggle("btn-brand", on);
+        b.classList.toggle("active", on);
+      });
+
+      if(name === "supervisor") setSupervisorStep(1);
+      if(name === "schedule") loadCalendar();
+      if(name === "roster") renderRoster();
+      if(name === "exec" && CURRENT_USER) loadMyJobs();
+      if(name === "movement") initMovementTab();
+      if(name === "reference") initReferenceTab();
+    }
+
+    /* CUSTOM DROPDOWN */
+    function makeDropdown(containerId, label, options, onChange){
+      const cid = containerId;
+      const wrap = document.createElement("div");
+      wrap.className = "dd";
+
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "dd-btn";
+      btn.innerHTML = `
+        <span class="truncate">${safeText(label)}: <span class="muted" id="${cid}-val">All</span></span>
+        <i class="ri-arrow-down-s-line muted"></i>
+      `;
+
+      const menu = document.createElement("div");
+      menu.className = "dd-menu glass2";
+
+      const items = [{value:"", text:"All"}].concat((options || []).map(x=>({value:x, text:x})));
+      menu.innerHTML = items.map(it => `
+        <div class="dd-item" data-value="${safeText(it.value)}">
+          <span class="dot" style="background: var(--accent); box-shadow:none; width:6px; height:6px;"></span>
+          <div class="font-extrabold text-sm">${safeText(it.text)}</div>
+        </div>
+      `).join("");
+
+      btn.addEventListener("click", ()=>{
+        document.querySelectorAll(".dd-menu.show").forEach(m=>{
+          if(m !== menu) m.classList.remove("show");
+        });
+        menu.classList.toggle("show");
+      });
+
+      menu.addEventListener("click", (e)=>{
+        const item = e.target.closest(".dd-item");
+        if(!item) return;
+        const v = item.getAttribute("data-value") || "";
+        $(cid + "-val").textContent = v ? v : "All";
+        menu.classList.remove("show");
+        onChange(v);
+      });
+
+      document.addEventListener("click", (e)=>{
+        if(!wrap.contains(e.target)) menu.classList.remove("show");
+      });
+
+      wrap.appendChild(btn);
+      wrap.appendChild(menu);
+
+      const host = $(containerId);
+      host.innerHTML = "";
+      host.appendChild(wrap);
+
+      return { setValue: (v)=>{ $(cid + "-val").textContent = v ? v : "All"; } };
+    }
+
+    /* MODAL */
+    function showModal(title, subtitle, bodyHtml, actions){
+      $("modalTitle").textContent = title || "";
+      $("modalSubtitle").textContent = subtitle || "";
+      $("modalBody").innerHTML = bodyHtml || "";
+      $("modalActions").innerHTML = "";
+
+      (actions || []).forEach(a=>{
+        const b = document.createElement("button");
+        b.className = a.className || "btn";
+        b.textContent = a.label || "OK";
+        b.onclick = a.onClick || closeModal;
+        $("modalActions").appendChild(b);
+      });
+
+      $("modal").classList.add("show");
+    }
+    function closeModal(){ $("modal").classList.remove("show"); }
+    function openPanduanPenggunaan(){
+      const body = `
+        <div class="max-h-[60vh] overflow-auto pr-2 space-y-4">
+          <div class="glass2 p-3">
+            <div class="font-extrabold">1) Mula Dengan Identiti Pengguna</div>
+            <div class="muted text-sm mt-1">Pilih nama anda semasa sistem dibuka. Nama ini akan digunakan untuk personalisasi tab Inspector Exec dan Dokumen.</div>
+          </div>
+          <div class="glass2 p-3">
+            <div class="font-extrabold">2) Supervisor</div>
+            <div class="muted text-sm mt-1">Langkah 1: Tanda job yang hendak diagihkan. Guna carian dan penapis Zon/Negeri/Jenis jika perlu.</div>
+            <div class="muted text-sm mt-1">Langkah 2: Tetapkan tarikh mula/tamat dan pilih pemeriksa utama serta pemeriksa kedua (opsyenal), kemudian klik Assign Selected.</div>
+          </div>
+          <div class="glass2 p-3">
+            <div class="font-extrabold">3) Inspector Exec (Untuk Pemeriksa)</div>
+            <div class="muted text-sm mt-1">Job anda dimuatkan automatik. Pilih job, kemas kini status, isi ulasan pemeriksaan, kemudian muat naik bukti (gambar/PDF).</div>
+          </div>
+          <div class="glass2 p-3">
+            <div class="font-extrabold">4) Dokumen</div>
+            <div class="muted text-sm mt-1">Pilih job berkaitan dan jana Borang Tugas Rasmi. Pautan dokumen akan dipaparkan selepas proses berjaya.</div>
+          </div>
+          <div class="glass2 p-3">
+            <div class="font-extrabold">5) Schedule, Roster, Reference</div>
+            <div class="muted text-sm mt-1">Schedule memaparkan jadual tugasan aktif, Roster untuk status pemeriksa, dan Reference untuk semakan surat permohonan mengikut bulan.</div>
+          </div>
+          <div class="glass2 p-3">
+            <div class="font-extrabold">Tip Penting</div>
+            <div class="muted text-sm mt-1">Semak konflik tarikh sebelum pengagihan, pastikan status job sentiasa dikemas kini, dan gunakan Switch User jika bertukar pengguna.</div>
+          </div>
+        </div>
+      `;
+      showModal(
+        "Panduan Penggunaan Sistem CTP",
+        "Rujukan lengkap aliran kerja harian",
+        body,
+        [{label:"Tutup", className:"btn", onClick: closeModal}]
+      );
+    }
+
+    /* SUPERVISOR: 2-step flow */
+    let supervisorStep = 1;
+
+    function setSupervisorStep(step){
+      supervisorStep = (step === 2) ? 2 : 1;
+      const s1 = $("supStepSelect");
+      const s2 = $("supStepAssign");
+      if(s1) s1.classList.toggle("hidden", supervisorStep !== 1);
+      if(s2) s2.classList.toggle("hidden", supervisorStep !== 2);
+
+      const c1 = $("supStepChip1");
+      const c2 = $("supStepChip2");
+      if(c1) c1.classList.toggle("btn-brand", supervisorStep === 1);
+      if(c2) c2.classList.toggle("btn-brand", supervisorStep === 2);
+    }
+
+    function getSelectedJobsData(){
+      return Array.from(selectedJobIds)
+        .map(id => (RAW.jobs || []).find(j => String(j.id || "") === String(id || "")))
+        .filter(Boolean);
+    }
+
+    function renderSelectedJobSummary(){
+      const selected = getSelectedJobsData();
+      const count = selected.length;
+      const c1 = $("step1SelectedCount");
+      const c2 = $("step2SelectedCount");
+      if(c1) c1.textContent = String(count);
+      if(c2) c2.textContent = String(count);
+
+      const html = count
+        ? selected.map(j => {
+            const id = String(j.id || "-");
+            const unit = String(j.unit || "-");
+            const loc = [String(j.daerah || ""), String(j.negeri || "")].filter(Boolean).join(", ") || "-";
+            return `
+              <div class="glass2 p-3">
+                <div class="font-extrabold text-sm truncate">${safeText(id)}</div>
+                <div class="muted text-xs mt-1 truncate">${safeText(unit)}</div>
+                <div class="muted text-xs mt-1">${safeText(loc)}</div>
+              </div>
+            `;
+          }).join("")
+        : `<div class="muted text-sm">No jobs selected yet.</div>`;
+
+      const list1 = $("selectedJobListStep1");
+      const list2 = $("selectedJobListStep2");
+      if(list1) list1.innerHTML = html;
+      if(list2) list2.innerHTML = html;
+    }
+
+    function syncAssignState(){
+      const hasSel = selectedJobIds.size > 0;
+
+      const idsToLock = ["assignStart","assignEnd","insp1","insp2","btnAssign","btnCheckConflicts"];
+      idsToLock.forEach(id=>{
+        const el = $(id);
+        if(!el) return;
+        el.disabled = !hasSel;
+      });
+
+      const toAssign = $("btnToAssignStep");
+      if(toAssign) toAssign.disabled = !hasSel;
+
+      renderSelectedJobSummary();
+      if(!hasSel){
+        $("assignMsg").textContent = "Select job(s) using the checkbox first.";
+      }else if($("assignMsg").textContent === "Select job(s) using the checkbox first."){
+        $("assignMsg").textContent = "";
+      }
+    }
+
+    /* LOAD DATA */
+    function refreshAll(){
+      $("assignMsg").textContent = "Loading...";
+      google.script.run
+        .withSuccessHandler((data)=>{
+          RAW = data || { jobs: [], inspectors: [] };
+
+          $("statPending").textContent = String((RAW.jobs || []).length);
+          $("statInsp").textContent = String((RAW.inspectors || []).length);
+
+          $("statAssigned").textContent = "...";
+          google.script.run
+            .withSuccessHandler((active)=> {
+              const arr = Array.isArray(active) ? active : [];
+              const count = arr.filter(j => {
+                const s = String(j.status || j.Status || "").toLowerCase();
+                return s && s !== "completed" && s !== "cancelled";
+              }).length;
+              $("statAssigned").textContent = String(count);
+            })
+            .withFailureHandler(()=> {
+              $("statAssigned").textContent = "0";
+            })
+            .getAllActiveJobs();
+
+          updateLatestJobTicker(RAW.jobs || []);
+
+          $("assignMsg").textContent = "";
+
+          buildFilters();
+          renderJobs();
+          fillInspectors();
+          fillExecInspectors();
+          syncUserDependentUI();
+          syncAssignState();
+        })
+        .withFailureHandler((err)=>{
+          $("assignMsg").textContent = "Load failed: " + String(err);
+        })
+        .getSidebarData();
+    }
+
+    /* SUPERVISOR */
+    let fZon = "", fNegeri = "", fJenis = "";
+
+    function buildFilters(){
+      const jobs = RAW.jobs || [];
+      const zons = [...new Set(jobs.map(j=>j.zon).filter(Boolean))].sort();
+      const negeris = [...new Set(jobs.map(j=>j.negeri).filter(Boolean))].sort();
+      const jenis = [...new Set(jobs.map(j=>j.jenis).filter(Boolean))].sort();
+
+      makeDropdown("ddZon", "Zon", zons, (v)=>{ fZon=v; renderJobs(); });
+      makeDropdown("ddNegeri", "Negeri", negeris, (v)=>{ fNegeri=v; renderJobs(); });
+      makeDropdown("ddJenis", "Jenis", jenis, (v)=>{ fJenis=v; renderJobs(); });
+
+      $("jobSearch").value = "";
+    }
+
+    /* Identify "new" based on local seen list (simple + robust) */
+    function getSeenPendingSet_(){
+      let seen = [];
+      try { seen = JSON.parse(localStorage.getItem(LAST_JOB_IDS_KEY) || "[]"); } catch(e){ seen = []; }
+      return new Set((seen || []).map(x=>String(x).trim()).filter(Boolean));
+    }
+
+    function renderJobs(){
+      const q = String($("jobSearch").value || "").toLowerCase().trim();
+      const seenSet = getSeenPendingSet_();
+
+      const list = (RAW.jobs || []).filter(j=>{
+        if(fZon && String(j.zon||"") !== fZon) return false;
+        if(fNegeri && String(j.negeri||"") !== fNegeri) return false;
+        if(fJenis && String(j.jenis||"") !== fJenis) return false;
+
+        if(!q) return true;
+        const hay = [j.id, j.unit, j.negeri, j.daerah, j.zon, j.jenis].join(" ").toLowerCase();
+        return hay.includes(q);
+      });
+
+      $("jobList").innerHTML = list.map(j=>{
+        const id = String(j.id || "");
+        const isSel = selectedJobIds.has(id);
+        const isNew = id && !seenSet.has(id);
+        const loc = [String(j.daerah || ""), String(j.negeri || "")].filter(Boolean).join(", ");
+        const dt = jobDisplayDate(j);
+
+        return `
+          <div class="glass2">
+            <div class="flex items-start gap-3">
+              <input class="chk"
+                     type="checkbox"
+                     data-action="toggleSel"
+                     data-jobid="${safeText(id)}"
+                     ${isSel ? "checked" : ""} />
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center justify-between gap-3">
+                  <div class="font-extrabold text-sm truncate">${safeText(id)}</div>
+                  <div class="flex items-center gap-2 flex-shrink-0">
+                    ${isNew ? `<span class="badge-new"><span class="mini-dot"></span>NEW</span>` : ``}
+                    ${j.jenis ? `<span class="muted text-xs font-extrabold">${safeText(j.jenis)}</span>` : ``}
+                  </div>
+                </div>
+                <div class="flex items-center justify-between gap-3 mt-1">
+                  <div class="muted text-xs truncate">${safeText(j.unit || "Unknown Unit")}</div>
+                  <div class="muted text-xs font-bold flex-shrink-0">${safeText(j.negeri || j.daerah || "")}</div>
+                </div>
+                <div class="flex items-center justify-between gap-3 mt-1">
+                  <div class="muted text-xs truncate">${safeText(loc || "-")}</div>
+                  <div class="muted text-xs font-bold flex-shrink-0">${safeText(dt)}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      SUP_VISIBLE_JOBS = list.slice();
+      $("selCount").textContent = String(selectedJobIds.size);
+      syncAssignState();
+    }
+
+    function fillInspectors(){
+      const list = RAW.inspectors || [];
+      const opts = [`<option value="">Select...</option>`].concat(list.map(n=>`<option value="${safeText(n)}">${safeText(n)}</option>`));
+      $("insp1").innerHTML = opts.join("");
+      $("insp2").innerHTML = [`<option value="">None</option>`].concat(list.map(n=>`<option value="${safeText(n)}">${safeText(n)}</option>`)).join("");
+    }
+
+    function setFocusedJob(jobId){
+      focusedJobId = jobId || "";
+    }
+
+    function cancelFocusedJob(){
+      if(!focusedJobId) return;
+      showModal(
+        "Cancel Job",
+        focusedJobId,
+        `
+          <div class="muted text-sm">Reason</div>
+          <textarea id="cancelReason" class="w-full mt-2 px-3 py-2 rounded-xl glass2 outline-none" rows="3" placeholder="Type reason..."></textarea>
+        `,
+        [
+          { label:"Close", className:"btn", onClick: closeModal },
+          {
+            label:"Confirm Cancel",
+            className:"btn btn-bad",
+            onClick: ()=>{
+              const reason = $("cancelReason").value || "";
+              google.script.run.withSuccessHandler(()=>{
+                closeModal();
+                setFocusedJob("");
+                refreshAll();
+              }).withFailureHandler((err)=>{
+                showModal("Cancel failed", "", `<div class="muted text-sm">${safeText(String(err))}</div>`, [{label:"Close", onClick: closeModal}]);
+              }).cancelJob(focusedJobId, reason);
+            }
+          }
+        ]
+      );
+    }
+
+    function openReassignModal(){
+      if(!focusedJobId) return;
+      const list = RAW.inspectors || [];
+      const opts = list.map(n=>`<option value="${safeText(n)}">${safeText(n)}</option>`).join("");
+      showModal(
+        "Reassign Job",
+        focusedJobId,
+        `
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <div class="muted text-xs font-bold uppercase tracking-wider mb-2">Start Date</div>
+              <input id="rsStart" type="date" class="w-full px-3 py-2 rounded-xl glass2 outline-none" />
+            </div>
+            <div>
+              <div class="muted text-xs font-bold uppercase tracking-wider mb-2">End Date</div>
+              <input id="rsEnd" type="date" class="w-full px-3 py-2 rounded-xl glass2 outline-none" />
+            </div>
+            <div>
+              <div class="muted text-xs font-bold uppercase tracking-wider mb-2">Lead Inspector</div>
+              <select id="rsInsp1" class="w-full px-3 py-2 rounded-xl glass2 outline-none">${opts}</select>
+            </div>
+            <div>
+              <div class="muted text-xs font-bold uppercase tracking-wider mb-2">Second Inspector</div>
+              <select id="rsInsp2" class="w-full px-3 py-2 rounded-xl glass2 outline-none"><option value="">None</option>${opts}</select>
+            </div>
+          </div>
+          <div class="muted text-xs mt-3">Conflict detection is enforced by backend.</div>
+        `,
+        [
+          { label:"Close", className:"btn", onClick: closeModal },
+          {
+            label:"Confirm Reassign",
+            className:"btn btn-brand",
+            onClick: ()=>{
+              const insp1 = $("rsInsp1").value || "";
+              const insp2 = $("rsInsp2").value || "";
+              const sd = $("rsStart").value || "";
+              const ed = $("rsEnd").value || "";
+              google.script.run.withSuccessHandler((res)=>{
+                if(res && res.ok === false){
+                  showModal("Conflict detected", "", `<pre class="text-xs muted">${safeText(JSON.stringify(res, null, 2))}</pre>`, [{label:"Close", onClick: closeModal}]);
+                  return;
+                }
+                closeModal();
+                refreshAll();
+              }).withFailureHandler((err)=>{
+                showModal("Reassign failed", "", `<div class="muted text-sm">${safeText(String(err))}</div>`, [{label:"Close", onClick: closeModal}]);
+              }).reassignJob(focusedJobId, insp1, insp2, sd, ed);
+            }
+          }
+        ]
+      );
+    }
+
+    function assignSelected(){
+      const ids = Array.from(selectedJobIds);
+      if(!ids.length){ $("assignMsg").textContent = "Select at least 1 job (checkbox)."; syncAssignState(); return; }
+
+      const insp1 = $("insp1").value || "";
+      const insp2 = $("insp2").value || "";
+      const startDate = $("assignStart").value || "";
+      const endDate = $("assignEnd").value || "";
+      const time24 = $("assignTime").value || "";
+
+      if(!insp1){ $("assignMsg").textContent = "Lead inspector is required."; return; }
+      if(!startDate){ $("assignMsg").textContent = "Start date is required."; return; }
+
+      $("assignMsg").textContent = "Assigning...";
+      LAST_ASSIGN_CONTEXT = {
+        jobs: getSelectedJobsData(),
+        insp1, insp2, startDate, endDate, time24
+      };
+
+      google.script.run.withSuccessHandler((res)=>{
+        if(res && res.ok === false){
+          if(res.error && String(res.error).toLowerCase().includes("conflict")){
+            showModal("Date conflict detected","Please adjust dates or inspectors",
+              `<pre class="text-xs muted">${safeText(JSON.stringify(res.conflicts || res, null, 2))}</pre>`,
+              [{label:"Close", onClick: closeModal}]
+            );
+          }else{
+            showModal("Assignment failed","",`<div class="muted text-sm">${safeText(JSON.stringify(res, null, 2))}</div>`,[{label:"Close", onClick: closeModal}]);
+          }
+          $("assignMsg").textContent = "";
+          return;
+        }
+
+        showModal("Assigned","",`<div class="muted text-sm">${safeText(res.message || "Done")}</div>`,[
+          {label:"AI: WhatsApp Text", className:"btn btn-brand", onClick: ()=> runAiWhatsappGenerator() },
+          {label:"Close", onClick: closeModal}
+        ]);
+
+        selectedJobIds.clear();
+        $("selCount").textContent = "0";
+        setSupervisorStep(1);
+        refreshAll();
+        $("assignMsg").textContent = "";
+      }).withFailureHandler((err)=>{
+        $("assignMsg").textContent = "Assign failed: " + String(err);
+      }).processAssignment({ jobIds: ids, insp1, insp2, startDate, endDate });
+    }
+
+    function checkConflictsUI(){
+      const ids = Array.from(selectedJobIds);
+      if(!ids.length){
+        showModal("No selection","",`<div class="muted text-sm">Select job(s) using the checkbox first.</div>`,[{label:"Close", onClick: closeModal}]);
+        return;
+      }
+
+      const insp1 = $("insp1").value || "";
+      const insp2 = $("insp2").value || "";
+      const startDate = $("assignStart").value || "";
+      const endDate = $("assignEnd").value || "";
+
+      if(!insp1 || !startDate){
+        showModal("Missing info","",`<div class="muted text-sm">Pick lead inspector and start date first.</div>`,[{label:"Close", onClick: closeModal}]);
+        return;
+      }
+
+      google.script.run.withSuccessHandler((res)=>{
+        if(res && res.ok === false && String(res.error||"").toLowerCase().includes("conflict")){
+          showModal("Conflicts found","",`<pre class="text-xs muted">${safeText(JSON.stringify(res.conflicts, null, 2))}</pre>`,[{label:"Close", onClick: closeModal}]);
+          return;
+        }
+        showModal("No conflicts detected","",`<div class="muted text-sm">Backend did not report conflicts for the chosen inspector/date window.</div>`,[{label:"Close", onClick: closeModal}]);
+      }).withFailureHandler((err)=>{
+        showModal("Check failed","",`<div class="muted text-sm">${safeText(String(err))}</div>`,[{label:"Close", onClick: closeModal}]);
+      }).processAssignment({ jobIds: ["__CHECK_ONLY__"], insp1, insp2, startDate, endDate });
+    }
+
+    /* SCHEDULE (dashboard style, jobs-only) */
+    function pad2(n){ return String(n).padStart(2, "0"); }
+    function toDayKey(d){ return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; }
+    function toMonthKey(d){ return `${d.getFullYear()}-${pad2(d.getMonth()+1)}`; }
+
+    function monthLabelFromKey(key){
+      const m = String(key || "").match(/^(\d{4})-(\d{2})$/);
+      if(!m) return key || "-";
+      const y = Number(m[1]);
+      const mon = Number(m[2]) - 1;
+      const d = new Date(y, mon, 1, 12, 0, 0, 0);
+      if(isNaN(d.getTime())) return key || "-";
+      return d.toLocaleDateString("en-GB", { month:"long", year:"numeric" });
+    }
+
+    function parseMonthKey(key){
+      const m = String(key || "").match(/^(\d{4})-(\d{2})$/);
+      if(!m) return null;
+      const y = Number(m[1]);
+      const mon = Number(m[2]);
+      if(!Number.isFinite(y) || !Number.isFinite(mon) || mon < 1 || mon > 12) return null;
+      return { y, mon };
+    }
+
+    function scheduleStatusBucket(status){
+      const s = String(status || "").toLowerCase().trim();
+      if(!s) return "";
+      if(s.includes("completed") || s.includes("selesai")) return "completed";
+      if(s.includes("in progress") || s.includes("progress")) return "progress";
+      if(s.includes("assigned") || s.includes("ditugas")) return "assigned";
+      return "";
+    }
+
+    function scheduleStatusClass(status){
+      const b = scheduleStatusBucket(status);
+      if(b === "assigned") return "s-assigned";
+      if(b === "progress") return "s-progress";
+      if(b === "completed") return "s-completed";
+      return "";
+    }
+
+    function hasAssignedInspector(job){
+      const a1 = String(job?.insp1 || "").toLowerCase().trim();
+      const a2 = String(job?.insp2 || "").toLowerCase().trim();
+      const invalid = new Set(["", "-", "none", "unassigned"]);
+      return !invalid.has(a1) || !invalid.has(a2);
+    }
+
+    function scheduleDateRange(job){
+      let start = parseDateSmart(job?.start) || parseDateSmart(job?.tarikhTugasan) || parseDateSmart(job?.timestamp);
+      if(!start) return null;
+      let end = parseDateSmart(job?.end) || parseDateSmart(job?.endDate) || start;
+      start = new Date(start.getFullYear(), start.getMonth(), start.getDate(), 12, 0, 0, 0);
+      end = new Date(end.getFullYear(), end.getMonth(), end.getDate(), 12, 0, 0, 0);
+      if(end.getTime() < start.getTime()){
+        const tmp = start;
+        start = end;
+        end = tmp;
+      }
+      return { start, end };
+    }
+
+    function expandDayKeys(start, end){
+      const out = [];
+      const cur = new Date(start.getFullYear(), start.getMonth(), start.getDate(), 12, 0, 0, 0);
+      const last = new Date(end.getFullYear(), end.getMonth(), end.getDate(), 12, 0, 0, 0);
+      for(let i=0; i<370 && cur.getTime() <= last.getTime(); i++){
+        out.push(toDayKey(cur));
+        cur.setDate(cur.getDate() + 1);
+      }
+      return out;
+    }
+
+    function mapScheduleJobRow(x){
+      return {
+        id: String(x?.id || x?.["Job ID"] || "").trim(),
+        unit: String(x?.unit || x?.Unit || "").trim(),
+        jenis: String(x?.jenis || x?.Jenis || "").trim(),
+        negeri: String(x?.negeri || x?.Negeri || "").trim(),
+        daerah: String(x?.daerah || x?.Daerah || "").trim(),
+        zon: String(x?.zon || x?.Zon || "").trim(),
+        status: String(x?.status || x?.Status || "").trim(),
+        insp1: String(x?.insp1 || x?.assigned1 || x?.["Nama Pemeriksa 1"] || "").trim(),
+        insp2: String(x?.insp2 || x?.assigned2 || x?.["Nama Pemeriksa 2"] || "").trim(),
+        start: x?.start || x?.tarikhTugasan || x?.["Tarikh Tugasan"] || "",
+        end: x?.end || x?.endDate || x?.["Tarikh Tamat"] || "",
+        timestamp: x?.timestamp || x?.Timestamp || ""
+      };
+    }
+
+    function getSchedulableJobs(){
+      return (SCH_ALL_JOBS || []).filter(j => {
+        const bucket = scheduleStatusBucket(j.status);
+        if(!bucket) return false;
+        if(!hasAssignedInspector(j)) return false;
+        return !!scheduleDateRange(j);
+      });
+    }
+
+    function getScheduleMonthKeys(){
+      const nowKey = toMonthKey(new Date());
+      const set = new Set([nowKey]);
+      getSchedulableJobs().forEach(j => {
+        const range = scheduleDateRange(j);
+        if(!range) return;
+        const from = new Date(range.start.getFullYear(), range.start.getMonth(), 1, 12, 0, 0, 0);
+        const to = new Date(range.end.getFullYear(), range.end.getMonth(), 1, 12, 0, 0, 0);
+        for(let i=0, cur = new Date(from); i<60 && cur.getTime() <= to.getTime(); i++){
+          set.add(toMonthKey(cur));
+          cur.setMonth(cur.getMonth() + 1);
+        }
+      });
+      return Array.from(set).sort((a,b) => a < b ? 1 : -1);
+    }
+
+    function renderScheduleMonthOptions(forceCurrent=false){
+      const el = $("schMonth");
+      if(!el) return;
+      const nowKey = toMonthKey(new Date());
+      const keys = getScheduleMonthKeys();
+      el.innerHTML = keys.map(k => `<option value="${safeText(k)}">${safeText(monthLabelFromKey(k))}</option>`).join("");
+      if(forceCurrent || !SCH_MONTH_KEY || !keys.includes(SCH_MONTH_KEY)){
+        SCH_MONTH_KEY = keys.includes(nowKey) ? nowKey : (keys[0] || nowKey);
+      }
+      const hasSelected = Array.from(el.options || []).some(o => String(o.value || "") === SCH_MONTH_KEY);
+      if(!hasSelected) SCH_MONTH_KEY = keys[0] || nowKey;
+      el.value = SCH_MONTH_KEY;
+    }
+
+    function buildScheduleDayMap(monthKey){
+      const map = new Map();
+      const monthJobs = new Map();
+      getSchedulableJobs().forEach(j => {
+        const bucket = scheduleStatusBucket(j.status);
+        const range = scheduleDateRange(j);
+        if(!bucket || !range) return;
+        const dayKeys = expandDayKeys(range.start, range.end);
+        dayKeys.forEach(k => {
+          if(!k.startsWith(monthKey + "-")) return;
+          if(!map.has(k)){
+            map.set(k, { jobs: [], statuses: new Set(), counts: { assigned: 0, progress: 0, completed: 0 } });
+          }
+          const rec = map.get(k);
+          rec.jobs.push(j);
+          rec.statuses.add(bucket);
+          rec.counts[bucket] = (rec.counts[bucket] || 0) + 1;
+          monthJobs.set(String(j.id || ""), j);
+        });
+      });
+      return { map, monthJobs: Array.from(monthJobs.values()) };
+    }
+
+    function statusOrderForSchedule(st){
+      const bucket = scheduleStatusBucket(st);
+      if(bucket === "progress") return 0;
+      if(bucket === "assigned") return 1;
+      if(bucket === "completed") return 2;
+      return 9;
+    }
+
+    function renderScheduleDayCards(dayKey){
+      const cardsEl = $("schDayCards");
+      const titleEl = $("schDayTitle");
+      if(!cardsEl || !titleEl) return;
+
+      const dateObj = parseDateSmart(dayKey);
+      const pretty = dateObj ? dateObj.toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" }) : "-";
+      const rec = SCH_DAY_MAP.get(dayKey);
+      const jobs = rec && Array.isArray(rec.jobs) ? rec.jobs : [];
+      const list = [...jobs].sort((a, b) => {
+        const byStatus = statusOrderForSchedule(a.status) - statusOrderForSchedule(b.status);
+        if(byStatus !== 0) return byStatus;
+        return String(a.id || "").localeCompare(String(b.id || ""));
+      });
+      titleEl.textContent = `${pretty} (${list.length} job${list.length === 1 ? "" : "s"})`;
+
+      if(!list.length){
+        cardsEl.innerHTML = `<div class="muted text-sm">Tiada tugasan dijadualkan pada tarikh ini.</div>`;
+        return;
+      }
+
+      cardsEl.innerHTML = list.map(j => {
+        const loc = [String(j.daerah || "").trim(), String(j.negeri || "").trim()].filter(Boolean).join(", ");
+        const start = parseDateSmart(j.start) || parseDateSmart(j.tarikhTugasan);
+        const end = parseDateSmart(j.end) || parseDateSmart(j.endDate);
+        const fmt = (d)=> d ? d.toLocaleDateString("en-GB") : "-";
+        const range = (start && end && toDayKey(start) !== toDayKey(end)) ? `${fmt(start)} - ${fmt(end)}` : fmt(start || end);
+        const assigned = [String(j.insp1 || "").trim() || "Unassigned", String(j.insp2 || "").trim()].filter(Boolean).join(" / ");
+        return `
+          <article class="sch-card">
+            <div class="sch-card-top">
+              <div>
+                <div class="sch-card-id">${safeText(String(j.id || "JOB"))}</div>
+                <div class="sch-card-unit">${safeText(String(j.unit || "-"))}</div>
+              </div>
+              <span class="sch-status ${scheduleStatusClass(j.status)}">${safeText(String(j.status || "-"))}</span>
+            </div>
+            <div class="sch-card-sub"><b>Jenis:</b> ${safeText(String(j.jenis || "-"))}</div>
+            <div class="sch-card-sub"><b>Pemeriksa:</b> ${safeText(assigned)}</div>
+            <div class="sch-card-sub"><b>Lokasi:</b> ${safeText(loc || "-")} (${safeText(String(j.zon || "-"))})</div>
+            <div class="sch-card-sub"><b>Tarikh:</b> ${safeText(range || "-")}</div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function renderScheduleCalendar(){
+      const gridEl = $("schGrid");
+      if(!gridEl) return;
+
+      const parsed = parseMonthKey(SCH_MONTH_KEY);
+      if(!parsed){
+        gridEl.innerHTML = `<div class="muted text-sm">Bulan tidak sah.</div>`;
+        const cardsEl = $("schDayCards");
+        if(cardsEl) cardsEl.innerHTML = `<div class="muted text-sm">Tiada data.</div>`;
+        const countEl = $("schCount");
+        if(countEl) countEl.textContent = "0 job(s)";
+        return;
+      }
+
+      const { y, mon } = parsed;
+      const first = new Date(y, mon - 1, 1, 12, 0, 0, 0);
+      const daysInMonth = new Date(y, mon, 0, 12, 0, 0, 0).getDate();
+      const offset = (first.getDay() + 6) % 7;
+
+      const built = buildScheduleDayMap(SCH_MONTH_KEY);
+      SCH_DAY_MAP = built.map;
+
+      const countEl = $("schCount");
+      const infoEl = $("schMonthInfo");
+      if(countEl) countEl.textContent = `${built.monthJobs.length} job(s)`;
+      if(infoEl) infoEl.textContent = monthLabelFromKey(SCH_MONTH_KEY);
+
+      const todayKey = toDayKey(new Date());
+      if(!SCH_SELECTED_DAY || !SCH_SELECTED_DAY.startsWith(SCH_MONTH_KEY + "-")){
+        if(SCH_DAY_MAP.has(todayKey) && todayKey.startsWith(SCH_MONTH_KEY + "-")){
+          SCH_SELECTED_DAY = todayKey;
+        }else if(SCH_DAY_MAP.size > 0){
+          SCH_SELECTED_DAY = Array.from(SCH_DAY_MAP.keys()).sort()[0];
+        }else{
+          SCH_SELECTED_DAY = `${SCH_MONTH_KEY}-01`;
+        }
+      }
+
+      const cells = [];
+      for(let i=0; i<offset; i++){
+        cells.push(`<button class="sch-day out" type="button" tabindex="-1" aria-hidden="true"></button>`);
+      }
+
+      for(let d=1; d<=daysInMonth; d++){
+        const dayKey = `${SCH_MONTH_KEY}-${pad2(d)}`;
+        const rec = SCH_DAY_MAP.get(dayKey);
+        const statuses = rec ? Array.from(rec.statuses) : [];
+        const count = rec ? rec.jobs.length : 0;
+        const dots = [
+          statuses.includes("assigned") ? `<i class="sch-dot sch-dot-assigned"></i>` : "",
+          statuses.includes("progress") ? `<i class="sch-dot sch-dot-progress"></i>` : "",
+          statuses.includes("completed") ? `<i class="sch-dot sch-dot-completed"></i>` : ""
+        ].join("");
+        const classes = [
+          "sch-day",
+          rec ? "has-jobs" : "",
+          dayKey === SCH_SELECTED_DAY ? "selected" : "",
+          dayKey === todayKey ? "today" : ""
+        ].filter(Boolean).join(" ");
+        cells.push(`
+          <button class="${classes}" type="button" data-day="${safeText(dayKey)}" aria-label="${safeText(dayKey)}">
+            <span class="sch-num">${d}</span>
+            <span class="sch-markers">${dots}${count ? `<span class="sch-count">${count}</span>` : ""}</span>
+          </button>
+        `);
+      }
+
+      const totalCells = Math.ceil(cells.length / 7) * 7;
+      for(let i=cells.length; i<totalCells; i++){
+        cells.push(`<button class="sch-day out" type="button" tabindex="-1" aria-hidden="true"></button>`);
+      }
+
+      gridEl.innerHTML = cells.join("");
+      renderScheduleDayCards(SCH_SELECTED_DAY);
+    }
+
+    function loadCalendar(forceCurrentMonth=false){
+      const gridEl = $("schGrid");
+      const cardsEl = $("schDayCards");
+      if(gridEl) gridEl.innerHTML = `<div class="muted text-sm">Loading schedule...</div>`;
+      if(cardsEl) cardsEl.innerHTML = `<div class="muted text-sm">Loading schedule...</div>`;
+
+      google.script.run.withSuccessHandler((jobs)=>{
+        const arr = Array.isArray(jobs) ? jobs : [];
+        SCH_ALL_JOBS = arr.map(mapScheduleJobRow);
+        renderScheduleMonthOptions(forceCurrentMonth || !SCH_MONTH_KEY);
+        renderScheduleCalendar();
+      }).withFailureHandler((err)=>{
+        if(gridEl) gridEl.innerHTML = `<div class="muted text-sm">Failed: ${safeText(String(err))}</div>`;
+        if(cardsEl) cardsEl.innerHTML = `<div class="muted text-sm">Failed: ${safeText(String(err))}</div>`;
+      }).getAllActiveJobs();
+    }
+
+    /* ROSTER */
+    function renderRoster(){
+  $("rosterList").innerHTML = `<div class="muted text-sm">Loading roster...</div>`;
+  google.script.run.withSuccessHandler((list)=>{
+    const arr = Array.isArray(list) ? list : [];
+    if(!arr.length){
+      $("rosterList").innerHTML = `<div class="muted text-sm">No roster data found.</div>`;
+      return;
+    }
+
+    const STATUS_OPTS = [
+      "Aktif",
+      "Bertugas",
+      "Cuti",
+      "Kursus",
+      "Tidak Hadir",
+      "Lain-lain"
+    ];
+
+    $("rosterList").innerHTML = arr.map(x=>{
+      const s = String(x.status||"").toLowerCase();
+      let dot = "var(--accent)";
+      if(s.includes("aktif")) dot = "var(--ok)";
+      if(s.includes("bertugas")) dot = "var(--accent)";
+      if(s.includes("cuti") || s.includes("kursus")) dot = "var(--warn)";
+
+      const current = String(x.status || "Unknown");
+      const name = String(x.name || "").trim();
+
+      const optionsHtml = STATUS_OPTS.map(v=>{
+        const sel = (v.toLowerCase() === current.toLowerCase()) ? "selected" : "";
+        return `<option value="${safeText(v)}" ${sel}>${safeText(v)}</option>`;
+      }).join("");
+
+      return `
+        <div class="glass2 p-4">
+          <div class="flex items-start justify-between gap-3">
+            <div class="min-w-0">
+              <div class="font-extrabold text-base truncate">${safeText(x.name)}</div>
+              <div class="muted text-xs mt-1">${safeText(x.rank || "Inspector")}</div>
+            </div>
+
+            <span class="chip">
+              <span class="dot" style="background:${dot}; box-shadow:none"></span>
+              <span id="rosterChip-${safeText(name)}">${safeText(current)}</span>
+            </span>
+          </div>
+
+          <div class="mt-3 grid grid-cols-1 sm:grid-cols-12 gap-2">
+            <div class="sm:col-span-8">
+              <div class="muted text-xs font-bold uppercase tracking-wider mb-2">Update Status</div>
+              <select
+                class="w-full px-3 py-2 rounded-xl glass2 outline-none"
+                data-action="rosterStatusSelect"
+                data-name="${safeText(name)}"
+              >
+                ${optionsHtml}
+              </select>
+            </div>
+
+            <div class="sm:col-span-4 flex items-end">
+              <button
+                class="btn btn-brand w-full justify-center"
+                data-action="rosterStatusSave"
+                data-name="${safeText(name)}"
+              >
+                <i class="ri-save-3-line"></i> Save
+              </button>
+            </div>
+          </div>
+
+          <div class="mt-2 muted text-xs" id="rosterMsg-${safeText(name)}"></div>
+        </div>
+      `;
+    }).join("");
+
+  }).withFailureHandler((err)=>{
+    $("rosterList").innerHTML = `<div class="muted text-sm">Failed: ${safeText(String(err))}</div>`;
+  }).getFullRosterData();
+}
+
+    /* EXECUTION */
+    function fillExecInspectors(){
+      google.script.run.withSuccessHandler((list)=>{
+        const arr = Array.isArray(list) ? list : [];
+        $("execInspector").innerHTML = [`<option value="">Select inspector...</option>`]
+          .concat(arr.map(n=>`<option value="${safeText(n)}">${safeText(n)}</option>`))
+          .join("");
+        syncUserDependentUI();
+      }).getInspectorDropdown();
+    }
+
+    function loadMyJobs(){
+      const name = String(CURRENT_USER || $("execInspector").value || "").trim();
+      if(name && $("execInspector")) $("execInspector").value = name;
+      if(!name){
+        EXEC_JOBS = [];
+        $("myJobs").innerHTML = `<div class="muted text-sm">Select user identity first.</div>`;
+        return;
+      }
+      $("myJobs").innerHTML = `<div class="muted text-sm">Loading jobs...</div>`;
+
+      google.script.run.withSuccessHandler((jobs)=>{
+        const arr = Array.isArray(jobs) ? jobs : [];
+        EXEC_JOBS = arr.slice();
+        if(!arr.length){
+          EXEC_JOBS = [];
+          $("myJobs").innerHTML = `<div class="muted text-sm">No active assigned jobs found for this inspector.</div>`;
+          $("execBody").innerHTML = `<div class="muted text-sm">No job selected yet.</div>`;
+          myFocusedJobId = "";
+          $("execChip").innerHTML = `<span class="dot"></span><span class="muted">No job selected</span>`;
+          return;
+        }
+
+        $("myJobs").innerHTML = arr.map(j=>{
+          const on = (String(myFocusedJobId) === String(j["Job ID"]));
+          return `
+            <div class="glass2 p-3 cursor-pointer hover:opacity-95 transition"
+                 data-action="myjob"
+                 data-jobid="${safeText(j["Job ID"])}"
+                 style="${on ? 'outline:2px solid rgba(58,160,255,.55)' : ''}">
+              <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                  <div class="font-extrabold text-sm">${safeText(j["Job ID"])}</div>
+                  <div class="muted text-xs mt-1 truncate">${safeText(j["Unit"] || "-")}</div>
+                </div>
+                <span class="chip">${safeText(j["Status"] || "-")}</span>
+              </div>
+              <div class="mt-2 flex flex-wrap gap-2">
+                ${j["Negeri"] ? `<span class="chip"><i class="ri-map-pin-2-line"></i>${safeText(j["Negeri"])}</span>` : ``}
+                ${j["Daerah"] ? `<span class="chip"><i class="ri-compass-3-line"></i>${safeText(j["Daerah"])}</span>` : ``}
+              </div>
+            </div>
+          `;
+        }).join("");
+      }).withFailureHandler((err)=>{
+        EXEC_JOBS = [];
+        $("myJobs").innerHTML = `<div class="muted text-sm">Failed: ${safeText(String(err))}</div>`;
+      }).getJobsByInspectorName(name);
+    }
+
+    function setExecFocused(jobId){
+      myFocusedJobId = jobId || "";
+      if(!myFocusedJobId){
+        $("execChip").innerHTML = `<span class="dot"></span><span class="muted">No job selected</span>`;
+        $("execBody").innerHTML = `<div class="muted text-sm">No job selected yet.</div>`;
+        return;
+      }
+
+      $("execChip").innerHTML = `<span class="dot"></span><span>${safeText(myFocusedJobId)}</span>`;
+      const job = (EXEC_JOBS || []).find(j => String(j["Job ID"] || "") === String(myFocusedJobId)) || null;
+      const currentStatus = String((job && job["Status"]) || "").trim();
+      const currentNotes = String((job && job["reportNotes"]) || "").trim();
+      const noteValue = currentNotes || "Tarikh Pemeriksaan (DD/MM/YYYY):\nUlasan:";
+      const labSentCtp = toDateInputValue(job ? job["labSentCtp"] : "");
+      const labSentStride = toDateInputValue(job ? job["labSentStride"] : "");
+      const labReportReceived = toDateInputValue(job ? job["labReportReceived"] : "");
+      const reportResult = String((job && job["reportResult"]) || "").trim().toUpperCase();
+
+      $("execBody").innerHTML = `
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <div class="muted text-xs font-bold uppercase tracking-wider mb-2">Update Status</div>
+            <select id="execStatus" class="w-full px-3 py-2 rounded-xl glass2 outline-none">
+              <option value="">Select...</option>
+              <option value="Assigned" ${currentStatus === "Assigned" ? "selected" : ""}>Assigned</option>
+              <option value="In Progress" ${currentStatus === "In Progress" ? "selected" : ""}>In Progress</option>
+              <option value="With Issue" ${currentStatus === "With Issue" ? "selected" : ""}>With Issue</option>
+              <option value="Completed" ${currentStatus === "Completed" ? "selected" : ""}>Completed</option>
+              <option value="Cancelled" ${currentStatus === "Cancelled" ? "selected" : ""}>Cancelled</option>
+            </select>
+
+            <div class="muted text-xs font-bold uppercase tracking-wider mt-4 mb-2">
+              Report Notes
+              <span class="muted normal-case">(Tarikh Pemeriksaan: DD/MM/YYYY)</span>
+            </div>
+
+            <textarea id="execNote" class="w-full px-3 py-2 rounded-xl glass2 outline-none" rows="6"
+              placeholder="Contoh:
+Tarikh Pemeriksaan: 13/01/2026
+Ulasan:">${safeText(noteValue)}</textarea>
+
+            <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="glass2 p-3">
+                <div class="muted text-xs font-bold uppercase tracking-wider mb-2">Tarikh Hantar Sampel Ke Makmal CT&amp;P</div>
+                <input id="execLabSentCtp" type="date" class="w-full px-3 py-2 rounded-xl glass2 outline-none" value="${safeText(labSentCtp)}" />
+              </div>
+              <div class="glass2 p-3">
+                <div class="muted text-xs font-bold uppercase tracking-wider mb-2">Tarikh Hantar Sampel ke Makmal STRIDE</div>
+                <input id="execLabSentStride" type="date" class="w-full px-3 py-2 rounded-xl glass2 outline-none" value="${safeText(labSentStride)}" />
+              </div>
+              <div class="glass2 p-3">
+                <div class="muted text-xs font-bold uppercase tracking-wider mb-2">Tarikh Terima Laporan Makmal CT&amp;P/STRIDE</div>
+                <input id="execLabReportReceived" type="date" class="w-full px-3 py-2 rounded-xl glass2 outline-none" value="${safeText(labReportReceived)}" />
+              </div>
+              <div class="glass2 p-3">
+                <div class="muted text-xs font-bold uppercase tracking-wider mb-2">Report Result</div>
+                <select id="execReportResult" class="w-full px-3 py-2 rounded-xl glass2 outline-none">
+                  <option value="">Select...</option>
+                  <option value="ACCEPTED" ${reportResult === "ACCEPTED" ? "selected" : ""}>ACCEPTED</option>
+                  <option value="WARNED" ${reportResult === "WARNED" ? "selected" : ""}>WARNED</option>
+                  <option value="FORFEITED" ${reportResult === "FORFEITED" ? "selected" : ""}>FORFEITED</option>
+                  <option value="REJECTED" ${reportResult === "REJECTED" ? "selected" : ""}>REJECTED</option>
+                  <option value="REPLACEMENT" ${reportResult === "REPLACEMENT" ? "selected" : ""}>REPLACEMENT</option>
+                </select>
+              </div>
+            </div>
+
+            <button class="btn btn-ok mt-3 w-full justify-center" onclick="submitExecUpdate()">
+              <i class="ri-save-3-line"></i> Save Update
+            </button>
+          </div>
+
+          <div>
+            <div class="muted text-xs font-bold uppercase tracking-wider mb-2">Evidence Upload</div>
+
+            <div class="glass2 p-3">
+              <input id="execFile" type="file" class="w-full text-sm muted" />
+              <button class="btn btn-brand mt-3 w-full justify-center" onclick="submitEvidenceUpload()">
+                <i class="ri-upload-2-line"></i> Upload Evidence
+              </button>
+
+              <div id="execUploadMsg" class="mt-3 muted text-sm"></div>
+            </div>
+
+            <div class="mt-4">
+              <div class="muted text-xs font-bold uppercase tracking-wider mb-2">Uploaded (session memory)</div>
+              <div id="execEvList" class="space-y-2">
+                <div class="muted text-sm">No evidence uploaded yet.</div>
+              </div>
+              <div class="muted text-xs mt-2">Listing here is session memory only. Backend listing can be added later if you want.</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      renderExecEvidenceList();
+
+      setTimeout(() => {
+        const ta = $("execNote");
+        if (!ta) return;
+        if (String(ta.value || "").trim() !== "") return;
+        ta.value = "Tarikh Pemeriksaan (DD/MM/YYYY): \nUlasan: ";
+        ta.setSelectionRange(ta.value.length, ta.value.length);
+        ta.focus();
+      }, 0);
+    }
+
+    function submitExecUpdate(){
+      const name = String(CURRENT_USER || $("execInspector").value || "").trim();
+      const status = $("execStatus").value || "";
+      const note = $("execNote").value || "";
+      const extra = {};
+      const labSentCtp = String($("execLabSentCtp")?.value || "").trim();
+      const labSentStride = String($("execLabSentStride")?.value || "").trim();
+      const labReportReceived = String($("execLabReportReceived")?.value || "").trim();
+      const reportResult = String($("execReportResult")?.value || "").trim();
+
+      if(labSentCtp) extra.labSentCtp = labSentCtp;
+      if(labSentStride) extra.labSentStride = labSentStride;
+      if(labReportReceived) extra.labReportReceived = labReportReceived;
+      if(reportResult) extra.reportResult = reportResult;
+
+      if(!name || !myFocusedJobId){
+        showModal("Missing","",`<div class="muted text-sm">Select user and job first.</div>`,[{label:"Close", onClick: closeModal}]);
+        return;
+      }
+      if(!status){
+        showModal("Missing","",`<div class="muted text-sm">Select a status first.</div>`,[{label:"Close", onClick: closeModal}]);
+        return;
+      }
+
+      showModal("Saving...", myFocusedJobId, `<div class="muted text-sm">Submitting update...</div>`, []);
+
+      google.script.run.withSuccessHandler((res)=>{
+        closeModal();
+        showModal("Saved", myFocusedJobId, `<div class="muted text-sm">${safeText(String(res || "Updated"))}</div>`, [{label:"Close", onClick: closeModal}]);
+        loadMyJobs();
+        refreshAll();
+      }).withFailureHandler((err)=>{
+        closeModal();
+        showModal("Failed", myFocusedJobId, `<div class="muted text-sm">${safeText(String(err))}</div>`, [{label:"Close", onClick: closeModal}]);
+      }).updateJobStatusFromSidebar(myFocusedJobId, status, name, note, extra);
+    }
+
+    function submitEvidenceUpload(){
+      const file = $("execFile").files && $("execFile").files[0];
+      if(!myFocusedJobId){
+        showModal("No job","",`<div class="muted text-sm">Select a job first.</div>`,[{label:"Close", onClick: closeModal}]);
+        return;
+      }
+      if(!file){
+        showModal("No file","",`<div class="muted text-sm">Choose a file first.</div>`,[{label:"Close", onClick: closeModal}]);
+        return;
+      }
+
+      const maxMb = 8;
+      if(file.size > maxMb * 1024 * 1024){
+        showModal("File too large","",`<div class="muted text-sm">Keep uploads under ${maxMb}MB for stability.</div>`,[{label:"Close", onClick: closeModal}]);
+        return;
+      }
+
+      $("execUploadMsg").textContent = `Uploading ${file.name}...`;
+
+      const reader = new FileReader();
+      reader.onload = function(){
+        const base64 = String(reader.result).split(",")[1] || "";
+        google.script.run.withSuccessHandler((res)=>{
+          if(res && res.ok){
+            const arr = evidenceMem.get(myFocusedJobId) || [];
+            arr.unshift({ name: res.name || file.name, url: res.url || "" });
+            evidenceMem.set(myFocusedJobId, arr);
+
+            $("execUploadMsg").textContent = "Uploaded successfully.";
+            renderExecEvidenceList();
+
+            if(focusedJobId === myFocusedJobId) setFocusedJob(focusedJobId);
+          }else{
+            $("execUploadMsg").textContent = "Upload done but response looks odd.";
+          }
+        }).withFailureHandler((err)=>{
+          $("execUploadMsg").textContent = "Upload failed: " + String(err);
+        }).uploadEvidence(myFocusedJobId, file.name, file.type || "application/octet-stream", base64);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function renderExecEvidenceList(){
+      const box = $("execEvList");
+      if(!box) return;
+
+      const arr = evidenceMem.get(myFocusedJobId) || [];
+      if(!arr.length){
+        box.innerHTML = `<div class="muted text-sm">No evidence uploaded yet.</div>`;
+        return;
+      }
+      box.innerHTML = arr.map(x=>`
+        <a class="glass2 p-3 block hover:opacity-90" href="${x.url}" target="_blank" rel="noopener">
+          <div class="flex items-center justify-between gap-2">
+            <div class="min-w-0">
+              <div class="font-extrabold truncate">${safeText(x.name)}</div>
+              <div class="muted text-xs truncate">${safeText(x.url)}</div>
+            </div>
+            <i class="ri-external-link-line muted"></i>
+          </div>
+        </a>
+      `).join("");
+    }
+
+    /* MOVEMENT */
+    let movSelectedInspector = "";
+    let movSelectedJobIds = new Set();
+
+    function initMovementTab(){
+      movSelectedInspector = String(CURRENT_USER || "");
+      movSelectedJobIds = new Set();
+      $("movMsg").innerHTML = "";
+      $("movJobs").innerHTML = `<div class="muted text-sm">${movSelectedInspector ? "Loading jobs..." : "Pick a pemeriksa to load jobs."}</div>`;
+
+      if(movSelectedInspector){
+        $("movInspDD").innerHTML = `
+          <div class="chip">
+            <i class="ri-user-3-line"></i>
+            <span>${safeText(movSelectedInspector)}</span>
+          </div>
+        `;
+        loadMovementJobsForInspector(movSelectedInspector);
+      }else{
+        google.script.run.withSuccessHandler((list)=>{
+          const inspectors = Array.isArray(list) ? list : [];
+          makeDropdown("movInspDD", "Pemeriksa", inspectors, (val)=>{
+            movSelectedInspector = val || "";
+            movSelectedJobIds = new Set();
+            loadMovementJobsForInspector(movSelectedInspector);
+          });
+        }).withFailureHandler((e)=>{
+          $("movInspDD").innerHTML = `<div class="muted text-sm">${safeText(String(e))}</div>`;
+        }).getInspectorDropdown();
+      }
+
+      $("btnGenBTR").onclick = ()=>{
+        if(!movSelectedInspector){
+          setMovMsg("Sila pilih pemeriksa dulu.", true);
+          return;
+        }
+        const ids = Array.from(movSelectedJobIds);
+        if(!ids.length){
+          setMovMsg("Sila pilih sekurang-kurangnya 1 job.", true);
+          return;
+        }
+
+        setMovMsg("Generating semua dokumen (Google Docs)...", false);
+
+        google.script.run.withSuccessHandler((res)=>{
+          if(!res || !res.ok){
+            setMovMsg((res && res.error) ? safeText(res.error) : "Generate failed", true);
+            return;
+          }
+
+          const folderUrl = res.folderUrl || "";
+          const borangUrl = res.borangUrl || "";
+          const perintahUrl = res.perintahUrl || "";
+          const kenderaanUrl = res.kenderaanUrl || "";
+
+                    setMovMsg(
+            `Success: ${safeText(res.message || "Generated")}<br>
+             ${folderUrl ? `<a class="underline" href="${folderUrl}" target="_blank" rel="noopener">Folder</a><br>` : ``}
+             ${borangUrl ? `<a class="underline" href="${borangUrl}" target="_blank" rel="noopener">Borang Tugas Rasmi (Doc)</a><br>` : ``}
+             ${perintahUrl ? `<a class="underline" href="${perintahUrl}" target="_blank" rel="noopener">Perintah Pergerakan (Doc)</a><br>` : ``}
+             ${kenderaanUrl ? `<a class="underline" href="${kenderaanUrl}" target="_blank" rel="noopener">Permohonan Kenderaan (Doc)</a>` : ``}`,
+            false
+          );
+
+        }).withFailureHandler((e)=>{
+          setMovMsg(safeText(String(e)), true);
+        }).generateAllMovementDocs({
+          inspectorName: movSelectedInspector,
+          jobIds: ids
+        });
+      };
+    }
+
+    function loadMovementJobsForInspector(name){
+      const box = $("movJobs");
+      if(!name){
+        box.innerHTML = `<div class="muted text-sm">Pick a pemeriksa to load jobs.</div>`;
+        return;
+      }
+
+      box.innerHTML = `<div class="muted text-sm">Loading jobs...</div>`;
+
+      google.script.run.withSuccessHandler((jobs)=>{
+        movSelectedJobIds = new Set();
+        box.innerHTML = "";
+
+        const arr = Array.isArray(jobs) ? jobs : [];
+        if(!arr.length){
+          box.innerHTML = `<div class="muted text-sm">No active assigned jobs.</div>`;
+          return;
+        }
+
+        arr.forEach(j=>{
+          const id = j["Job ID"];
+          const unit = j["Unit"] || "-";
+          const negeri = j["Negeri"] || "";
+          const daerah = j["Daerah"] || "";
+
+          const card = document.createElement("div");
+          card.className = "glass2 p-3 cursor-pointer";
+          card.innerHTML = `
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <div class="font-extrabold">${safeText(id)}</div>
+                <div class="muted text-sm">${safeText(unit)}</div>
+                <div class="muted text-xs mt-1">${safeText(daerah)}${daerah && negeri ? ", " : ""}${safeText(negeri)}</div>
+              </div>
+              <div class="chip">Select</div>
+            </div>
+          `;
+
+          card.onclick = ()=>{
+            const chip = card.querySelector(".chip");
+            if(movSelectedJobIds.has(id)){
+              movSelectedJobIds.delete(id);
+              card.style.outline = "none";
+              chip.textContent = "Select";
+            } else {
+              movSelectedJobIds.add(id);
+              card.style.outline = "2px solid rgba(58,160,255,.70)";
+              chip.textContent = "Selected";
+            }
+          };
+
+          box.appendChild(card);
+        });
+
+      }).withFailureHandler((e)=>{
+        box.innerHTML = `<div class="muted text-sm">${safeText(String(e))}</div>`;
+      }).getJobsByInspectorName(name);
+    }
+
+    function setMovMsg(html, isErr){
+      const el = $("movMsg");
+      el.style.color = isErr ? "var(--bad)" : "var(--text)";
+      el.innerHTML = html;
+    }
+
+    /* REFERENCE */
+    let REF_ROWS = [];
+    let REF_MONTH = "";
+    let REF_SEARCH = "";
+
+    function initReferenceTab(){
+      $("refMsg").textContent = "Loading reference data...";
+      $("refBody").innerHTML = "";
+
+      const refSearchEl = $("refSearch");
+      if(refSearchEl){
+        refSearchEl.value = REF_SEARCH;
+        refSearchEl.oninput = ()=>{
+          REF_SEARCH = String(refSearchEl.value || "").trim().toLowerCase();
+          renderReferenceTable();
+        };
+      }
+
+      google.script.run.withSuccessHandler((rows)=>{
+        REF_ROWS = Array.isArray(rows) ? rows : [];
+
+        if(!REF_ROWS.length){
+          $("refMsg").textContent = "No reference data found (Permohonan + WDP).";
+          $("refMonth").innerHTML = `<option value="">No data</option>`;
+          return;
+        }
+
+        const monthKeys = [...new Set(REF_ROWS.map(r => r.monthKey).filter(Boolean))];
+        monthKeys.sort((a,b)=>{
+          if(a==="Unknown") return 1;
+          if(b==="Unknown") return -1;
+          return String(b).localeCompare(String(a));
+        });
+
+        if(!REF_MONTH || !monthKeys.includes(REF_MONTH)){
+          REF_MONTH = monthKeys[0] || "";
+        }
+
+        $("refMonth").innerHTML = monthKeys.map(k=>{
+          const label = monthKeyToLabel_(k);
+          const sel = (k === REF_MONTH) ? "selected" : "";
+          return `<option value="${safeText(k)}" ${sel}>${safeText(label)}</option>`;
+        }).join("");
+
+        $("refMonth").onchange = ()=>{
+          REF_MONTH = $("refMonth").value || "";
+          renderReferenceTable();
+        };
+
+        $("refMsg").textContent = "";
+        renderReferenceTable();
+
+      }).withFailureHandler((err)=>{
+        $("refMsg").textContent = "Load failed: " + String(err);
+      }).getReferenceData();
+    }
+
+    function renderReferenceTable(){
+      const body = $("refBody");
+      if(!body) return;
+
+      const q = String(REF_SEARCH || "").trim().toLowerCase();
+      const rows = (REF_ROWS || []).filter(r => {
+        if(!REF_MONTH) return true;
+        return String(r.monthKey || "") === String(REF_MONTH);
+      }).filter(r => {
+        if(!q) return true;
+        const hay = [
+          r.timestamp, r.unit, r.pemohon, r.telefon,
+          r.tarikhSurat, r.source, r.uploadUrl, r.monthKey
+        ].map(x => String(x || "").toLowerCase()).join(" ");
+        return hay.includes(q);
+      });
+
+      if(!rows.length){
+        body.innerHTML = `<tr><td class="py-3 muted" colspan="7">No rows for this filter.</td></tr>`;
+        return;
+      }
+
+      body.innerHTML = rows.map(r=>{
+        const ts = safeText(r.timestamp || "");
+        const unit = safeText(r.unit || "");
+        const surat = safeText(r.tarikhSurat || "");
+        const url = String(r.uploadUrl || "").trim();
+        const src = safeText(r.source || "");
+        const pemohon = safeText(r.pemohon || "");
+        const tel = safeText(r.telefon || "");
+
+        let linkHtml = `<span class="muted">No file</span>`;
+        if(url){
+          const looksPdf = url.toLowerCase().includes(".pdf") || url.toLowerCase().includes("pdf");
+          linkHtml = `
+            <a class="underline" href="${safeText(url)}" target="_blank" rel="noopener">
+              Open PDF
+            </a>
+            ${looksPdf ? `` : `<span class="muted text-xs ml-2">(not verified)</span>`}
+          `;
+        }
+
+        return `
+          <tr class="border-b" style="border-color: var(--line)">
+            <td class="py-3 pr-3">${ts}</td>
+            <td class="py-3 pr-3">${unit}</td>
+            <td class="py-2 pr-3">${pemohon}</td>
+            <td class="py-2 pr-3">${tel}</td>
+            <td class="py-3 pr-3">${surat}</td>
+            <td class="py-3 pr-3">${linkHtml}</td>
+            <td class="py-3 pr-3"><span class="chip">${src}</span></td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function monthKeyToLabel_(k){
+      if(!k || k === "Unknown") return "Unknown";
+      const parts = String(k).split("-");
+      if(parts.length !== 2) return k;
+      const y = parts[0];
+      const m = parts[1];
+      const dt = new Date(Number(y), Number(m)-1, 1);
+      if(isNaN(dt.getTime())) return k;
+      return dt.toLocaleString("en-GB", { month: "long", year: "numeric" });
+    }
+    /* AI COPILOT */
+    function aiFormatVisibleJobs_(){
+      return (SUP_VISIBLE_JOBS || []).map(j => ({
+        jobId: String(j.id || "").trim(),
+        unit: String(j.unit || "").trim(),
+        inspectionType: String(j.jenis || "").trim(),
+        state: String(j.negeri || "").trim(),
+        district: String(j.daerah || "").trim(),
+        zone: String(j.zon || "").trim(),
+        locations: [String(j.daerah || "").trim(), String(j.negeri || "").trim()].filter(Boolean),
+        startDate: String($("assignStart")?.value || "").trim(),
+        endDate: String($("assignEnd")?.value || "").trim(),
+        time: String($("assignTime")?.value || "").trim(),
+        notes: "",
+        assignedInspectors: [],
+        status: "Pending"
+      }));
+    }
+
+    function aiShowTextOutput(title, subtitle, text){
+      const body = `
+        <textarea id="aiOutputText" class="w-full px-3 py-2 rounded-xl glass2 outline-none" rows="14">${safeText(text || "")}</textarea>
+      `;
+      showModal(title, subtitle || "", body, [
+        { label:"Copy", className:"btn btn-brand", onClick: ()=>{ const t=$("aiOutputText"); if(t){ navigator.clipboard.writeText(t.value || ""); } } },
+        { label:"Close", className:"btn", onClick: closeModal }
+      ]);
+    }
+
+    function initAiCopilotAccess(){
+      const panel = $("aiCopilotPanel");
+      if(panel) panel.classList.add("hidden");
+      google.script.run.withSuccessHandler((ctx)=>{
+        AI_COPILOT_ALLOWED = !!(ctx && ctx.allowed);
+        const email = String((ctx && ctx.email) || "");
+        if(panel && AI_COPILOT_ALLOWED) panel.classList.remove("hidden");
+        if($("aiCopilotMsg")){
+          $("aiCopilotMsg").textContent = AI_COPILOT_ALLOWED
+            ? `Enabled for ${email || "authorized user"}.`
+            : "Hidden for non-allowlisted users.";
+        }
+      }).withFailureHandler((err)=>{
+        if($("aiCopilotMsg")) $("aiCopilotMsg").textContent = "AI Copilot unavailable: " + String(err);
+      }).aiCopilotContext();
+    }
+
+    function runAiClusterSuggestion(){
+      if(!AI_COPILOT_ALLOWED){
+        showModal("Access denied", "", `<div class="muted text-sm">AI Copilot is not enabled for this account.</div>`, [{label:"Close", onClick: closeModal}]);
+        return;
+      }
+      const jobs = aiFormatVisibleJobs_();
+      if(!jobs.length){
+        showModal("No jobs", "", `<div class="muted text-sm">No visible pending jobs to cluster.</div>`, [{label:"Close", onClick: closeModal}]);
+        return;
+      }
+      showModal("AI Clusters", "Processing...", `<div class="muted text-sm">Generating cluster suggestion...</div>`, []);
+      google.script.run.withSuccessHandler((res)=>{
+        const text = String((res && res.text) || "");
+        aiShowTextOutput("AI: Suggest Clusters", `${jobs.length} visible job(s)`, text);
+      }).withFailureHandler((err)=>{
+        showModal("AI cluster failed","",`<div class="muted text-sm">${safeText(String(err))}</div>`,[{label:"Close", onClick: closeModal}]);
+      }).aiSuggestClusters({
+        jobs: jobs,
+        filters: {
+          zone: String(fZon || ""),
+          state: String(fNegeri || ""),
+          query: String($("jobSearch")?.value || "")
+        }
+      });
+    }
+
+    function buildWhatsappPayloadFromCurrent(){
+      const selected = getSelectedJobsData();
+      const useCurrent = selected.length > 0;
+      const jobs = useCurrent ? selected : ((LAST_ASSIGN_CONTEXT && Array.isArray(LAST_ASSIGN_CONTEXT.jobs)) ? LAST_ASSIGN_CONTEXT.jobs : []);
+      if(!jobs.length) return null;
+
+      const startDate = useCurrent ? String($("assignStart")?.value || "") : String(LAST_ASSIGN_CONTEXT?.startDate || "");
+      const endDate = useCurrent ? String($("assignEnd")?.value || "") : String(LAST_ASSIGN_CONTEXT?.endDate || "");
+      const time24 = useCurrent ? String($("assignTime")?.value || "") : String(LAST_ASSIGN_CONTEXT?.time24 || "");
+      const insp1 = useCurrent ? String($("insp1")?.value || "") : String(LAST_ASSIGN_CONTEXT?.insp1 || "");
+      const insp2 = useCurrent ? String($("insp2")?.value || "") : String(LAST_ASSIGN_CONTEXT?.insp2 || "");
+
+      return {
+        jobIds: jobs.map(j => String(j.id || "")),
+        jobs: jobs.map(j => ({
+          jobId: String(j.id || ""),
+          unit: String(j.unit || ""),
+          inspectionType: String(j.jenis || ""),
+          state: String(j.negeri || ""),
+          district: String(j.daerah || ""),
+          zone: String(j.zon || ""),
+          locations: [String(j.unit || ""), [String(j.daerah||""), String(j.negeri||"")].filter(Boolean).join(", ")].filter(Boolean),
+          startDate: startDate,
+          endDate: endDate,
+          time: time24,
+          notes: "",
+          assignedInspectors: [insp1, insp2].filter(Boolean),
+          status: "Assigned"
+        })),
+        startDate: startDate,
+        endDate: endDate,
+        time24: time24,
+        assignedInspectors: [insp1, insp2].filter(Boolean)
+      };
+    }
+
+    function runAiWhatsappGenerator(){
+      if(!AI_COPILOT_ALLOWED){
+        showModal("Access denied", "", `<div class="muted text-sm">AI Copilot is not enabled for this account.</div>`, [{label:"Close", onClick: closeModal}]);
+        return;
+      }
+      const payload = buildWhatsappPayloadFromCurrent();
+      if(!payload){
+        showModal("No assignment context","",`<div class="muted text-sm">Select jobs (or complete an assignment) first.</div>`,[{label:"Close", onClick: closeModal}]);
+        return;
+      }
+      showModal("AI WhatsApp", "Generating...", `<div class="muted text-sm">Preparing WhatsApp text...</div>`, []);
+      google.script.run.withSuccessHandler((res)=>{
+        aiShowTextOutput("AI: WhatsApp Text", "Ready to copy", String((res && res.text) || ""));
+      }).withFailureHandler((err)=>{
+        showModal("AI WhatsApp failed","",`<div class="muted text-sm">${safeText(String(err))}</div>`,[{label:"Close", onClick: closeModal}]);
+      }).aiGenerateWhatsapp(payload);
+    }
+    /* EVENTS */
+    document.addEventListener("click", (e)=>{
+      const rosterSave = e.target.closest('[data-action="rosterStatusSave"]');
+if(rosterSave){
+  const name = rosterSave.getAttribute("data-name") || "";
+  if(!name) return;
+
+  const sel = document.querySelector(`[data-action="rosterStatusSelect"][data-name="${CSS.escape(name)}"]`);
+  const msg = $("rosterMsg-" + name);
+  const chip = $("rosterChip-" + name);
+
+  const status = sel ? (sel.value || "") : "";
+  if(!status){
+    if(msg) msg.textContent = "Status required.";
+    return;
+  }
+
+  if(msg) msg.textContent = "Saving...";
+  rosterSave.setAttribute("disabled","disabled");
+
+  google.script.run.withSuccessHandler((res)=>{
+    rosterSave.removeAttribute("disabled");
+    if(msg) msg.textContent = "Saved.";
+    if(chip) chip.textContent = status;
+    refreshAll(); // optional: keeps other stats fresh
+  }).withFailureHandler((err)=>{
+    rosterSave.removeAttribute("disabled");
+    if(msg) msg.textContent = "Save failed: " + String(err);
+  }).setInspectorStatus(name, status);
+
+  return;
+}
+
+      const tabBtn = e.target.closest("[data-tab]");
+      if(tabBtn){
+        setTab(tabBtn.getAttribute("data-tab"));
+        return;
+      }
+
+      /* Selection toggle via checkbox only */
+      const selToggle = e.target.closest('[data-action="toggleSel"]');
+      if(selToggle){
+        const jobId = selToggle.getAttribute("data-jobid") || "";
+        if(!jobId) return;
+
+        if(selToggle.checked) selectedJobIds.add(jobId);
+        else selectedJobIds.delete(jobId);
+
+        $("selCount").textContent = String(selectedJobIds.size);
+        syncAssignState();
+        return;
+      }
+
+      const myJob = e.target.closest('[data-action="myjob"]');
+      if(myJob){
+        const jobId = myJob.getAttribute("data-jobid") || "";
+        setExecFocused(jobId);
+        loadMyJobs();
+        return;
+      }
+
+    });
+
+    $("jobSearch").addEventListener("input", renderJobs);
+
+    if($("schGrid")){
+      $("schGrid").addEventListener("click", (e)=>{
+        const btn = e.target.closest("button[data-day]");
+        if(!btn) return;
+        const day = String(btn.getAttribute("data-day") || "");
+        if(!day) return;
+        SCH_SELECTED_DAY = day;
+        renderScheduleCalendar();
+      });
+    }
+    if($("schMonth")){
+      $("schMonth").addEventListener("change", ()=>{
+        SCH_MONTH_KEY = String($("schMonth").value || "");
+        SCH_SELECTED_DAY = "";
+        renderScheduleCalendar();
+      });
+    }
+    if($("schCurrentMonth")){
+      $("schCurrentMonth").addEventListener("click", ()=>{
+        SCH_MONTH_KEY = toMonthKey(new Date());
+        SCH_SELECTED_DAY = "";
+        loadCalendar(true);
+      });
+    }
+
+    $("btnTheme").addEventListener("click", toggleTheme);
+    $("btnPanduan").addEventListener("click", openPanduanPenggunaan);
+    if($("btnAiCopilotPage")) $("btnAiCopilotPage").addEventListener("click", ()=>{
+      setTab("supervisor");
+      const panel = $("aiCopilotPanel");
+      if(panel) panel.scrollIntoView({ behavior:"smooth", block:"center" });
+    });
+    $("btnAssign").addEventListener("click", assignSelected);
+    $("btnCheckConflicts").addEventListener("click", checkConflictsUI);
+    if($("btnAiCluster")) $("btnAiCluster").addEventListener("click", runAiClusterSuggestion);
+    if($("btnAiWhatsapp")) $("btnAiWhatsapp").addEventListener("click", runAiWhatsappGenerator);
+    $("btnToAssignStep").addEventListener("click", ()=>{
+      if(selectedJobIds.size === 0){
+        $("assignMsg").textContent = "Select at least 1 job before continuing.";
+        return;
+      }
+      setSupervisorStep(2);
+      syncAssignState();
+    });
+    $("btnBackToSelect").addEventListener("click", ()=> setSupervisorStep(1));
+    $("btnSwitchUser").addEventListener("click", ()=>{
+      const sel = $("identityUserSelect");
+      if(sel && CURRENT_USER) sel.value = CURRENT_USER;
+      openIdentityOverlay("");
+    });
+    $("identityContinue").addEventListener("click", ()=>{
+      const picked = String($("identityUserSelect").value || "").trim();
+      if(!picked){
+        const msg = $("identityMsg");
+        if(msg) msg.textContent = "Please select your name.";
+        return;
+      }
+      applyCurrentUser(picked, true);
+      closeIdentityOverlay();
+      refreshAll();
+    });
+
+    function clearSelectionAll(){
+      selectedJobIds.clear();
+      $("selCount").textContent = "0";
+      setSupervisorStep(1);
+      syncAssignState();
+      renderJobs();
+    }
+
+    $("btnClearSel").addEventListener("click", clearSelectionAll);
+    $("btnClearSel2").addEventListener("click", clearSelectionAll);
+
+    /* INIT */
+    loadTheme();
+    setTab("supervisor");
+    initAiCopilotAccess();
+    initUserIdentity();
+    refreshAll();
+  </script>
+</body>
+</html>
+
+

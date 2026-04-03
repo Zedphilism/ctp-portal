@@ -2451,38 +2451,46 @@
       }[c]));
     }
 
-    // ===== PHOTO LOOKUP MAP (Keeps your local assets, maps them to API names) =====
-    // Format: "EXACT NAME FROM SHEET": "path/to/photo.jpg"
+    // ===== PHOTO LOOKUP MAP =====
+    // Upload non-technical personnel photos into assets/inspectortwo as NON_1.jpeg ... NON_15.jpeg.
+    // Use the .jpeg extension exactly so the dashboard path matches your uploaded files.
+    // Missing files will fall back to the built-in image placeholder.
+    // Format: "EXACT NAME FROM SHEET": "path/to/photo.jpeg"
     const PHOTO_MAP = {
-      "NUR FADHILAH BINTI ZULKEPLI": "assets/inspectortwo/NON_1.jpeg",
-      "JAY AZRIN BIN CHE YAHAYA": "assets/inspectortwo/NON_2.jpeg",
-      "AMIR AFIZIE BIN DAUD": "assets/inspectortwo/NON_3.jpeg",
-      "SHAFEE BIN ISHAK": "assets/inspectortwo/NON_4.jpeg",
-      "MOHD AIZAT BIN AYOB": "assets/inspectortwo/NON_5.jpeg",
-      "MOHAMAD FAZWAN BIN ZAKARIA": "assets/inspectortwo/NON_6.jpeg",
-      "MUHAMMAD FAIZAL BIN BATALUMI": "assets/inspectortwo/NON_7.jpeg",
-      "AMIR SYAIFUDIN BIN ISMAIL": "assets/inspectortwo/NON_8.jpeg",
-      "MOHAMAD ZAIDI BIN ABDULLAH": "assets/inspectortwo/NON_9.jpeg",
-      "NAZIRUL HAFIZ BIN ABD SHUKOR": "assets/inspectortwo/NON_10.jpeg",
-      "MUHAMMAD IZZAT BIN ABU ZAHARIN": "assets/inspectortwo/NON_11.jpeg",
-      "MOHAMAD SHARUL IZAM BIN MOHD HAIZENMAN": "assets/inspectortwo/NON_12.jpeg"
+      "SHARIFAH ANNIE ADDILLAH BINTI SYED MOHAMAD HAZAM": "assets/inspectortwo/NON_1.jpeg",
+      "NURULAISYAH BINTI HAMDAN": "assets/inspectortwo/NON_2.jpeg",
+      "MEOR MUHAMMAD MURAD BIN MEOR BUSU": "assets/inspectortwo/NON_3.jpeg",
+      "MUHAMMAD RIDHWAN BIN AMIRUDIN": "assets/inspectortwo/NON_4.jpeg",
+      "AZZUWAN BIN RAJAK": "assets/inspectortwo/NON_5.jpeg",
+      "MOHAMAD KHAIRUL HALIMIN BIN RAHANI": "assets/inspectortwo/NON_6.jpeg",
+      "NORSHAHFEDI BIN NORDIN": "assets/inspectortwo/NON_7.jpeg",
+      "MOHD SYAIFUL IKHMAL BIN ZULKIFLI": "assets/inspectortwo/NON_8.jpeg",
+      "SHA JULIANA BINTI SARON": "assets/inspectortwo/NON_9.jpeg",
+      "NURSHEEMA MELISSA BINTI MAT KAMIS": "assets/inspectortwo/NON_10.jpeg",
+      "IZAHAM BIN ISHAK": "assets/inspectortwo/NON_11.jpeg",
+      "ASILA BINTI AHMAD": "assets/inspectortwo/NON_12.jpeg",
+      "SYARINAH BINTI SHARIFFUDDIN": "assets/inspectortwo/NON_13.jpeg",
+      "NOR SURIA BINTI ABDUL RAHMAN": "assets/inspectortwo/NON_14.jpeg",
+      "RAIDAH NAZIHAH BINTI MAHMUD": "assets/inspectortwo/NON_15.jpeg"
     };
 
     // Map full names to the short display format you requested
     const SHORT_NAMES = {
-      "MOHAMAD ZAIDI BIN ABDULLAH": "SSjn Zaidi",
-      "AMIR SYAIFUDIN BIN ISMAIL": "SSjn Amir Syaifudin",
-      "AMIR AFIZIE BIN DAUD": "SSjn Amir Afizie",
-      "MOHD AIZAT BIN AYOB": "SSjn Aizat",
-      "MOHAMAD SHARUL IZAM BIN MOHD HAIZENMAN": "SSjn Sharul",
-      "MOHAMAD FAZWAN BIN ZAKARIA": "SSjn Fazwan",
-      "MUHAMMAD FAIZAL BIN BATALUMI": "SSjn Faizal",
-      "JAY AZRIN BIN CHE YAHAYA": "SSjn Jay",
-      "NAZIRUL HAFIZ BIN ABD SHUKOR": "Sjn Nazirul",
-      "MUHAMMAD IZZAT BIN ABU ZAHARIN": "Sjn Izzat",
-      // Fallbacks for others found in data
-      "SHAFEE BIN ISHAK": "SSjn Shafee",
-      "NUR FADHILAH BINTI ZULKEPLI": "Kapt Fadhilah"
+      "SHARIFAH ANNIE ADDILLAH BINTI SYED MOHAMAD HAZAM": "Sharifah Annie",
+      "NURULAISYAH BINTI HAMDAN": "Nurulaisyah",
+      "MEOR MUHAMMAD MURAD BIN MEOR BUSU": "Meor Murad",
+      "MUHAMMAD RIDHWAN BIN AMIRUDIN": "Ridhwan",
+      "AZZUWAN BIN RAJAK": "Azzuwan",
+      "MOHAMAD KHAIRUL HALIMIN BIN RAHANI": "Khairul Halimin",
+      "NORSHAHFEDI BIN NORDIN": "Norshahfedi",
+      "MOHD SYAIFUL IKHMAL BIN ZULKIFLI": "Syaiful Ikhmal",
+      "SHA JULIANA BINTI SARON": "Sha Juliana",
+      "NURSHEEMA MELISSA BINTI MAT KAMIS": "Nursheema",
+      "IZAHAM BIN ISHAK": "Izaham",
+      "ASILA BINTI AHMAD": "Asila",
+      "SYARINAH BINTI SHARIFFUDDIN": "Syarinah",
+      "NOR SURIA BINTI ABDUL RAHMAN": "Nor Suria",
+      "RAIDAH NAZIHAH BINTI MAHMUD": "Raidah Naziha"
     };
 
     function setBadge(mode, text){
