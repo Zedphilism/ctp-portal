@@ -1142,7 +1142,142 @@
       body.normal-mode .hero h1{ font-size:22px; }
       body.normal-mode .hero h2{ font-size:14px; }
     }
+
+    /* ── Spline 3D Scene Card ─────────────────────────────── */
+    .spline-card{
+      position:relative;
+      overflow:hidden;
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      background:#000;
+      box-shadow:var(--shadow);
+      height:480px;
+      margin-bottom:18px;
+    }
+
+    @keyframes spotlightReveal{
+      0%  { opacity:0; transform:translate(-72%,-62%) skewX(12deg); }
+      100%{ opacity:1; transform:translate(-50%,-40%) skewX(12deg); }
+    }
+
+    .spline-spotlight{
+      animation:spotlightReveal 2s ease forwards;
+      pointer-events:none;
+      position:absolute;
+      z-index:1;
+      height:169%;
+      width:138%;
+      opacity:0;
+      top:-40px;
+      left:0;
+    }
+    @media(min-width:768px){
+      .spline-spotlight{ width:84%; left:60%; top:-20px; }
+    }
+
+    .spline-inner{
+      display:flex;
+      height:100%;
+    }
+
+    .spline-left{
+      flex:1;
+      padding:32px;
+      position:relative;
+      z-index:10;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+
+    .spline-right{
+      flex:1;
+      position:relative;
+    }
+
+    .spline-h1{
+      margin:0;
+      font-size:clamp(26px,4.5vw,46px);
+      font-weight:900;
+      background:linear-gradient(to bottom,#fafafa,#9a9a9a);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+      line-height:1.1;
+    }
+
+    .spline-p{
+      margin:16px 0 0;
+      font-size:14px;
+      color:rgba(212,212,212,.9);
+      max-width:400px;
+      line-height:1.75;
+    }
+
+    .spline-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 12px;
+      border-radius:999px;
+      border:1px solid rgba(34,197,94,.35);
+      background:rgba(34,197,94,.12);
+      color:rgba(134,239,172,.9);
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.9px;
+      text-transform:uppercase;
+      margin-bottom:14px;
+    }
+
+    .spline-badge::before{
+      content:"";
+      width:7px;
+      height:7px;
+      border-radius:50%;
+      background:#22c55e;
+      box-shadow:0 0 10px rgba(34,197,94,.7);
+      animation:pulseDot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulseDot{
+      0%,100%{ box-shadow:0 0 8px rgba(34,197,94,.6); }
+      50%{ box-shadow:0 0 18px rgba(34,197,94,.95); }
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      .spline-badge::before{ animation:none; }
+    }
+
+    .spline-loader{
+      width:100%;
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .spline-spin{
+      width:34px;
+      height:34px;
+      border:3px solid rgba(255,255,255,.12);
+      border-top-color:rgba(255,255,255,.55);
+      border-radius:50%;
+      animation:spinLoader .75s linear infinite;
+    }
+
+    @keyframes spinLoader{ to{ transform:rotate(360deg); } }
+
+    @media(max-width:640px){ .spline-right{ display:none; } }
+
+    /* ── Reduced motion: pause all decorative animations ─── */
+    @media(prefers-reduced-motion:reduce){
+      .ticker-track{ animation:none; }
+      .spline-spotlight{ animation:none; opacity:.18; }
+      .spline-spin{ animation:none; border-top-color:rgba(255,255,255,.4); }
+    }
   </style>
+  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.89/build/spline-viewer.js"></script>
 </head>
 <body class="theme-light">
   <audio id="rayaAudio" src="assets/aidilfitri.mp3" preload="auto" loop playsinline></audio>
@@ -1235,6 +1370,53 @@
         </div>
       </div>
     </section>
+
+    <!-- ── Spline 3D Interactive Section ──────────────────── -->
+    <section class="spline-card" aria-label="Portal CT&P 3D Interaktif">
+      <!-- Aceternity spotlight -->
+      <svg class="spline-spotlight" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3787 2842" fill="none" aria-hidden="true">
+        <g filter="url(#sFilter)">
+          <ellipse cx="1924.71" cy="273.501" rx="1924.71" ry="273.501"
+            transform="matrix(-0.822377 -0.568943 -0.568943 0.822377 3631.88 2291.09)"
+            fill="white" fill-opacity="0.21"/>
+        </g>
+        <defs>
+          <filter id="sFilter" x="0.860352" y="0.838989" width="3785.16" height="2840.26"
+            filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+            <feGaussianBlur stdDeviation="151" result="effect1_fg"/>
+          </filter>
+        </defs>
+      </svg>
+
+      <div class="spline-inner">
+        <div class="spline-left">
+          <span class="spline-badge">Interaktif 3D</span>
+          <h2 class="spline-h1">Portal CT&amp;P<br>Interaktif 3D</h2>
+          <p class="spline-p">Cawangan Teknik &amp; Pemeriksaan — sistem pengurusan pemeriksaan, penjadualan dan pemantauan aset ATM yang responsif dan interaktif.</p>
+        </div>
+        <div class="spline-right">
+          <div class="spline-loader" id="idxSplineLoader">
+            <span class="spline-spin"></span>
+          </div>
+          <spline-viewer
+            id="idxSplineViewer"
+            url="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
+            style="width:100%;height:100%;display:none;">
+          </spline-viewer>
+        </div>
+      </div>
+    </section>
+    <script>
+      (function(){
+        var v=document.getElementById('idxSplineViewer'),l=document.getElementById('idxSplineLoader');
+        if(!v||!l)return;
+        function show(){ l.style.display='none'; v.style.display='block'; }
+        v.addEventListener('load',show);
+        setTimeout(function(){ if(l.style.display!=='none') show(); },9000);
+      })();
+    </script>
 
     <section class="grid grid-single" aria-label="Akses Sel Teknikal">
       <article class="card tech">
