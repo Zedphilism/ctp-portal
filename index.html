@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Portal CT&P | Sel Teknikal</title>
   <meta name="description" content="Halaman akses Sel Teknikal di bawah Cawangan Teknik & Pemeriksaan." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root{
       --bg:#072b1d;
@@ -769,6 +772,21 @@
       min-height:52px;
     }
 
+    .scope-note a{
+      color:var(--text);
+      font-weight:900;
+      text-decoration:none;
+      border-bottom:1px dotted currentColor;
+    }
+
+    .scope-note a:hover{
+      border-bottom-style:solid;
+    }
+
+    body.theme-light .scope-note a{
+      color:#0f6f3d;
+    }
+
     .cta{
       margin-top:auto;
       display:flex;
@@ -1255,7 +1273,7 @@
           <a href="https://docs.google.com/forms/d/e/1FAIpQLSc9qcmCLyHy-t-GIo3cz1k9aoTrzk5F-ComMLORNVfxovIJ3A/viewform?usp=sharing&ouid=116666925478114456158" target="_blank" rel="noopener">Borang: Pemeriksaan Penerimaan Akhir (FAT)</a>
         </div>
 
-        <div class="scope-note">Maklumat pemisahan skop lebih terperinci, SOP, dan sempadan kuasa: <strong>[ISI OLEH PENTADBIR]</strong></div>
+        <div class="scope-note">Maklumat pemisahan skop lebih terperinci, SOP, dan sempadan kuasa: <a href="carta.html"><strong>Buka carta interaktif Sel Teknikal</strong></a></div>
 
         <div class="cta">
           <button class="btn-liquid" data-cell="teknikal" data-target="dashboard.html"><span>Masuk Sel Teknikal</span></button>

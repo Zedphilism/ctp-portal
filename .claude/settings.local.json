@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 C:/Users/user/.claude/skills/ui-ux-pro-max/scripts/search.py \"government military inspection portal dashboard dark\" --design-system -p \"CT&P Portal\")",
+      "Bash(python C:/Users/user/.claude/skills/ui-ux-pro-max/scripts/search.py \"government military inspection portal dashboard dark\" --design-system -p \"CT&P Portal\")",
+      "Bash(py:*)",
+      "Read(//c/Users/user/.claude/skills/ui-ux-pro-max/**)",
+      "Bash(python scripts/search.py \"government portal SaaS dashboard technical inspection professional dark elegant\" --design-system -p \"CT&P Portal\" -f markdown)",
+      "Bash(where python:*)"
+    ]
+  }
+}

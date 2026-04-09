@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ms">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Carta Alir Sel Teknikal | CT&amp;P</title>
+  <meta name="description" content="Workflow interaktif Sel Teknikal CT&P untuk FAT, Mewujudkan Dokumen dan Bekalan Teknikal." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root{--bg:#072b1d;--panel:#0c3a28;--panel2:#0a3222;--soft:rgba(255,255,255,.04);--text:#f5fff6;--muted:#bfd8c6;--line:rgba(224,255,232,.14);--shadow:0 24px 70px rgba(0,0,0,.32);--tech:#1ba05a;--gold:#d7a447;}
+    body.theme-light{--bg:#f5fbf1;--panel:#fff;--panel2:#edf7eb;--soft:rgba(20,79,49,.045);--text:#153625;--muted:#5b7665;--line:rgba(18,79,48,.12);--shadow:0 20px 52px rgba(16,63,38,.12);--tech:#148b4f;--gold:#bf8a2d;}
+    *{box-sizing:border-box} html,body{height:100%} body{margin:0;font-family:"Inter",system-ui,sans-serif;color:var(--text);background:radial-gradient(920px 560px at 18% 8%,rgba(50,161,92,.18),transparent 60%),radial-gradient(860px 540px at 82% 18%,rgba(215,164,71,.16),transparent 52%),var(--bg);}
+    body::before{content:"";position:fixed;inset:-40px;pointer-events:none;background:radial-gradient(closest-side at 50% 42%,rgba(0,0,0,0) 55%,rgba(0,0,0,.24) 100%)} body.theme-light::before{background:radial-gradient(closest-side at 50% 45%,rgba(255,255,255,0) 62%,rgba(20,64,39,.08) 100%)}
+    a{color:inherit}
+    .theme-fab{position:fixed;top:18px;left:18px;z-index:30}.theme-switch{border:0;padding:0;background:transparent;cursor:pointer;line-height:0}.theme-track{position:relative;width:86px;height:40px;border-radius:999px;display:block;overflow:hidden;border:1px solid rgba(255,255,255,.12);background:linear-gradient(165deg,#7d848e,#4c525d);box-shadow:inset 0 2px 2px rgba(255,255,255,.14),inset 0 -6px 12px rgba(0,0,0,.35),0 7px 14px rgba(0,0,0,.25)}.theme-track:before{content:"";position:absolute;inset:3px;border-radius:999px;background:linear-gradient(180deg,#757d88,#5a616d);z-index:1}.theme-thumb{position:absolute;top:4px;left:4px;width:37px;height:32px;border-radius:999px;z-index:2;background:linear-gradient(180deg,#8b929d,#5c6470);box-shadow:inset 0 1px 1px rgba(255,255,255,.25),0 4px 8px rgba(0,0,0,.3);transition:left .28s ease}.theme-icon{position:absolute;top:50%;transform:translateY(-50%);width:16px;height:16px;color:rgba(255,255,255,.5);z-index:3}.theme-icon svg{width:100%;height:100%;fill:currentColor}.theme-icon-sun{left:12px}.theme-icon-moon{right:12px}body.theme-light .theme-thumb{left:4px}body.theme-dark .theme-thumb{left:45px}body.theme-light .theme-icon-sun{color:#fff}body.theme-dark .theme-icon-moon{color:#e7fff0}.theme-switch:focus-visible .theme-track{outline:2px solid var(--tech);outline-offset:2px}
+    .wrap{position:relative;z-index:1;width:min(1220px,calc(100% - 28px));margin:0 auto;padding:86px 0 42px}
+    .card,.panel,.aside,.detail,.docs{border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));box-shadow:var(--shadow);backdrop-filter:blur(12px);border-radius:24px}
+    .hero{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);gap:18px;padding:26px}
+    .brand{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px}.logos{display:flex;gap:10px}.logos img{width:46px;height:46px;object-fit:contain;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.05);padding:7px}.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;border:1px solid rgba(215,164,71,.28);background:rgba(215,164,71,.16);font-size:12px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+    h1,h2,h3{margin:0;font-family:"Space Grotesk","Inter",sans-serif} h1{font-size:clamp(2rem,3vw,3.15rem);line-height:1.02;max-width:12ch} .hero p,.side p,.sub,.detail p,.docs p,.source p{color:var(--muted);line-height:1.7}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 16px;border-radius:999px;border:1px solid var(--line);background:var(--soft);text-decoration:none;font-weight:800;transition:.18s ease}.btn:hover{transform:translateY(-1px);border-color:rgba(27,160,90,.34);background:rgba(27,160,90,.12)}.btn.primary{background:linear-gradient(135deg,rgba(27,160,90,.22),rgba(215,164,71,.18));border-color:rgba(27,160,90,.34)}
+    .side{display:grid;gap:14px}.mini{padding:16px;border:1px solid var(--line);border-radius:18px;background:var(--soft)}.mini h3{font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}.mini ul{margin:0;padding:0;list-style:none;display:grid;gap:10px}.mini li{display:flex;gap:10px;align-items:flex-start;line-height:1.55}.mini li:before{content:"";width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--tech));margin-top:7px;flex:0 0 auto}
+    .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:18px}.stat{padding:16px}.k{font-size:11px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}.v{margin-top:10px;font-size:2rem;font-weight:800}
+    .shell{display:grid;grid-template-columns:minmax(280px,320px) minmax(0,1fr);gap:18px;margin-top:18px}
+    .aside{padding:16px;display:grid;gap:12px;align-content:start}.nav-title{font-size:12px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}.wf-btn{width:100%;text-align:left;border:1px solid var(--line);background:rgba(255,255,255,.02);color:var(--text);padding:16px;border-radius:18px;cursor:pointer;transition:.18s ease}.wf-btn:hover{transform:translateY(-1px);border-color:rgba(27,160,90,.32);background:rgba(27,160,90,.08)}.wf-btn.active{border-color:rgba(27,160,90,.4);background:linear-gradient(180deg,rgba(27,160,90,.16),rgba(27,160,90,.06));box-shadow:0 0 0 1px rgba(27,160,90,.16) inset}.wf-btn strong{display:block;font-size:16px;line-height:1.35}.wf-btn span{display:block;margin-top:7px;font-size:13px;color:var(--muted);line-height:1.55}.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.chip{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+    .panel{padding:18px;display:grid;gap:16px}.head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}.note{padding:12px 14px;border:1px dashed rgba(215,164,71,.35);border-radius:16px;background:rgba(215,164,71,.08);font-size:13px;line-height:1.6}
+    .stage{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);gap:16px}.map{position:relative;padding:18px 14px 8px 22px;border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.02)}.map:before{content:"";position:absolute;top:26px;bottom:26px;left:30px;width:2px;background:linear-gradient(180deg,rgba(27,160,90,.44),rgba(215,164,71,.26))}.steps{display:grid;gap:10px;position:relative;z-index:1}
+    .step{width:100%;text-align:left;border:1px solid var(--line);background:var(--soft);color:var(--text);border-radius:18px;padding:14px 14px 14px 54px;cursor:pointer;position:relative;transition:.18s ease}.step:hover{transform:translateY(-1px);border-color:rgba(27,160,90,.34);background:rgba(27,160,90,.08)}.step.active{border-color:rgba(27,160,90,.44);box-shadow:0 0 0 1px rgba(27,160,90,.18) inset;background:linear-gradient(180deg,rgba(27,160,90,.15),rgba(27,160,90,.05))}.n{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:900;border:1px solid rgba(27,160,90,.36);background:rgba(27,160,90,.18);box-shadow:0 0 0 6px rgba(255,255,255,.03)}.step.decision .n{border-radius:10px;background:rgba(215,164,71,.22);border-color:rgba(215,164,71,.4);transform:translateY(-50%) rotate(45deg)}.step.decision .n span{transform:rotate(-45deg)}.step strong{display:block;font-size:15px;line-height:1.4}.phase{display:block;margin-top:5px;color:var(--muted);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+    .detail,.docs,.source{padding:18px}.top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}.detail p{margin:0}.tags{display:flex;gap:8px;flex-wrap:wrap}.tag{display:inline-flex;align-items:center;gap:8px;padding:8px 11px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.03);font-size:12px;font-weight:700}.tag:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--tech)}
+    .decision-box{padding:14px;border-radius:18px;border:1px solid rgba(215,164,71,.34);background:rgba(215,164,71,.08);display:grid;gap:10px}.decision-box h3{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.branches{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.branch{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.03);padding:12px}.branch strong{display:block;margin-bottom:6px;font-size:13px}.branch span{display:block;color:var(--muted);line-height:1.55;font-size:13px}
+    .docs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.doc{border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.03);padding:13px 14px;display:grid;gap:8px}.doc strong{font-size:14px}.source{margin-top:18px}
+    @media (max-width:1080px){.hero,.shell,.stage{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width:720px){.wrap{width:min(100% - 20px,1220px);padding-top:80px}.hero,.panel,.aside,.detail,.docs,.source{padding:16px}.stats{grid-template-columns:1fr}.branches{grid-template-columns:1fr}.map{padding:14px 12px 8px 18px}.map:before{left:24px}.step{padding-left:48px}.n{left:10px}.theme-fab{top:12px;left:12px}}
+  </style>
+</head>
+<body class="theme-light">
+  <div class="theme-fab">
+    <button class="theme-switch" id="themeSwitch" type="button" aria-label="Toggle light and dark theme" title="Switch theme">
+      <span class="theme-track">
+        <span class="theme-thumb"></span>
+        <span class="theme-icon theme-icon-sun" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0-5a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1zm10-6a1 1 0 0 1-1 1h-2a1 1 0 1 1 0-2h2a1 1 0 0 1 1 1zM7 12a1 1 0 0 1-1 1H4a1 1 0 1 1 0-2h2a1 1 0 0 1 1 1zm11.07-6.66a1 1 0 0 1 0 1.42l-1.41 1.41a1 1 0 1 1-1.42-1.41l1.42-1.42a1 1 0 0 1 1.41 0zM8.76 15.24a1 1 0 0 1 0 1.41l-1.42 1.42a1 1 0 0 1-1.41-1.42l1.41-1.41a1 1 0 0 1 1.42 0zm0-8.48a1 1 0 0 1-1.42 0L5.93 5.34a1 1 0 0 1 1.41-1.41l1.42 1.41a1 1 0 0 1 0 1.42zm8.49 8.48 1.41 1.41a1 1 0 1 1-1.41 1.42l-1.42-1.42a1 1 0 1 1 1.42-1.41z"/></svg></span>
+        <span class="theme-icon theme-icon-moon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.71 14.29A9 9 0 0 1 9.71 3.29a1 1 0 0 0-1.24-1.24A11 11 0 1 0 22 15.53a1 1 0 0 0-1.29-1.24z"/></svg></span>
+      </span>
+    </button>
+  </div>
+  <main class="wrap">
+    <section class="card hero">
+      <div>
+        <div class="brand">
+          <div class="logos" aria-hidden="true"><img src="assets/icon1.png" alt="" /><img src="assets/icon2.png" alt="" /></div>
+          <span class="eyebrow">Sel Teknikal &middot; SOP Interaktif</span>
+        </div>
+        <h1>Carta Alir Pemeriksaan Sel Teknikal</h1>
+        <p>Rujukan web ini menukar kandungan workflow dalam PDF SOP kepada aliran interaktif untuk FAT, Mewujudkan Dokumen dan Bekalan Teknikal. Klik setiap langkah untuk lihat tindakan, gerbang keputusan dan dokumen output.</p>
+        <div class="actions">
+          <a class="btn" href="index.html">Kembali ke Portal</a>
+          <a class="btn primary" href="dashboard.html">Buka Dashboard Sel Teknikal</a>
+        </div>
+      </div>
+      <div class="side">
+        <div class="mini">
+          <h3>Workflow Dalam PDF</h3>
+          <ul>
+            <li>FAT (Final Acceptance Test)</li>
+            <li>Mewujudkan Dokumen</li>
+            <li>Bekalan Teknikal</li>
+          </ul>
+        </div>
+        <div class="mini">
+          <h3>Nota</h3>
+          <p>Teks langkah telah dinormalkan daripada carta PDF asal untuk bacaan web. Gerbang Ya / Tidak selepas semakan PP1 / PPP / KC dipaparkan sebagai decision gate interaktif.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats">
+      <div class="card stat"><div class="k">Workflow</div><div class="v" id="wfCount">3</div><div class="sub">Tiga aliran utama dalam PDF.</div></div>
+      <div class="card stat"><div class="k">Langkah</div><div class="v" id="stepCount">30</div><div class="sub">Sepuluh langkah bagi setiap aliran.</div></div>
+      <div class="card stat"><div class="k">Decision Gate</div><div class="v" id="gateCount">3</div><div class="sub">Semakan sebelum pelaksanaan diteruskan.</div></div>
+      <div class="card stat"><div class="k">Dokumen Output</div><div class="v" id="docCount">10</div><div class="sub">Laporan dan borang yang disebut dalam carta.</div></div>
+    </section>
+
+    <section class="shell">
+      <aside class="aside">
+        <div class="nav-title">Pilih Workflow</div>
+        <div id="nav"></div>
+      </aside>
+      <div class="panel">
+        <div class="head">
+          <div>
+            <h2 id="title"></h2>
+            <p id="summary"></p>
+          </div>
+          <div class="meta" id="chips"></div>
+        </div>
+        <div class="note" id="note"></div>
+        <div class="stage">
+          <div class="map"><div class="steps" id="steps"></div></div>
+          <aside class="detail" id="detail"></aside>
+        </div>
+        <section class="docs">
+          <h3>Dokumen Keluaran</h3>
+          <p id="docsIntro"></p>
+          <div class="docs-grid" id="docs"></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="card source">
+      <h3>Asas Rujukan</h3>
+      <p>Halaman ini dibina daripada kandungan workflow dalam fail SOP Pemeriksaan &amp; Carta Alir Sel Teknikal yang anda berikan. Ia direka untuk memudahkan semakan aliran di web, bukan menggantikan dokumen rasmi dalaman.</p>
+    </section>
+  </main>
+  <script>
+    const THEME_KEY = "ctp_theme", themeSwitch = document.getElementById("themeSwitch");
+    function normalizeTheme(theme){return theme === "light" || theme === "lightB" ? "light" : "dark";}
+    function applyTheme(theme){const mode = normalizeTheme(theme); document.body.classList.toggle("theme-light", mode === "light"); document.body.classList.toggle("theme-dark", mode === "dark"); if(themeSwitch) themeSwitch.setAttribute("aria-pressed", mode === "dark" ? "true" : "false");}
+    (function initTheme(){let stored = ""; try{stored = localStorage.getItem(THEME_KEY) || "";}catch(e){} applyTheme(stored || "light"); if(themeSwitch) themeSwitch.addEventListener("click",()=>{const next = document.body.classList.contains("theme-dark") ? "light" : "dark"; applyTheme(next); try{localStorage.setItem(THEME_KEY,next);}catch(e){}});})();
+
+    const DATA = {
+      fat: {short:"FAT",title:"Carta Alir Pemeriksaan Teknikal bagi FAT (Final Acceptance Test)",summary:"Permohonan FAT diterima, disemak, dipersedia, dilaksanakan di premis atau pasukan dan ditutup melalui laporan pemeriksaan FAT.",note:"Carta asal menunjukkan semakan PP1 / PPP / KC sebagai gerbang Ya / Tidak sebelum pelaksanaan FAT diteruskan.",docs:[["Laporan FAT","Laporan pemeriksaan penerimaan akhir yang disediakan selepas taklimat hasil."]],steps:[
+        {no:1,phase:"Permulaan",title:"Terima dan semak permohonan FAT",body:"Permohonan Final Acceptance Test diterima, disemak dan diselaraskan mengikut arahan pentadbiran awal."},
+        {no:2,phase:"Permulaan",title:"Lantik pemeriksa tanggungjawab",body:"Pegawai bertanggungjawab melantik pemeriksa yang akan mengendalikan aliran FAT."},
+        {no:3,phase:"Persediaan",title:"Rujuk kontrak, spesifikasi dan contoh pengeluaran",body:"Pemeriksa membuat rujukan kepada dokumen kontrak, spesifikasi dan contoh pengeluaran sekiranya ada."},
+        {no:4,phase:"Persediaan",title:"Selaras dengan pasukan atau premis",body:"Penyelarasan dibuat bersama pasukan atau premis supaya pemeriksaan boleh dilaksanakan mengikut susunan yang dipersetujui."},
+        {no:5,phase:"Persediaan",title:"Isi borang dan buku permohonan tugas luar stesen",body:"Dokumen tugasan luar stesen dilengkapkan sebelum pemeriksa bergerak ke lokasi."},
+        {no:6,phase:"Semakan",decision:true,title:"Lapor kepada PP1 dan sahkan arahan semasa",body:"Pemeriksa melapor kepada PP1. Semakan PP1 / PPP / KC menjadi gerbang keputusan sebelum aliran diteruskan.",yes:"Teruskan ke langkah 7 untuk pelaksanaan FAT.",noText:"Tunggu arahan semula atau pembetulan sebelum pemeriksaan diteruskan."},
+        {no:7,phase:"Pelaksanaan",title:"Lapor diri di pasukan atau premis",body:"Pemeriksa hadir dan melapor diri di lokasi yang telah diselaraskan."},
+        {no:8,phase:"Pelaksanaan",title:"Laksanakan pemeriksaan FAT",body:"Pemeriksaan Final Acceptance Test dilaksanakan berdasarkan rujukan kontrak, spesifikasi dan keperluan teknikal."},
+        {no:9,phase:"Pelaporan",title:"Taklimat dan bentang hasil kepada PP1",body:"Hasil pemeriksaan dirumuskan dan dibentangkan kepada PP1 untuk tindakan seterusnya."},
+        {no:10,phase:"Pelaporan",title:"Sediakan laporan pemeriksaan FAT",body:"Langkah penutup ialah penyediaan laporan pemeriksaan FAT sebagai dokumen rasmi rekod."}
+      ]},
+      dokumen: {short:"Dokumen",title:"Carta Alir Pemeriksaan Mewujudkan Dokumen",summary:"Aliran ini memfokuskan penerimaan permohonan, persediaan rujukan, pelaksanaan di pasukan dan penyediaan dokumen BAT yang dinyatakan dalam carta asal.",note:"Senarai BAT pada penghujung workflow diambil terus daripada carta PDF asal untuk memudahkan padanan semula dengan proses manual.",docs:[["BAT M 430","Dokumen keluaran yang disenaraikan dalam carta mewujudkan dokumen."],["BAT M 430A","Dokumen keluaran sokongan bagi aliran mewujudkan dokumen."],["BAT M 112","Dokumen rujukan / output selepas pemeriksaan."],["BAT M 113","Dokumen rujukan / output selepas pemeriksaan."],["BAT M 488","Dokumen tambahan yang turut disebut pada penghujung workflow."]],steps:[
+        {no:1,phase:"Permulaan",title:"Terima dan semak surat permohonan pasukan",body:"Permohonan mewujudkan dokumen diterima dan disemak berdasarkan surat permohonan pasukan."},
+        {no:2,phase:"Permulaan",title:"Lantik pemeriksa tanggungjawab",body:"Pemeriksa ditugaskan untuk mengambil aliran mewujudkan dokumen ini."},
+        {no:3,phase:"Persediaan",title:"Rujuk kontrak, spesifikasi dan contoh pengeluaran",body:"Pemeriksa menyediakan rujukan teknikal utama sebelum kerja dimulakan."},
+        {no:4,phase:"Persediaan",title:"Selaras dengan pasukan",body:"Penyelarasan bersama pasukan dibuat untuk memastikan data dan maklumat tapak mencukupi."},
+        {no:5,phase:"Persediaan",title:"Isi borang dan buku permohonan tugas luar stesen",body:"Keperluan pentadbiran tugasan luar stesen dilengkapkan sebelum pemeriksa bergerak."},
+        {no:6,phase:"Semakan",decision:true,title:"Lapor kepada PP1 dan sahkan arahan semasa",body:"Carta asal menunjukkan semakan PP1 / PPP / KC sebagai gerbang keputusan sebelum pemeriksa meneruskan kerja di lapangan.",yes:"Teruskan ke langkah 7 untuk kerja mewujudkan dokumen.",noText:"Tindakan ditangguh sehingga arahan atau pembetulan baharu diterima."},
+        {no:7,phase:"Pelaksanaan",title:"Lapor diri kepada pasukan",body:"Pemeriksa hadir di pasukan dan membuat pengesahan kehadiran sebelum kerja teknikal dimulakan."},
+        {no:8,phase:"Pelaksanaan",title:"Laksanakan pemeriksaan dan mewujudkan dokumen",body:"Kerja teknikal dilaksanakan untuk mengumpul maklumat dan mewujudkan dokumen yang diperlukan."},
+        {no:9,phase:"Pelaporan",title:"Taklimat dan bentang hasil kepada PP1",body:"Dapatan pemeriksaan serta status mewujudkan dokumen dimaklumkan kepada PP1."},
+        {no:10,phase:"Pelaporan",title:"Sediakan laporan dan dokumen BAT",body:"Laporan pemeriksaan disiapkan bersama dokumen BAT yang disenaraikan dalam carta asal."}
+      ]},
+      bekalan: {short:"Bekalan",title:"Carta Alir Pemeriksaan Bekalan Teknikal",summary:"Aliran ini meliputi permohonan daripada depoh atau pasukan, persediaan tugas luar stesen, pelaksanaan pemeriksaan bekalan teknikal dan penyediaan laporan akhir.",note:"Nama dokumen output dikekalkan seperti dalam carta PDF supaya lebih mudah disemak semula dengan proses manual sedia ada.",docs:[["BAT L 97","Dokumen output yang disenaraikan dalam carta bekalan teknikal."],["AM 75 E","Borang sokongan yang disebut pada penghujung workflow."],["BAT L 5","Dokumen tambahan yang perlu disediakan bersama laporan."],["DO","Rujukan output akhir yang disebut dalam carta PDF."]],steps:[
+        {no:1,phase:"Permulaan",title:"Terima dan semak kawat atau surat permohonan depoh / pasukan",body:"Aliran bermula apabila permohonan pemeriksaan bekalan teknikal diterima daripada depoh atau pasukan."},
+        {no:2,phase:"Permulaan",title:"Lantik pemeriksa tanggungjawab",body:"Pemeriksa dilantik untuk mengambil tindakan terhadap permohonan bekalan teknikal."},
+        {no:3,phase:"Persediaan",title:"Rujuk kontrak, spesifikasi dan contoh pengeluaran",body:"Pemeriksa menyediakan rujukan teknikal yang diperlukan sebelum pemeriksaan dibuat."},
+        {no:4,phase:"Persediaan",title:"Selaras dengan depoh",body:"Penyelarasan dibuat dengan pihak depoh supaya akses, item dan jadual pemeriksaan jelas."},
+        {no:5,phase:"Persediaan",title:"Isi borang dan buku permohonan tugas luar stesen",body:"Dokumen perjalanan dan pentadbiran tugasan luar stesen disiapkan terlebih dahulu."},
+        {no:6,phase:"Semakan",decision:true,title:"Lapor kepada PP1 dan sahkan arahan semasa",body:"Selepas laporan dibuat, carta asal menunjukkan gerbang Ya / Tidak di bawah semakan PP1 / PPP / KC sebelum pemeriksaan diteruskan.",yes:"Teruskan ke langkah 7 untuk pemeriksaan bekalan teknikal.",noText:"Tindakan dihentikan sementara sehingga arahan baharu diberi."},
+        {no:7,phase:"Pelaksanaan",title:"Lapor diri kepada depoh atau pasukan",body:"Pemeriksa hadir ke lokasi dan membuat pengesahan kehadiran dengan pihak berkaitan."},
+        {no:8,phase:"Pelaksanaan",title:"Laksanakan pemeriksaan bekalan teknikal",body:"Pemeriksaan dibuat terhadap bekalan teknikal mengikut skop dan rujukan spesifikasi."},
+        {no:9,phase:"Pelaporan",title:"Taklimat dan bentang hasil kepada PP1",body:"Dapatan pemeriksaan dijelaskan kepada PP1 untuk tindakan lanjutan."},
+        {no:10,phase:"Pelaporan",title:"Sediakan laporan pemeriksaan dan dokumen sokongan",body:"Laporan akhir serta dokumen BAT L 97, AM 75 E, BAT L 5 dan DO disediakan sebagai penutup aliran."}
+      ]}
+    };
+
+    const nav = document.getElementById("nav"), titleEl = document.getElementById("title"), summaryEl = document.getElementById("summary"), noteEl = document.getElementById("note"), chips = document.getElementById("chips"), stepsEl = document.getElementById("steps"), detail = document.getElementById("detail"), docs = document.getElementById("docs"), docsIntro = document.getElementById("docsIntro");
+    let wfId = "fat", stepNo = 1;
+    const list = Object.entries(DATA).map(([id, value]) => ({ id, ...value }));
+    document.getElementById("wfCount").textContent = list.length;
+    document.getElementById("stepCount").textContent = list.reduce((n,w)=>n+w.steps.length,0);
+    document.getElementById("gateCount").textContent = list.reduce((n,w)=>n+w.steps.filter(s=>s.decision).length,0);
+    document.getElementById("docCount").textContent = list.reduce((n,w)=>n+w.docs.length,0);
+
+    function renderNav(){
+      nav.innerHTML = list.map(w=>`<button class="wf-btn${w.id===wfId?' active':''}" data-wf="${w.id}"><strong>${w.title}</strong><span>${w.summary}</span><div class="meta"><span class="chip">${w.steps.length} langkah</span><span class="chip">${w.docs.length} output</span></div></button>`).join("");
+      nav.querySelectorAll("[data-wf]").forEach(b=>b.addEventListener("click",()=>{wfId=b.dataset.wf;stepNo=1;renderNav();render();}));
+    }
+
+    function render(){
+      const wf = DATA[wfId], step = wf.steps.find(s=>s.no===stepNo) || wf.steps[0];
+      titleEl.textContent = wf.title; summaryEl.textContent = wf.summary; noteEl.textContent = wf.note;
+      chips.innerHTML = [...new Set(wf.steps.map(s=>s.phase))].map(x=>`<span class="chip">${x}</span>`).join("");
+      stepsEl.innerHTML = wf.steps.map(s=>`<button class="step${s.no===step.no?' active':''}${s.decision?' decision':''}" data-step="${s.no}"><span class="n">${s.decision?`<span>${s.no}</span>`:s.no}</span><strong>${s.title}</strong><span class="phase">${s.phase}</span></button>`).join("");
+      stepsEl.querySelectorAll("[data-step]").forEach(b=>b.addEventListener("click",()=>{stepNo=Number(b.dataset.step);render();}));
+      detail.innerHTML = `<div class="top"><span class="chip">Langkah ${step.no}</span><span class="chip">${step.phase}</span></div><h3>${step.title}</h3><p>${step.body}</p><div class="tags"><span class="tag">Workflow: ${wf.short}</span><span class="tag">Jenis: ${step.decision?'Decision Gate':'Tindakan'}</span>${step.no===10?`<span class="tag">Output: ${wf.docs.map(d=>d[0]).join(", ")}</span>`:""}</div>${step.decision?`<div class="decision-box"><h3>Gerbang Keputusan</h3><div class="branches"><div class="branch"><strong>Jika Ya</strong><span>${step.yes}</span></div><div class="branch"><strong>Jika Tidak</strong><span>${step.noText || 'Kembali untuk semakan semula.'}</span></div></div></div>`:""}`;
+      docsIntro.textContent = `Output rujukan untuk workflow ${wf.short}.`;
+      docs.innerHTML = wf.docs.map(d=>`<div class="doc"><strong>${d[0]}</strong><span>${d[1]}</span></div>`).join("");
+    }
+    renderNav(); render();
+  </script>
+</body>
+</html>
