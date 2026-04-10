@@ -133,3 +133,75 @@
 #ctp-theme-badge {
   font-family: 'Lato', system-ui, sans-serif !important;
 }
+
+/* ─── Forest Silhouette (index.html only) ────────────────────────────────── */
+#hutan-forest {
+  display: none;
+}
+
+[data-theme="hutan"] #hutan-forest {
+  display: block;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 52vh;
+  min-height: 280px;
+  max-height: 520px;
+  pointer-events: none;
+  z-index: 0;
+  animation: hutan-forest-rise 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Light mode: show lighter silhouettes (not pitch black) */
+[data-theme="hutan"] body.theme-light #hutan-forest {
+  opacity: 0.38;
+  filter: brightness(1.8) sepia(0.2);
+}
+
+/* Entry animation — forest rises up from the bottom */
+@keyframes hutan-forest-rise {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Subtle slow parallax sway on the nearest tree layer (layer 4) */
+[data-theme="hutan"] #hutan-forest svg path:nth-child(6) {
+  transform-origin: bottom center;
+  animation: hutan-sway 18s ease-in-out infinite;
+}
+
+[data-theme="hutan"] #hutan-forest svg path:nth-child(7) {
+  transform-origin: bottom center;
+  animation: hutan-sway 22s ease-in-out infinite reverse;
+}
+
+@keyframes hutan-sway {
+  0%, 100% { transform: translateX(0); }
+  33%       { transform: translateX(-4px); }
+  66%       { transform: translateX(4px); }
+}
+
+/* Push page content above the forest */
+[data-theme="hutan"] .wrap,
+[data-theme="hutan"] main {
+  padding-bottom: calc(52vh + 20px) !important;
+}
+
+/* On small screens, reduce forest height */
+@media (max-width: 640px) {
+  [data-theme="hutan"] #hutan-forest {
+    height: 35vh;
+    min-height: 180px;
+  }
+  [data-theme="hutan"] .wrap,
+  [data-theme="hutan"] main {
+    padding-bottom: calc(35vh + 20px) !important;
+  }
+}
