@@ -1,0 +1,193 @@
+/**
+ * CTP Portal — Theme D: Batu Putih (White Stone)
+ * ─────────────────────────────────────────────────────
+ * Week rotation: 3 (ISO week % 4 === 3)
+ * Identity : Architectural precision. Limestone white, slate grey, arctic blue.
+ *            Maximum clarity — data speaks, chrome disappears.
+ * Fonts    : Inter only (300–900 weight range — weight IS the hierarchy)
+ * Palette  : Stone white #f7f9fb · Slate #0f172a · Arctic cyan #0891b2
+ * Effects  : Grid line texture · Bold geometric borders · Clean shadows only
+ *            No glow. No blur. No noise. Silence is the aesthetic.
+ */
+
+/* ─── Fonts: Weight Hierarchy ────────────────────────────────────────────── */
+[data-theme="batu"] body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 400;
+  font-feature-settings: "cv02","cv03","cv04","cv11";
+  -webkit-font-smoothing: antialiased;
+}
+
+[data-theme="batu"] h1 {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  font-feature-settings: "ss01","cv02";
+}
+[data-theme="batu"] h2 {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+[data-theme="batu"] h3 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+[data-theme="batu"] h4, [data-theme="batu"] h5, [data-theme="batu"] h6 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* ─── Atmosphere: Minimal + Structured ───────────────────────────────────── */
+[data-theme="batu"] body {
+  background:
+    radial-gradient(800px 600px at 0% 0%, rgba(8, 145, 178, 0.04) 0%, transparent 60%),
+    radial-gradient(600px 500px at 100% 100%, rgba(14, 116, 144, 0.03) 0%, transparent 60%),
+    var(--bg) !important;
+}
+
+/* Architectural grid line texture */
+[data-theme="batu"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 1;
+  background-image:
+    linear-gradient(rgba(15,23,42,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15,23,42,0.025) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Light mode override: white + light grid */
+[data-theme="batu"] body.theme-light {
+  background: var(--bg) !important;
+}
+
+/* ─── No decorative vignette in batu ────────────────────────────────────── */
+[data-theme="batu"] body::before {
+  display: none !important;
+}
+
+/* ─── Bold Border System ─────────────────────────────────────────────────── */
+[data-theme="batu"] [class*="panel"],
+[data-theme="batu"] [class*="card"],
+[data-theme="batu"] [class*="modal"],
+[data-theme="batu"] [class*="drawer"],
+[data-theme="batu"] [class*="box"] {
+  border: 1.5px solid rgba(15, 23, 42, 0.1) !important;
+  box-shadow: 0 1px 3px rgba(15,23,42,0.06), 0 4px 12px rgba(15,23,42,0.04) !important;
+  border-radius: 10px !important;
+}
+
+/* ─── Strict Button Geometry ─────────────────────────────────────────────── */
+[data-theme="batu"] button,
+[data-theme="batu"] .btn,
+[data-theme="batu"] a[class*="btn"] {
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+  transition: background-color 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease !important;
+}
+
+[data-theme="batu"] button:hover {
+  box-shadow: 0 0 0 2px rgba(8, 145, 178, 0.25), 0 2px 8px rgba(8,145,178,0.12) !important;
+  transform: none !important;
+}
+
+/* ─── Input: Clean Borders ───────────────────────────────────────────────── */
+[data-theme="batu"] input,
+[data-theme="batu"] select,
+[data-theme="batu"] textarea {
+  border-radius: 8px !important;
+  border: 1.5px solid rgba(15, 23, 42, 0.12) !important;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease !important;
+}
+
+[data-theme="batu"] input:focus,
+[data-theme="batu"] select:focus,
+[data-theme="batu"] textarea:focus {
+  border-color: rgba(8, 145, 178, 0.6) !important;
+  box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.12) !important;
+  outline: none !important;
+}
+
+/* ─── Focus Rings ────────────────────────────────────────────────────────── */
+[data-theme="batu"] *:focus-visible {
+  outline: 2px solid rgba(8, 145, 178, 0.6) !important;
+  outline-offset: 2px;
+  box-shadow: none !important;
+}
+
+/* ─── Table / List Lines ─────────────────────────────────────────────────── */
+[data-theme="batu"] hr,
+[data-theme="batu"] [class*="divider"],
+[data-theme="batu"] td,
+[data-theme="batu"] th {
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+/* ─── Navigation: Strong top border ─────────────────────────────────────── */
+[data-theme="batu"] header,
+[data-theme="batu"] nav {
+  border-bottom: 1.5px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: none !important;
+}
+
+/* ─── Scrollbar: Thin Architectural ─────────────────────────────────────── */
+[data-theme="batu"] ::-webkit-scrollbar { width: 5px; height: 5px; }
+[data-theme="batu"] ::-webkit-scrollbar-track { background: rgba(241,245,249,1); }
+[data-theme="batu"] ::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.15);
+  border-radius: 2px;
+}
+[data-theme="batu"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(8, 145, 178, 0.4);
+}
+
+/* ─── Selection ──────────────────────────────────────────────────────────── */
+[data-theme="batu"] ::selection {
+  background: rgba(8, 145, 178, 0.18);
+  color: #0f172a;
+}
+
+/* ─── Badge Typography ───────────────────────────────────────────────────── */
+[data-theme="batu"] [class*="badge"],
+[data-theme="batu"] [class*="status"] {
+  font-weight: 700 !important;
+  letter-spacing: 0.03em !important;
+  font-size: 0.72em !important;
+  border-radius: 4px !important;
+}
+
+/* ─── Bold Cyan Accent on Key Metrics ────────────────────────────────────── */
+[data-theme="batu"] [class*="stat-value"],
+[data-theme="batu"] [class*="metric"],
+[data-theme="batu"] [class*="count"] {
+  color: var(--tech) !important;
+  font-weight: 800 !important;
+}
+
+/* ─── Hover: Bold Color Shift (no glow, no lift) ────────────────────────── */
+[data-theme="batu"] a:hover {
+  color: var(--tech) !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
+}
+
+/* ─── Subtle Cyan Accent Line ─────────────────────────────────────────────── */
+[data-theme="batu"] [class*="active"],
+[data-theme="batu"] [aria-current="page"] {
+  border-left: 3px solid var(--tech) !important;
+}
+
+/* ─── Theme Badge ────────────────────────────────────────────────────────── */
+#ctp-theme-badge {
+  border-radius: 8px !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-weight: 700 !important;
+  border: 1.5px solid rgba(15,23,42,0.12) !important;
+  box-shadow: 0 1px 4px rgba(15,23,42,0.08), 0 4px 12px rgba(15,23,42,0.05) !important;
+  letter-spacing: -0.01em !important;
+  color: var(--muted) !important;
+}

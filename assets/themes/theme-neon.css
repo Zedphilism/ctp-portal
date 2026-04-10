@@ -1,0 +1,201 @@
+/**
+ * CTP Portal — Theme B: Neon Archipelago
+ * ─────────────────────────────────────────────────────
+ * Week rotation: 1 (ISO week % 4 === 1)
+ * Identity : Rain-slick midnight city. Electric archipelago of light and data.
+ * Fonts    : Fira Code (headings) + Fira Sans (body)
+ * Palette  : Abyss navy #000814 · Neon cyan #00f5ff · Signal purple #a855f7
+ * Effects  : Scanlines · CRT corners · Neon glow text · Terminal pulse · Glitch keyframes
+ */
+
+/* ─── Fonts ──────────────────────────────────────────────────────────────── */
+[data-theme="neon"] body {
+  font-family: 'Fira Sans', system-ui, sans-serif;
+}
+
+[data-theme="neon"] h1,
+[data-theme="neon"] h2,
+[data-theme="neon"] h3,
+[data-theme="neon"] h4,
+[data-theme="neon"] h5,
+[data-theme="neon"] h6 {
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-shadow: 0 0 20px rgba(0, 245, 255, 0.35), 0 0 40px rgba(0, 245, 255, 0.15);
+}
+
+/* ─── Atmosphere ─────────────────────────────────────────────────────────── */
+[data-theme="neon"] body {
+  background:
+    radial-gradient(700px 500px at 20% 15%, rgba(0, 100, 200, 0.22) 0%, transparent 60%),
+    radial-gradient(500px 400px at 80% 75%, rgba(123, 0, 255, 0.18) 0%, transparent 55%),
+    radial-gradient(300px 200px at 50% 50%, rgba(0, 245, 255, 0.04) 0%, transparent 50%),
+    var(--bg) !important;
+}
+
+/* Scanlines overlay */
+[data-theme="neon"] body::before {
+  content: "" !important;
+  position: fixed !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 245, 255, 0.018) 2px,
+    rgba(0, 245, 255, 0.018) 4px
+  ) !important;
+  animation: neon-scan 8s linear infinite !important;
+}
+
+@keyframes neon-scan {
+  0%   { background-position: 0 0; }
+  100% { background-position: 0 -80px; }
+}
+
+/* Grain / static texture */
+[data-theme="neon"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.025;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(0,245,255,.1) 0px, rgba(0,245,255,.1) 1px, transparent 1px, transparent 4px),
+    repeating-linear-gradient(90deg, rgba(168,85,247,.06) 0px, rgba(168,85,247,.06) 1px, transparent 1px, transparent 8px);
+  mix-blend-mode: screen;
+}
+
+/* Light mode atmosphere */
+[data-theme="neon"] body.theme-light {
+  background:
+    radial-gradient(600px 400px at 20% 15%, rgba(0, 130, 200, 0.07) 0%, transparent 60%),
+    radial-gradient(400px 300px at 80% 75%, rgba(100, 30, 220, 0.06) 0%, transparent 55%),
+    var(--bg) !important;
+}
+[data-theme="neon"] body.theme-light::before { opacity: 0 !important; }
+[data-theme="neon"] body.theme-light h1,
+[data-theme="neon"] body.theme-light h2,
+[data-theme="neon"] body.theme-light h3 {
+  text-shadow: 0 0 16px rgba(0,130,200,0.2), 0 0 32px rgba(0,130,200,0.08) !important;
+}
+
+/* ─── CRT Corner Vignette ────────────────────────────────────────────────── */
+[data-theme="neon"] html::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(ellipse at 50% 50%, transparent 65%, rgba(0,0,10,0.55) 100%);
+}
+
+/* ─── Nav & Header ───────────────────────────────────────────────────────── */
+[data-theme="neon"] header,
+[data-theme="neon"] nav,
+[data-theme="neon"] [class*="header"],
+[data-theme="neon"] [class*="nav"] {
+  border-bottom: 1px solid rgba(0, 245, 255, 0.1) !important;
+  box-shadow: 0 1px 0 rgba(0, 245, 255, 0.05);
+}
+
+/* ─── Buttons ────────────────────────────────────────────────────────────── */
+[data-theme="neon"] button,
+[data-theme="neon"] .btn,
+[data-theme="neon"] a[class*="btn"] {
+  border-radius: 4px !important;
+  transition: all 0.18s ease !important;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.8em;
+}
+
+[data-theme="neon"] button:hover {
+  box-shadow: 0 0 0 1px rgba(0, 245, 255, 0.4), 0 0 16px rgba(0, 245, 255, 0.2) !important;
+  text-shadow: 0 0 8px rgba(0, 245, 255, 0.5);
+}
+
+/* ─── Neon Border Glow on Inputs ─────────────────────────────────────────── */
+[data-theme="neon"] input,
+[data-theme="neon"] select,
+[data-theme="neon"] textarea {
+  border-radius: 4px !important;
+  transition: box-shadow 0.18s ease !important;
+}
+
+[data-theme="neon"] input:focus,
+[data-theme="neon"] select:focus,
+[data-theme="neon"] textarea:focus {
+  box-shadow: 0 0 0 1px rgba(0, 245, 255, 0.5), 0 0 12px rgba(0, 245, 255, 0.15) !important;
+  outline: none !important;
+}
+
+/* ─── Focus Rings ────────────────────────────────────────────────────────── */
+[data-theme="neon"] *:focus-visible {
+  outline: 1px solid rgba(0, 245, 255, 0.7) !important;
+  outline-offset: 2px;
+  box-shadow: 0 0 10px rgba(0, 245, 255, 0.2) !important;
+}
+
+/* ─── Status Badge Glow ──────────────────────────────────────────────────── */
+[data-theme="neon"] [class*="badge"],
+[data-theme="neon"] [class*="status"] {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.72em;
+}
+
+/* ─── Glitch Animation (available for hover targets) ─────────────────────── */
+@keyframes neon-glitch {
+  0%   { transform: translate(0); clip-path: none; }
+  20%  { transform: translate(-2px, 1px); clip-path: polygon(0 0,100% 0,100% 30%,0 30%); }
+  40%  { transform: translate(2px, -1px); clip-path: polygon(0 40%,100% 40%,100% 60%,0 60%); }
+  60%  { transform: translate(-1px, 0); clip-path: polygon(0 70%,100% 70%,100% 100%,0 100%); }
+  80%  { transform: translate(1px, 1px); }
+  100% { transform: translate(0); clip-path: none; }
+}
+
+@keyframes neon-pulse {
+  0%, 100% { text-shadow: 0 0 10px rgba(0,245,255,0.4), 0 0 20px rgba(0,245,255,0.2); }
+  50%       { text-shadow: 0 0 20px rgba(0,245,255,0.7), 0 0 40px rgba(0,245,255,0.3); }
+}
+
+[data-theme="neon"] h1 { animation: neon-pulse 4s ease-in-out infinite; }
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────────── */
+[data-theme="neon"] ::-webkit-scrollbar { width: 4px; height: 4px; }
+[data-theme="neon"] ::-webkit-scrollbar-track { background: #000814; }
+[data-theme="neon"] ::-webkit-scrollbar-thumb {
+  background: rgba(0, 245, 255, 0.3);
+  border-radius: 2px;
+}
+[data-theme="neon"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 245, 255, 0.55);
+}
+
+/* ─── Selection ──────────────────────────────────────────────────────────── */
+[data-theme="neon"] ::selection {
+  background: rgba(0, 245, 255, 0.2);
+  color: #cff4ff;
+  text-shadow: 0 0 8px rgba(0, 245, 255, 0.6);
+}
+
+/* ─── Separator Lines ────────────────────────────────────────────────────── */
+[data-theme="neon"] hr,
+[data-theme="neon"] [class*="divider"] {
+  border-color: rgba(0, 245, 255, 0.08) !important;
+  box-shadow: 0 0 8px rgba(0, 245, 255, 0.05);
+}
+
+/* ─── Theme Badge ────────────────────────────────────────────────────────── */
+#ctp-theme-badge {
+  border-radius: 4px !important;
+  font-family: 'Fira Code', monospace !important;
+  border-color: rgba(0, 245, 255, 0.2) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+}

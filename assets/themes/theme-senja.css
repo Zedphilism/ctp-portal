@@ -1,0 +1,183 @@
+/**
+ * CTP Portal — Theme C: Senja Emas (Golden Dusk)
+ * ─────────────────────────────────────────────────────
+ * Week rotation: 2 (ISO week % 4 === 2)
+ * Identity : The last light before dark — molten amber, deep ochre, liquid warmth.
+ * Fonts    : Playfair Display (headings, italic accents) + Inter (body)
+ * Palette  : Mahogany dusk #0f0700 · Amber sun #f59e0b · Warm gold #fbbf24
+ * Effects  : Amber radial sunset · Liquid glass panels · Golden shimmer · Warm vignette
+ */
+
+/* ─── Fonts ──────────────────────────────────────────────────────────────── */
+[data-theme="senja"] body {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+[data-theme="senja"] h1,
+[data-theme="senja"] h2,
+[data-theme="senja"] h3,
+[data-theme="senja"] h4,
+[data-theme="senja"] h5,
+[data-theme="senja"] h6 {
+  font-family: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+[data-theme="senja"] h1 { font-style: italic; }
+[data-theme="senja"] h2 { font-style: normal; }
+
+/* ─── Atmosphere: Sunset Gradient ───────────────────────────────────────── */
+[data-theme="senja"] body {
+  background:
+    radial-gradient(900px 550px at 5% 0%,   rgba(200, 80, 0, 0.45) 0%, transparent 55%),
+    radial-gradient(700px 500px at 95% 100%, rgba(120, 40, 0, 0.55) 0%, transparent 60%),
+    radial-gradient(500px 350px at 50% 35%,  rgba(245, 158, 11, 0.08) 0%, transparent 55%),
+    var(--bg) !important;
+}
+
+/* Warm grain texture */
+[data-theme="senja"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.045;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(245,158,11,.1) 0px, rgba(245,158,11,.1) 1px, transparent 1px, transparent 4px),
+    repeating-linear-gradient(45deg, rgba(251,191,36,.06) 0px, rgba(251,191,36,.06) 1px, transparent 1px, transparent 10px);
+  mix-blend-mode: overlay;
+}
+
+/* Warm vignette */
+[data-theme="senja"] body::before {
+  content: "" !important;
+  position: fixed !important;
+  inset: -20px !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  background: radial-gradient(ellipse at 50% 40%, transparent 50%, rgba(20,5,0,0.35) 100%) !important;
+  animation: senja-breathe 10s ease-in-out infinite !important;
+}
+
+@keyframes senja-breathe {
+  0%, 100% { opacity: 0.9; }
+  50%       { opacity: 1; }
+}
+
+/* Light mode sunset */
+[data-theme="senja"] body.theme-light {
+  background:
+    radial-gradient(700px 450px at 10% 5%,   rgba(230, 120, 0, 0.08) 0%, transparent 55%),
+    radial-gradient(600px 400px at 92% 95%,  rgba(180, 80, 0, 0.07) 0%, transparent 55%),
+    var(--bg) !important;
+}
+[data-theme="senja"] body.theme-light::before {
+  background: radial-gradient(ellipse at 50% 45%, rgba(255,255,255,0) 60%, rgba(150,80,0,0.06) 100%) !important;
+  animation: none !important;
+}
+
+/* ─── Headings: Golden Glow ──────────────────────────────────────────────── */
+[data-theme="senja"] h1,
+[data-theme="senja"] h2 {
+  text-shadow: 0 2px 20px rgba(245, 158, 11, 0.2);
+}
+
+@keyframes senja-shimmer {
+  0%, 100% { text-shadow: 0 2px 20px rgba(245,158,11,0.2); }
+  50%       { text-shadow: 0 2px 30px rgba(251,191,36,0.35), 0 0 50px rgba(245,158,11,0.15); }
+}
+
+[data-theme="senja"] h1 { animation: senja-shimmer 6s ease-in-out infinite; }
+
+/* ─── Liquid Glass Panel Effect ──────────────────────────────────────────── */
+[data-theme="senja"] [class*="panel"],
+[data-theme="senja"] [class*="card"],
+[data-theme="senja"] [class*="modal"],
+[data-theme="senja"] [class*="drawer"] {
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 180, 60, 0.05) 0%,
+    rgba(255, 120, 0, 0.02) 50%,
+    rgba(180, 80, 0, 0.04) 100%
+  ) !important;
+  border: 1px solid rgba(245, 158, 11, 0.12) !important;
+}
+
+/* ─── Buttons ────────────────────────────────────────────────────────────── */
+[data-theme="senja"] button,
+[data-theme="senja"] .btn {
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  border-radius: 20px !important;
+}
+
+[data-theme="senja"] button:hover {
+  box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.35), 0 6px 24px rgba(245, 158, 11, 0.2) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* ─── Inputs: Warm Focus ─────────────────────────────────────────────────── */
+[data-theme="senja"] input:focus,
+[data-theme="senja"] select:focus,
+[data-theme="senja"] textarea:focus {
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.35), 0 4px 16px rgba(245, 158, 11, 0.12) !important;
+  outline: none !important;
+}
+
+/* ─── Focus Rings ────────────────────────────────────────────────────────── */
+[data-theme="senja"] *:focus-visible {
+  outline: 2px solid rgba(245, 158, 11, 0.6) !important;
+  outline-offset: 2px;
+}
+
+/* ─── Separator Gradient ─────────────────────────────────────────────────── */
+[data-theme="senja"] hr,
+[data-theme="senja"] [class*="divider"] {
+  border: none !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(245,158,11,0.25), transparent) !important;
+}
+
+/* ─── Amber Shimmer Keyframe (available for custom use) ──────────────────── */
+@keyframes senja-gold-pulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
+  50%       { box-shadow: 0 0 25px rgba(251, 191, 36, 0.45); }
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────────── */
+[data-theme="senja"] ::-webkit-scrollbar { width: 6px; height: 6px; }
+[data-theme="senja"] ::-webkit-scrollbar-track { background: rgba(15, 7, 0, 0.8); }
+[data-theme="senja"] ::-webkit-scrollbar-thumb {
+  background: rgba(245, 158, 11, 0.3);
+  border-radius: 3px;
+}
+[data-theme="senja"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 158, 11, 0.55);
+}
+
+/* ─── Selection ──────────────────────────────────────────────────────────── */
+[data-theme="senja"] ::selection {
+  background: rgba(245, 158, 11, 0.25);
+  color: #fff8ec;
+}
+
+/* ─── Nav / Header ───────────────────────────────────────────────────────── */
+[data-theme="senja"] header,
+[data-theme="senja"] nav {
+  border-bottom-color: rgba(245, 158, 11, 0.1) !important;
+}
+
+/* ─── Link Hover Warmth ──────────────────────────────────────────────────── */
+[data-theme="senja"] a:hover {
+  text-shadow: 0 0 10px rgba(245, 158, 11, 0.35);
+}
+
+/* ─── Theme Badge ────────────────────────────────────────────────────────── */
+#ctp-theme-badge {
+  border-radius: 999px !important;
+  font-family: 'Playfair Display', serif !important;
+  border-color: rgba(245, 158, 11, 0.2) !important;
+  font-style: italic !important;
+  letter-spacing: 0.01em !important;
+}

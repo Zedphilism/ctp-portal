@@ -1,0 +1,135 @@
+/**
+ * CTP Portal — Theme A: Hutan Digital (Digital Forest)
+ * ─────────────────────────────────────────────────────
+ * Week rotation: 0 (ISO week % 4 === 0)
+ * Identity : Deep Malaysian rainforest. Dark organic canopy with emerald bioluminescence.
+ * Fonts    : EB Garamond (headings) + Lato (body)
+ * Palette  : Forest black #030f07 · Jade #00e87a · Amber gold #f0b429
+ * Effects  : Breathing radial glow · Jade panel shimmer · Botanical grain texture
+ */
+
+/* ─── Fonts ──────────────────────────────────────────────────────────────── */
+[data-theme="hutan"] body {
+  font-family: 'Lato', system-ui, -apple-system, sans-serif;
+}
+
+[data-theme="hutan"] h1,
+[data-theme="hutan"] h2,
+[data-theme="hutan"] h3,
+[data-theme="hutan"] h4,
+[data-theme="hutan"] h5,
+[data-theme="hutan"] h6 {
+  font-family: 'EB Garamond', 'Georgia', 'Times New Roman', serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* ─── Atmosphere: Background & Ambient Layer ─────────────────────────────── */
+[data-theme="hutan"] body {
+  background:
+    radial-gradient(900px 600px at 10% 5%, rgba(0, 140, 60, 0.22) 0%, transparent 65%),
+    radial-gradient(700px 500px at 88% 85%, rgba(0, 80, 35, 0.28) 0%, transparent 60%),
+    radial-gradient(400px 300px at 55% 50%, rgba(0, 200, 90, 0.04) 0%, transparent 55%),
+    var(--bg) !important;
+  animation: hutan-bg-breathe 12s ease-in-out infinite;
+}
+
+@keyframes hutan-bg-breathe {
+  0%, 100% { filter: brightness(1); }
+  50%       { filter: brightness(1.04); }
+}
+
+/* Grain texture overlay */
+[data-theme="hutan"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.04;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(0,255,100,.08) 0px, rgba(0,255,100,.08) 1px, transparent 1px, transparent 4px),
+    repeating-linear-gradient(90deg, rgba(240,180,40,.04) 0px, rgba(240,180,40,.04) 1px, transparent 1px, transparent 8px);
+  mix-blend-mode: overlay;
+}
+
+/* ─── Panels & Cards ─────────────────────────────────────────────────────── */
+[data-theme="hutan"] body.theme-light {
+  background:
+    radial-gradient(800px 500px at 15% 10%, rgba(0,180,80,0.08) 0%, transparent 60%),
+    radial-gradient(600px 400px at 85% 90%, rgba(0,120,50,0.06) 0%, transparent 55%),
+    var(--bg) !important;
+}
+
+/* ─── Header / Nav Enhancement ───────────────────────────────────────────── */
+[data-theme="hutan"] header,
+[data-theme="hutan"] nav,
+[data-theme="hutan"] [class*="header"],
+[data-theme="hutan"] [class*="nav"] {
+  border-bottom-color: rgba(0, 232, 122, 0.1) !important;
+}
+
+/* ─── Button & CTA Glow ──────────────────────────────────────────────────── */
+[data-theme="hutan"] button,
+[data-theme="hutan"] .btn,
+[data-theme="hutan"] a[class*="btn"] {
+  transition: all 0.22s ease !important;
+}
+
+[data-theme="hutan"] button:hover,
+[data-theme="hutan"] .btn:hover {
+  box-shadow: 0 0 0 1px rgba(0, 232, 122, 0.3), 0 4px 20px rgba(0, 232, 122, 0.2) !important;
+}
+
+/* ─── Status / Badge Glow ────────────────────────────────────────────────── */
+[data-theme="hutan"] [class*="badge"][class*="tech"],
+[data-theme="hutan"] [class*="status"]:not([class*="bad"]):not([class*="warn"]) {
+  text-shadow: 0 0 10px rgba(0, 232, 122, 0.4);
+}
+
+/* ─── Focus Rings ────────────────────────────────────────────────────────── */
+[data-theme="hutan"] *:focus-visible {
+  outline: 2px solid rgba(0, 232, 122, 0.7) !important;
+  outline-offset: 2px;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────────── */
+[data-theme="hutan"] ::-webkit-scrollbar { width: 6px; height: 6px; }
+[data-theme="hutan"] ::-webkit-scrollbar-track { background: var(--bg); }
+[data-theme="hutan"] ::-webkit-scrollbar-thumb {
+  background: rgba(0, 232, 122, 0.25);
+  border-radius: 3px;
+}
+[data-theme="hutan"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 232, 122, 0.45);
+}
+
+/* ─── Selection ──────────────────────────────────────────────────────────── */
+[data-theme="hutan"] ::selection {
+  background: rgba(0, 232, 122, 0.25);
+  color: #e8fff0;
+}
+
+/* ─── Separator / Dividers ───────────────────────────────────────────────── */
+[data-theme="hutan"] hr,
+[data-theme="hutan"] [class*="divider"],
+[data-theme="hutan"] [class*="separator"] {
+  border-color: rgba(0, 232, 122, 0.08) !important;
+}
+
+/* ─── Heading italic accent (EB Garamond beauty) ─────────────────────────── */
+[data-theme="hutan"] h1 em,
+[data-theme="hutan"] h2 em {
+  font-style: italic;
+  color: var(--tech);
+}
+
+/* ─── Link Hover ─────────────────────────────────────────────────────────── */
+[data-theme="hutan"] a:hover {
+  text-shadow: 0 0 8px rgba(0, 232, 122, 0.3);
+}
+
+/* ─── Theme Badge Override ───────────────────────────────────────────────── */
+#ctp-theme-badge {
+  font-family: 'Lato', system-ui, sans-serif !important;
+}
