@@ -13,6 +13,9 @@
   <!-- Uiverse components -->
   <link rel="stylesheet" href="assets/components/button.css" />
   <link rel="stylesheet" href="assets/components/card.css" />
+  <!-- API layer (same as analytics.html) -->
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
   <style>
     /* ── Design tokens ──────────────────────────────────────── */
     :root{
@@ -1075,7 +1078,6 @@
   <script>
     const CELL_KEY  = "ctp_selected_cell";
     const THEME_KEY = "ctp_theme";
-    const API_BASE  = "https://script.google.com/macros/s/AKfycbzyCi-6stLedx0-un55ldx_qOuPgRUrP5A_7nu6uCAINOZvQJatVIzfdowW6Vo02Dby/exec";
 
     const themeSwitch = document.getElementById("themeSwitch");
     const drawer      = document.getElementById("rightDrawer");
@@ -1193,42 +1195,27 @@
       });
     }
 
-    /* ── Live stats ─────────────────────────────────────────── */
+    /* ── Live stats (mirrors pages.analytics.js exactly) ───── */
     async function loadStats(){
       const elTotal     = document.getElementById("totalJobs");
       const elRate      = document.getElementById("completionPct");
       const elBreakdown = document.getElementById("statsBreakdown");
       try {
-        /* Mirror dashboard.html's fetchJsonSafe pattern exactly:
-           - No Content-Type header on GET (causes GAS CORS preflight failure)
-           - cache: "no-store" to bypass CDN cache
-           - Timestamp bust the URL like dashboard does (&t=...)
-           - Response shape: { ok: true, jobs: [...] }               */
-        const url = `${API_BASE}?action=listJobs&t=${Date.now()}`;
-        const res = await fetch(url, { method: "GET", cache: "no-store" });
-        const raw = await res.json();
+        const res = await API.listJobs();
+        if(!res.ok) throw new Error(res.error || "API Error");
 
-        if(!raw || !raw.ok) throw new Error(raw?.error || "API returned ok:false");
-
-        const jobs = Array.isArray(raw.jobs) ? raw.jobs : [];
+        const jobs    = res.jobs || [];
         const total   = jobs.length;
-        const selesai = jobs.filter(j => /selesai/i.test(j["Status"] || "")).length;
-        const dalam   = jobs.filter(j => /dalam/i.test( j["Status"] || "")).length;
-        const belum   = jobs.filter(j => /belum/i.test( j["Status"] || "")).length;
-        const batal   = jobs.filter(j => /dibatal/i.test(j["Status"] || "")).length;
+        const selesai = jobs.filter(j => /selesai/i.test(j.Status || "")).length;
+        const dalam   = jobs.filter(j => /dalam/i.test( j.Status || "")).length;
+        const belum   = jobs.filter(j => /belum/i.test( j.Status || "")).length;
+        const batal   = jobs.filter(j => /dibatal/i.test(j.Status || "")).length;
         const rate    = total > 0 ? Math.round((selesai / total) * 100) : 0;
 
-        /* Render total */
-        if(elTotal){
-          elTotal.innerHTML = "";
-          animateCounter(elTotal, total, 1200);
-        }
-
-        /* Render rate */
-        if(elRate) elRate.textContent = rate + "%";
+        if(elTotal){ elTotal.innerHTML = ""; animateCounter(elTotal, total, 1200); }
+        if(elRate)  elRate.textContent = rate + "%";
         animateRing(rate);
 
-        /* Render breakdown */
         if(elBreakdown){
           elBreakdown.innerHTML = `
             <div class="bd-item"><span class="bd-dot bd-selesai"></span><span>${selesai} Selesai</span></div>
@@ -1241,7 +1228,7 @@
         if(elTotal)     elTotal.innerHTML    = '<span class="stat-error">—</span>';
         if(elRate)      elRate.textContent   = "—";
         if(elBreakdown) elBreakdown.innerHTML = '<span class="stat-error">Gagal memuatkan data</span>';
-        console.warn("[stats]", err);
+        console.error("[stats]", err);
       }
     }
 
