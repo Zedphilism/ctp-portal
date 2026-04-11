@@ -1199,16 +1199,24 @@
       const elRate      = document.getElementById("completionPct");
       const elBreakdown = document.getElementById("statsBreakdown");
       try {
-        const res  = await fetch(`${API_BASE}?action=listJobs`, { cache: "no-store" });
-        if(!res.ok) throw new Error(`HTTP ${res.status}`);
-        const raw  = await res.json();
-        const jobs = Array.isArray(raw) ? raw : (raw.data || []);
-        const total    = jobs.length;
-        const selesai  = jobs.filter(j => /selesai/i.test(j.Status  || j.status  || "")).length;
-        const dalam    = jobs.filter(j => /dalam/i.test( j.Status  || j.status  || "")).length;
-        const belum    = jobs.filter(j => /belum/i.test( j.Status  || j.status  || "")).length;
-        const batal    = jobs.filter(j => /dibatal|batal/i.test( j.Status  || j.status  || "")).length;
-        const rate     = total > 0 ? Math.round((selesai / total) * 100) : 0;
+        /* Mirror dashboard.html's fetchJsonSafe pattern exactly:
+           - No Content-Type header on GET (causes GAS CORS preflight failure)
+           - cache: "no-store" to bypass CDN cache
+           - Timestamp bust the URL like dashboard does (&t=...)
+           - Response shape: { ok: true, jobs: [...] }               */
+        const url = `${API_BASE}?action=listJobs&t=${Date.now()}`;
+        const res = await fetch(url, { method: "GET", cache: "no-store" });
+        const raw = await res.json();
+
+        if(!raw || !raw.ok) throw new Error(raw?.error || "API returned ok:false");
+
+        const jobs = Array.isArray(raw.jobs) ? raw.jobs : [];
+        const total   = jobs.length;
+        const selesai = jobs.filter(j => /selesai/i.test(j["Status"] || "")).length;
+        const dalam   = jobs.filter(j => /dalam/i.test( j["Status"] || "")).length;
+        const belum   = jobs.filter(j => /belum/i.test( j["Status"] || "")).length;
+        const batal   = jobs.filter(j => /dibatal/i.test(j["Status"] || "")).length;
+        const rate    = total > 0 ? Math.round((selesai / total) * 100) : 0;
 
         /* Render total */
         if(elTotal){
