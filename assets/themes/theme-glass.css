@@ -1,0 +1,302 @@
+/**
+ * CTP Portal — Theme F: Glass Data
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Identity  : Luxury information architecture. Data as crystalline art.
+ * Fonts     : Playfair Display italic (headings, editorial) + Manrope (body, clean)
+ * Palette   : Deep space #05080f · Indigo haze #818cf8 · Soft violet #c084fc
+ * Effects   : True glassmorphism panels (backdrop-filter) · Prismatic dividers ·
+ *             Diffused orb lighting · Floating depth shadows · Max-rounded edges
+ * Design    : Layers of translucent depth; nothing is opaque, everything floats
+ */
+
+/* ─── Fonts ──────────────────────────────────────────────────────────────── */
+[data-theme="glass"] body {
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+[data-theme="glass"] h1,
+[data-theme="glass"] h2,
+[data-theme="glass"] h3,
+[data-theme="glass"] h4,
+[data-theme="glass"] h5,
+[data-theme="glass"] h6 {
+  font-family: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+[data-theme="glass"] h1 {
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+[data-theme="glass"] h2 {
+  font-style: italic;
+}
+
+/* ─── Atmosphere: Deep Space + Diffused Light Orbs ──────────────────────── */
+[data-theme="glass"] body {
+  background:
+    radial-gradient(1100px 800px at 10% 20%,  rgba(129, 140, 248, 0.13) 0%, transparent 55%),
+    radial-gradient(900px 700px at 88% 65%,   rgba(192, 132, 252, 0.10) 0%, transparent 55%),
+    radial-gradient(600px 500px at 55% 5%,    rgba(99, 102, 241, 0.07)  0%, transparent 50%),
+    radial-gradient(400px 400px at 20% 85%,   rgba(168, 85, 247, 0.06)  0%, transparent 50%),
+    var(--bg) !important;
+  animation: glass-breathe 18s ease-in-out infinite;
+}
+
+@keyframes glass-breathe {
+  0%, 100% { filter: brightness(1) hue-rotate(0deg); }
+  50%       { filter: brightness(1.04) hue-rotate(6deg); }
+}
+
+/* Subtle noise for glass texture */
+[data-theme="glass"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.25;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(129, 140, 248, 0.018) 2px,
+      rgba(129, 140, 248, 0.018) 4px
+    );
+  mix-blend-mode: overlay;
+}
+
+/* Large floating orb behind content (html-level) */
+[data-theme="glass"] html::before {
+  content: "";
+  position: fixed;
+  width: 800px;
+  height: 800px;
+  top: -200px;
+  right: -200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(129, 140, 248, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  animation: glass-orb-drift 25s ease-in-out infinite alternate;
+}
+
+@keyframes glass-orb-drift {
+  0%   { transform: translate(0, 0); }
+  100% { transform: translate(-80px, 60px); }
+}
+
+/* Light mode */
+[data-theme="glass"] body.theme-light {
+  background:
+    radial-gradient(900px 700px at 15% 20%, rgba(99, 102, 241, 0.06) 0%, transparent 55%),
+    radial-gradient(700px 600px at 85% 70%, rgba(168, 85, 247, 0.05) 0%, transparent 55%),
+    var(--bg) !important;
+  animation: none;
+}
+[data-theme="glass"] body.theme-light::after { opacity: 0.1; }
+
+/* ─── Nav: Frosted Glass Bar ─────────────────────────────────────────────── */
+[data-theme="glass"] header,
+[data-theme="glass"] nav,
+[data-theme="glass"] [class*="topbar"],
+[data-theme="glass"] [class*="header"] {
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  background: rgba(5, 8, 15, 0.55) !important;
+  border-bottom: 1px solid rgba(129, 140, 248, 0.12) !important;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+}
+
+[data-theme="glass"] body.theme-light header,
+[data-theme="glass"] body.theme-light nav,
+[data-theme="glass"] body.theme-light [class*="topbar"] {
+  background: rgba(248, 249, 255, 0.72) !important;
+  border-bottom: 1px solid rgba(99, 102, 241, 0.1) !important;
+}
+
+/* ─── Panels: True Glassmorphism ─────────────────────────────────────────── */
+[data-theme="glass"] [class*="panel"],
+[data-theme="glass"] [class*="card"],
+[data-theme="glass"] [class*="modal"],
+[data-theme="glass"] [class*="drawer"],
+[data-theme="glass"] [class*="popup"],
+[data-theme="glass"] [class*="box"],
+[data-theme="glass"] .stat,
+[data-theme="glass"] [class*="stat-card"] {
+  backdrop-filter: blur(24px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+  background: var(--panel) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 28px !important;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.15) inset !important;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease !important;
+}
+
+[data-theme="glass"] [class*="card"]:hover,
+[data-theme="glass"] .stat:hover,
+[data-theme="glass"] [class*="stat-card"]:hover {
+  border-color: rgba(129, 140, 248, 0.25) !important;
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.35),
+    0 1px 0 rgba(255, 255, 255, 0.12) inset,
+    0 0 40px rgba(129, 140, 248, 0.07) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Light mode glass */
+[data-theme="glass"] body.theme-light [class*="panel"],
+[data-theme="glass"] body.theme-light [class*="card"],
+[data-theme="glass"] body.theme-light .stat {
+  backdrop-filter: blur(20px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(200%) !important;
+  background: rgba(255, 255, 255, 0.7) !important;
+  border: 1px solid rgba(99, 102, 241, 0.1) !important;
+  box-shadow: 0 8px 32px rgba(70, 80, 200, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+/* ─── Headings: Editorial Elegance ───────────────────────────────────────── */
+[data-theme="glass"] h1 {
+  animation: glass-shimmer 8s ease-in-out infinite;
+}
+
+@keyframes glass-shimmer {
+  0%, 100% { text-shadow: 0 2px 24px rgba(129, 140, 248, 0.2); }
+  50%       { text-shadow: 0 2px 40px rgba(192, 132, 252, 0.35), 0 0 80px rgba(129, 140, 248, 0.12); }
+}
+
+[data-theme="glass"] h2,
+[data-theme="glass"] h3 {
+  text-shadow: 0 1px 16px rgba(129, 140, 248, 0.15);
+}
+
+/* ─── Buttons: Pill-Shaped Frosted Glass ─────────────────────────────────── */
+[data-theme="glass"] button,
+[data-theme="glass"] .btn,
+[data-theme="glass"] a[class*="btn"] {
+  border-radius: 999px !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  font-family: 'Manrope', sans-serif !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em !important;
+  transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+[data-theme="glass"] button:hover,
+[data-theme="glass"] .btn:hover {
+  box-shadow:
+    0 0 0 1px rgba(129, 140, 248, 0.5),
+    0 8px 32px rgba(129, 140, 248, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* ─── Inputs: Frosted Glass Fields ──────────────────────────────────────── */
+[data-theme="glass"] input,
+[data-theme="glass"] select,
+[data-theme="glass"] textarea {
+  border-radius: 18px !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(129, 140, 248, 0.15) !important;
+  font-family: 'Manrope', sans-serif !important;
+  transition: all 0.25s ease !important;
+}
+
+[data-theme="glass"] input:focus,
+[data-theme="glass"] select:focus,
+[data-theme="glass"] textarea:focus {
+  border-color: rgba(129, 140, 248, 0.5) !important;
+  box-shadow:
+    0 0 0 3px rgba(129, 140, 248, 0.12),
+    0 4px 20px rgba(129, 140, 248, 0.1) !important;
+  outline: none !important;
+}
+
+/* ─── Focus Rings ────────────────────────────────────────────────────────── */
+[data-theme="glass"] *:focus-visible {
+  outline: 2px solid rgba(129, 140, 248, 0.6) !important;
+  outline-offset: 3px;
+}
+
+/* ─── Badges: Frosted Pill ───────────────────────────────────────────────── */
+[data-theme="glass"] [class*="badge"],
+[data-theme="glass"] [class*="status"] {
+  border-radius: 999px !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  font-family: 'Manrope', sans-serif !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em !important;
+}
+
+/* ─── Active State: Glass Highlight ─────────────────────────────────────── */
+[data-theme="glass"] [class*="active"],
+[data-theme="glass"] [aria-current="page"],
+[data-theme="glass"] .tab.active {
+  background: rgba(129, 140, 248, 0.15) !important;
+  border: 1px solid rgba(129, 140, 248, 0.3) !important;
+  border-radius: 14px !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+/* ─── Dividers: Prismatic Gradient ───────────────────────────────────────── */
+[data-theme="glass"] hr,
+[data-theme="glass"] [class*="divider"],
+[data-theme="glass"] [class*="separator"] {
+  border: none !important;
+  height: 1px !important;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(129, 140, 248, 0.4) 25%,
+    rgba(192, 132, 252, 0.4) 50%,
+    rgba(99, 102, 241, 0.3) 75%,
+    transparent
+  ) !important;
+}
+
+/* ─── Scrollbar: Soft Glass ──────────────────────────────────────────────── */
+[data-theme="glass"] ::-webkit-scrollbar { width: 6px; height: 6px; }
+[data-theme="glass"] ::-webkit-scrollbar-track { background: transparent; }
+[data-theme="glass"] ::-webkit-scrollbar-thumb {
+  background: rgba(129, 140, 248, 0.25);
+  border-radius: 999px;
+}
+[data-theme="glass"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(129, 140, 248, 0.5);
+}
+
+/* ─── Selection ──────────────────────────────────────────────────────────── */
+[data-theme="glass"] ::selection {
+  background: rgba(129, 140, 248, 0.28);
+  color: #f0f4ff;
+}
+
+/* ─── Links ──────────────────────────────────────────────────────────────── */
+[data-theme="glass"] a:hover {
+  text-shadow: 0 0 12px rgba(129, 140, 248, 0.5);
+  color: var(--tech) !important;
+}
+
+/* ─── Theme Badge ────────────────────────────────────────────────────────── */
+#ctp-theme-badge {
+  border-radius: 999px !important;
+  font-family: 'Manrope', sans-serif !important;
+  font-style: italic !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-color: rgba(129, 140, 248, 0.25) !important;
+  box-shadow: 0 8px 28px rgba(129, 140, 248, 0.15) !important;
+}

@@ -1,0 +1,313 @@
+/**
+ * CTP Portal — Theme E: Command Center
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Identity  : Military operations center. Data as tactical intelligence.
+ * Fonts     : IBM Plex Mono (headings, terminal precision) + Rajdhani (body, stencil)
+ * Palette   : Ops black #0a0c0f · Signal red #e53935 · CCD steel #ccd6f6
+ * Effects   : Fine tactical grid · Corner bracket panels · Nav accent stripe ·
+ *             Heading prefix markers · All sharp-edged, zero radius
+ * Design    : Hard orthogonal geometry, uppercase precision, HUD aesthetic
+ */
+
+/* ─── Fonts ──────────────────────────────────────────────────────────────── */
+[data-theme="command"] body {
+  font-family: 'Rajdhani', 'Arial Narrow', Arial, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+[data-theme="command"] h1,
+[data-theme="command"] h2,
+[data-theme="command"] h3,
+[data-theme="command"] h4,
+[data-theme="command"] h5,
+[data-theme="command"] h6 {
+  font-family: 'IBM Plex Mono', 'Courier New', monospace;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* ─── Atmosphere ─────────────────────────────────────────────────────────── */
+[data-theme="command"] body {
+  background:
+    radial-gradient(700px 500px at 0% 0%,   rgba(229, 57, 53, 0.06) 0%, transparent 60%),
+    radial-gradient(500px 400px at 100% 100%, rgba(255, 112, 67, 0.04) 0%, transparent 55%),
+    var(--bg) !important;
+}
+
+/* Dual-density tactical grid */
+[data-theme="command"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(229, 57, 53, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(229, 57, 53, 0.028) 1px, transparent 1px),
+    linear-gradient(rgba(204, 214, 246, 0.014) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(204, 214, 246, 0.014) 1px, transparent 1px);
+  background-size: 96px 96px, 96px 96px, 24px 24px, 24px 24px;
+  mix-blend-mode: overlay;
+}
+
+/* Tactical sweep scanline */
+[data-theme="command"] body::before {
+  content: "" !important;
+  position: fixed !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(229, 57, 53, 0.025) 50%,
+    transparent 100%
+  ) !important;
+  background-size: 100% 6px !important;
+  animation: command-sweep 8s linear infinite !important;
+}
+
+@keyframes command-sweep {
+  0%   { background-position: 0 -200vh; }
+  100% { background-position: 0 200vh; }
+}
+
+/* Light mode */
+[data-theme="command"] body.theme-light {
+  background:
+    radial-gradient(600px 400px at 0% 0%, rgba(229, 57, 53, 0.03) 0%, transparent 55%),
+    var(--bg) !important;
+}
+[data-theme="command"] body.theme-light::before {
+  opacity: 0.35 !important;
+}
+[data-theme="command"] body.theme-light::after {
+  background-image:
+    linear-gradient(rgba(100, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(100, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(rgba(15, 23, 42, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.02) 1px, transparent 1px);
+  background-size: 96px 96px, 96px 96px, 24px 24px, 24px 24px;
+}
+
+/* ─── Nav: Top Red Accent Stripe ─────────────────────────────────────────── */
+[data-theme="command"] header,
+[data-theme="command"] nav,
+[data-theme="command"] [class*="topbar"],
+[data-theme="command"] [class*="header"],
+[data-theme="command"] [class*="nav-wrap"] {
+  border-top: 2px solid var(--tech) !important;
+  border-bottom: 1px solid rgba(229, 57, 53, 0.18) !important;
+  box-shadow: 0 1px 0 rgba(229, 57, 53, 0.08), 0 4px 20px rgba(229, 57, 53, 0.08) !important;
+}
+
+/* ─── Radius Override: Hard Edges Everywhere ─────────────────────────────── */
+[data-theme="command"] *,
+[data-theme="command"] *::before,
+[data-theme="command"] *::after {
+  --radius: 2px;
+}
+
+[data-theme="command"] [class*="panel"],
+[data-theme="command"] [class*="card"],
+[data-theme="command"] [class*="modal"],
+[data-theme="command"] [class*="drawer"],
+[data-theme="command"] [class*="popup"],
+[data-theme="command"] [class*="box"] {
+  border-radius: 2px !important;
+  border: 1px solid rgba(229, 57, 53, 0.14) !important;
+  position: relative;
+}
+
+/* ─── Corner Bracket Markers on Cards ────────────────────────────────────── */
+[data-theme="command"] [class*="card"],
+[data-theme="command"] .stat,
+[data-theme="command"] [class*="stat-card"] {
+  border-radius: 0 !important;
+  border: 1px solid rgba(229, 57, 53, 0.16) !important;
+  position: relative;
+}
+
+[data-theme="command"] [class*="card"]::before,
+[data-theme="command"] .stat::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 14px;
+  height: 14px;
+  border-top: 2px solid var(--tech);
+  border-left: 2px solid var(--tech);
+  pointer-events: none;
+  z-index: 2;
+}
+
+[data-theme="command"] [class*="card"]::after,
+[data-theme="command"] .stat::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 14px;
+  height: 14px;
+  border-bottom: 2px solid rgba(229, 57, 53, 0.5);
+  border-right: 2px solid rgba(229, 57, 53, 0.5);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ─── Headings: Tactical Designation Prefix ──────────────────────────────── */
+[data-theme="command"] h1 {
+  text-shadow: 0 0 30px rgba(229, 57, 53, 0.22);
+}
+
+[data-theme="command"] h1::before {
+  content: "//\00a0";
+  color: var(--tech);
+  font-weight: 300;
+  opacity: 0.65;
+  letter-spacing: 0.08em;
+}
+
+[data-theme="command"] h2::before {
+  content: "> ";
+  color: rgba(229, 57, 53, 0.55);
+  font-weight: 300;
+}
+
+/* ─── Buttons: Sharp, Uppercase, Terminal ────────────────────────────────── */
+[data-theme="command"] button,
+[data-theme="command"] .btn,
+[data-theme="command"] a[class*="btn"] {
+  border-radius: 0 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.8em !important;
+  font-weight: 500 !important;
+  border: 1px solid rgba(229, 57, 53, 0.3) !important;
+  transition: all 0.15s ease !important;
+}
+
+[data-theme="command"] button:hover,
+[data-theme="command"] .btn:hover {
+  border-color: var(--tech) !important;
+  color: var(--tech) !important;
+  box-shadow: 0 0 0 1px var(--tech), inset 0 0 16px rgba(229, 57, 53, 0.06) !important;
+  background: rgba(229, 57, 53, 0.05) !important;
+}
+
+/* ─── Inputs: Command Terminal Style ─────────────────────────────────────── */
+[data-theme="command"] input,
+[data-theme="command"] select,
+[data-theme="command"] textarea {
+  border-radius: 0 !important;
+  border: 1px solid rgba(229, 57, 53, 0.2) !important;
+  font-family: 'IBM Plex Mono', monospace !important;
+  letter-spacing: 0.04em !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+[data-theme="command"] input:focus,
+[data-theme="command"] select:focus,
+[data-theme="command"] textarea:focus {
+  border-color: var(--tech) !important;
+  box-shadow: 0 0 0 1px rgba(229, 57, 53, 0.4), inset 0 0 12px rgba(229, 57, 53, 0.03) !important;
+  outline: none !important;
+}
+
+/* ─── Focus Rings ────────────────────────────────────────────────────────── */
+[data-theme="command"] *:focus-visible {
+  outline: 1px solid rgba(229, 57, 53, 0.8) !important;
+  outline-offset: 2px;
+  box-shadow: 0 0 8px rgba(229, 57, 53, 0.2) !important;
+}
+
+/* ─── Badges: Tactical Status Codes ─────────────────────────────────────── */
+[data-theme="command"] [class*="badge"],
+[data-theme="command"] [class*="status"] {
+  border-radius: 0 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.68em !important;
+  font-weight: 500 !important;
+}
+
+/* ─── Active State: Red Left Stripe ─────────────────────────────────────── */
+[data-theme="command"] [class*="active"],
+[data-theme="command"] [aria-current="page"],
+[data-theme="command"] .tab.active,
+[data-theme="command"] .menu-link.active {
+  border-left: 3px solid var(--tech) !important;
+  border-radius: 0 !important;
+  background: rgba(229, 57, 53, 0.06) !important;
+}
+
+/* ─── Table: Tactical Grid Lines ─────────────────────────────────────────── */
+[data-theme="command"] td,
+[data-theme="command"] th {
+  border-color: rgba(229, 57, 53, 0.08) !important;
+}
+
+[data-theme="command"] th {
+  font-family: 'IBM Plex Mono', monospace !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  font-size: 0.72em !important;
+  font-weight: 600 !important;
+  color: var(--tech) !important;
+}
+
+/* ─── Dividers: Tactical Separator ──────────────────────────────────────── */
+[data-theme="command"] hr,
+[data-theme="command"] [class*="divider"],
+[data-theme="command"] [class*="separator"] {
+  border: none !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(229, 57, 53, 0.4) 15%, rgba(229, 57, 53, 0.4) 85%, transparent) !important;
+}
+
+/* ─── Stat Values: HUD Readout ───────────────────────────────────────────── */
+[data-theme="command"] [class*="stat-value"],
+[data-theme="command"] [class*="metric"],
+[data-theme="command"] [class*="count"] {
+  font-family: 'IBM Plex Mono', monospace !important;
+  color: var(--tech) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em !important;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────────── */
+[data-theme="command"] ::-webkit-scrollbar { width: 3px; height: 3px; }
+[data-theme="command"] ::-webkit-scrollbar-track { background: var(--bg); }
+[data-theme="command"] ::-webkit-scrollbar-thumb {
+  background: rgba(229, 57, 53, 0.4);
+  border-radius: 0;
+}
+[data-theme="command"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(229, 57, 53, 0.7);
+}
+
+/* ─── Selection ──────────────────────────────────────────────────────────── */
+[data-theme="command"] ::selection {
+  background: rgba(229, 57, 53, 0.28);
+  color: #ffffff;
+}
+
+/* ─── Links ──────────────────────────────────────────────────────────────── */
+[data-theme="command"] a:hover {
+  color: var(--tech) !important;
+  text-shadow: 0 0 8px rgba(229, 57, 53, 0.4);
+}
+
+/* ─── Theme Badge ────────────────────────────────────────────────────────── */
+#ctp-theme-badge {
+  border-radius: 0 !important;
+  font-family: 'IBM Plex Mono', monospace !important;
+  border-color: rgba(229, 57, 53, 0.28) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+}

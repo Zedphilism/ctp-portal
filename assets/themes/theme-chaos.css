@@ -1,0 +1,311 @@
+/**
+ * CTP Portal — Theme H: Data Chaos
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Identity  : Information theory in motion. Data is violence and beauty at once.
+ * Fonts     : Bebas Neue (headings, massive weight) + Sora (body, clean energy)
+ * Palette   : Void black #080808 · Hot signal #ff2d55 · Electric green #00ff88
+ * Effects   : Animated top rainbow stripe · Diagonal pattern field · Offset
+ *             block shadows · Bold 2px borders · Cards with translate-hover ·
+ *             Stat values at 2x scale · Alternating row accent colors
+ * Design    : Maximalist energy — nothing is quiet, everything demands attention
+ */
+
+/* ─── Fonts ──────────────────────────────────────────────────────────────── */
+[data-theme="chaos"] body {
+  font-family: 'Sora', system-ui, sans-serif;
+  font-weight: 400;
+}
+
+[data-theme="chaos"] h1,
+[data-theme="chaos"] h2,
+[data-theme="chaos"] h3,
+[data-theme="chaos"] h4,
+[data-theme="chaos"] h5,
+[data-theme="chaos"] h6 {
+  font-family: 'Bebas Neue', 'Impact', 'Arial Black', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 0.95;
+}
+
+/* Oversized, aggressive typography hierarchy */
+[data-theme="chaos"] h1 {
+  font-size: 4.5rem;
+  letter-spacing: 0.04em;
+  line-height: 0.9;
+}
+[data-theme="chaos"] h2 { font-size: 3rem; }
+[data-theme="chaos"] h3 { font-size: 2.2rem; }
+[data-theme="chaos"] h4 { font-size: 1.6rem; }
+
+/* ─── Atmosphere: Diagonal Energy Field ─────────────────────────────────── */
+[data-theme="chaos"] body {
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      transparent         0px,
+      transparent         78px,
+      rgba(255, 45, 85, 0.028) 78px,
+      rgba(255, 45, 85, 0.028) 80px
+    ),
+    repeating-linear-gradient(
+      45deg,
+      transparent          0px,
+      transparent          118px,
+      rgba(0, 255, 136, 0.02) 118px,
+      rgba(0, 255, 136, 0.02) 120px
+    ),
+    var(--bg) !important;
+}
+
+/* High-energy grain texture */
+[data-theme="chaos"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.055;
+  background-image:
+    repeating-linear-gradient(0deg,  rgba(255, 45, 85, .18) 0px, rgba(255, 45, 85, .18) 1px, transparent 1px, transparent 3px),
+    repeating-linear-gradient(90deg, rgba(0, 255, 136, .1)  0px, rgba(0, 255, 136, .1)  1px, transparent 1px, transparent 6px);
+  mix-blend-mode: overlay;
+}
+
+/* Animated rainbow stripe across the very top */
+[data-theme="chaos"] body::before {
+  content: "" !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 4px !important;
+  z-index: 100000 !important;
+  pointer-events: none !important;
+  background: linear-gradient(
+    90deg,
+    var(--tech),
+    var(--nontech),
+    var(--gold),
+    var(--tech),
+    var(--nontech)
+  ) !important;
+  background-size: 400% 100% !important;
+  animation: chaos-rainbow-stripe 3.5s linear infinite !important;
+}
+
+@keyframes chaos-rainbow-stripe {
+  0%   { background-position: 0% 0%; }
+  100% { background-position: 400% 0%; }
+}
+
+/* Light mode */
+[data-theme="chaos"] body.theme-light {
+  background:
+    repeating-linear-gradient(-45deg, transparent 0px, transparent 78px, rgba(255,45,85,0.04) 78px, rgba(255,45,85,0.04) 80px),
+    var(--bg) !important;
+}
+
+/* ─── Nav: Thick Bold Bottom Border ─────────────────────────────────────── */
+[data-theme="chaos"] header,
+[data-theme="chaos"] nav,
+[data-theme="chaos"] [class*="topbar"],
+[data-theme="chaos"] [class*="header"],
+[data-theme="chaos"] [class*="nav-wrap"] {
+  border-top: none !important;
+  border-bottom: 4px solid var(--tech) !important;
+  box-shadow: 0 4px 0 rgba(0, 255, 136, 0.25) !important;
+}
+
+/* ─── Panels: Offset Block Shadows ──────────────────────────────────────── */
+[data-theme="chaos"] [class*="panel"],
+[data-theme="chaos"] [class*="card"],
+[data-theme="chaos"] [class*="modal"],
+[data-theme="chaos"] [class*="drawer"],
+[data-theme="chaos"] [class*="popup"],
+[data-theme="chaos"] [class*="box"],
+[data-theme="chaos"] .stat,
+[data-theme="chaos"] [class*="stat-card"] {
+  border-radius: 0 !important;
+  border: 2px solid rgba(255, 45, 85, 0.35) !important;
+  box-shadow: 5px 5px 0 rgba(255, 45, 85, 0.45), 9px 9px 0 rgba(0, 255, 136, 0.15) !important;
+  transition: transform 0.12s ease, box-shadow 0.12s ease !important;
+}
+
+[data-theme="chaos"] [class*="card"]:hover,
+[data-theme="chaos"] .stat:hover,
+[data-theme="chaos"] [class*="stat-card"]:hover {
+  transform: translate(-3px, -3px) !important;
+  box-shadow: 8px 8px 0 rgba(255, 45, 85, 0.55), 12px 12px 0 rgba(0, 255, 136, 0.2) !important;
+}
+
+/* ─── H1: Pulsing Color Cycle ────────────────────────────────────────────── */
+@keyframes chaos-color-pulse {
+  0%   { color: var(--tech);    text-shadow: 4px 4px 0 rgba(0, 255, 136, 0.3); }
+  33%  { color: var(--nontech); text-shadow: 4px 4px 0 rgba(255, 45, 85, 0.3); }
+  66%  { color: var(--gold);    text-shadow: 4px 4px 0 rgba(0, 255, 136, 0.2); }
+  100% { color: var(--tech);    text-shadow: 4px 4px 0 rgba(0, 255, 136, 0.3); }
+}
+
+[data-theme="chaos"] h1 {
+  animation: chaos-color-pulse 5s ease-in-out infinite;
+}
+
+/* ─── Alternating Table Row Accents ─────────────────────────────────────── */
+[data-theme="chaos"] tr:nth-child(odd) > td {
+  border-left: 3px solid rgba(255, 45, 85, 0.4) !important;
+}
+[data-theme="chaos"] tr:nth-child(even) > td {
+  border-left: 3px solid rgba(0, 255, 136, 0.35) !important;
+}
+
+/* ─── Buttons: Bold Energy ───────────────────────────────────────────────── */
+[data-theme="chaos"] button,
+[data-theme="chaos"] .btn,
+[data-theme="chaos"] a[class*="btn"] {
+  border-radius: 0 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.12em !important;
+  font-family: 'Bebas Neue', sans-serif !important;
+  font-size: 1.1em !important;
+  font-weight: 400 !important;
+  border: 2px solid var(--tech) !important;
+  box-shadow: 3px 3px 0 rgba(0, 255, 136, 0.5) !important;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease, color 0.12s ease !important;
+}
+
+[data-theme="chaos"] button:hover,
+[data-theme="chaos"] .btn:hover {
+  transform: translate(-2px, -2px) !important;
+  box-shadow: 5px 5px 0 rgba(255, 45, 85, 0.65) !important;
+  border-color: var(--nontech) !important;
+  color: var(--nontech) !important;
+}
+
+/* ─── Inputs ─────────────────────────────────────────────────────────────── */
+[data-theme="chaos"] input,
+[data-theme="chaos"] select,
+[data-theme="chaos"] textarea {
+  border-radius: 0 !important;
+  border: 2px solid rgba(255, 45, 85, 0.3) !important;
+  font-family: 'Sora', sans-serif !important;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease !important;
+}
+
+[data-theme="chaos"] input:focus,
+[data-theme="chaos"] select:focus,
+[data-theme="chaos"] textarea:focus {
+  border-color: var(--tech) !important;
+  box-shadow: 3px 3px 0 rgba(255, 45, 85, 0.5) !important;
+  outline: none !important;
+}
+
+/* ─── Focus Rings ────────────────────────────────────────────────────────── */
+[data-theme="chaos"] *:focus-visible {
+  outline: 2px solid var(--tech) !important;
+  outline-offset: 3px;
+  box-shadow: 3px 3px 0 rgba(255, 45, 85, 0.4) !important;
+}
+
+/* ─── Badges: High-Contrast Borders ─────────────────────────────────────── */
+[data-theme="chaos"] [class*="badge"],
+[data-theme="chaos"] [class*="status"] {
+  border-radius: 0 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.12em !important;
+  font-family: 'Sora', sans-serif !important;
+  font-size: 0.68em !important;
+  font-weight: 700 !important;
+  border: 1px solid currentColor !important;
+}
+
+/* ─── Active State: Solid Fill (Inverted) ────────────────────────────────── */
+[data-theme="chaos"] [class*="active"],
+[data-theme="chaos"] [aria-current="page"],
+[data-theme="chaos"] .tab.active,
+[data-theme="chaos"] .menu-link.active {
+  background: var(--tech) !important;
+  color: #000000 !important;
+  border-radius: 0 !important;
+  font-weight: 700 !important;
+  border: none !important;
+}
+
+/* ─── Tables ─────────────────────────────────────────────────────────────── */
+[data-theme="chaos"] td,
+[data-theme="chaos"] th {
+  border-color: rgba(255, 45, 85, 0.12) !important;
+}
+
+[data-theme="chaos"] th {
+  font-family: 'Bebas Neue', sans-serif !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  font-size: 1.05em !important;
+  font-weight: 400 !important;
+  color: var(--tech) !important;
+  border-bottom: 2px solid var(--tech) !important;
+}
+
+/* ─── Dividers: Gradient Energy Bar ─────────────────────────────────────── */
+[data-theme="chaos"] hr,
+[data-theme="chaos"] [class*="divider"],
+[data-theme="chaos"] [class*="separator"] {
+  border: none !important;
+  height: 2px !important;
+  background: linear-gradient(
+    90deg,
+    var(--tech) 0%,
+    var(--nontech) 50%,
+    var(--gold) 100%
+  ) !important;
+}
+
+/* ─── Stat Values: Massive Bebas Readout ─────────────────────────────────── */
+[data-theme="chaos"] [class*="stat-value"],
+[data-theme="chaos"] [class*="metric"],
+[data-theme="chaos"] [class*="count"] {
+  font-family: 'Bebas Neue', sans-serif !important;
+  font-size: 2.4em !important;
+  color: var(--tech) !important;
+  letter-spacing: 0.04em !important;
+  line-height: 1 !important;
+  font-weight: 400 !important;
+}
+
+/* ─── Scrollbar: Chunky, Colored ────────────────────────────────────────── */
+[data-theme="chaos"] ::-webkit-scrollbar { width: 8px; height: 8px; }
+[data-theme="chaos"] ::-webkit-scrollbar-track { background: #080808; }
+[data-theme="chaos"] ::-webkit-scrollbar-thumb {
+  background: var(--tech);
+  border-radius: 0;
+}
+[data-theme="chaos"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--nontech);
+}
+
+/* ─── Selection ──────────────────────────────────────────────────────────── */
+[data-theme="chaos"] ::selection {
+  background: var(--tech);
+  color: #000000;
+}
+
+/* ─── Links ──────────────────────────────────────────────────────────────── */
+[data-theme="chaos"] a:hover {
+  color: var(--nontech) !important;
+  text-decoration: underline !important;
+  text-decoration-thickness: 2px !important;
+  text-underline-offset: 3px !important;
+}
+
+/* ─── Theme Badge ────────────────────────────────────────────────────────── */
+#ctp-theme-badge {
+  border-radius: 0 !important;
+  font-family: 'Bebas Neue', sans-serif !important;
+  font-size: 13px !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  border: 2px solid var(--tech) !important;
+  box-shadow: 3px 3px 0 rgba(255, 45, 85, 0.5) !important;
+}
