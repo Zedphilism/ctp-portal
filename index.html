@@ -1195,16 +1195,29 @@
       });
     }
 
-    /* ── Live stats (mirrors pages.analytics.js exactly) ───── */
+    /* ── Live stats — mirrors dashboard.html loadData() ────── */
+    /* Fetches all 3 tabs in parallel then combines, same as dashboard */
+    function extractJobs(res){
+      return (res && res.ok && Array.isArray(res.jobs)) ? res.jobs : [];
+    }
+
     async function loadStats(){
       const elTotal     = document.getElementById("totalJobs");
       const elRate      = document.getElementById("completionPct");
       const elBreakdown = document.getElementById("statsBreakdown");
       try {
-        const res = await API.listJobs();
-        if(!res.ok) throw new Error(res.error || "API Error");
+        const [resCTP, resWDP, resFAT] = await Promise.all([
+          API.listJobs({ tab: "permohonan" }),
+          API.listJobs({ tab: "wdp" }),
+          API.listJobs({ tab: "fat" }),
+        ]);
 
-        const jobs    = res.jobs || [];
+        const jobs = [
+          ...extractJobs(resCTP),
+          ...extractJobs(resWDP),
+          ...extractJobs(resFAT),
+        ];
+
         const total   = jobs.length;
         const selesai = jobs.filter(j => /selesai/i.test(j.Status || "")).length;
         const dalam   = jobs.filter(j => /dalam/i.test( j.Status || "")).length;
