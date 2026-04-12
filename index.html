@@ -1195,35 +1195,64 @@
       });
     }
 
-    /* ── Live stats — mirrors dashboard.html loadData() ────── */
-    /* Fetches all 3 tabs in parallel then combines, same as dashboard */
+    /* ── Helpers copied verbatim from dashboard.html ────────── */
     function extractJobs(res){
       return (res && res.ok && Array.isArray(res.jobs)) ? res.jobs : [];
     }
 
+    /* Exact copy of dashboard.html normalizeStatus() */
+    function normalizeStatus(raw){
+      const s = String(raw || "").toLowerCase();
+      if(!s) return "";
+      if((/\bassigned\b/.test(s) && !s.includes("unassigned")) || s.includes("ditugas")) return "Assigned";
+      if(s.includes("pending") || s.includes("baharu") || s.includes("baru")) return "Pending";
+      if(s.includes("progress") || s.includes("sedang") || s.includes("jalan")) return "In Progress";
+      if(s.includes("complete") || s.includes("selesai") || s.includes("tamat")) return "Completed";
+      if(s.includes("reject") || s.includes("ditolak") || s.includes("tolak")) return "Rejected";
+      if(s.includes("cancel") || s.includes("batal")) return "Cancelled";
+      return String(raw || "");
+    }
+
+    /* Exact copy of dashboard.html dedupeByJobId() — keyed on raw Job ID field */
+    function dedupeByJobId(list){
+      const seen = new Set();
+      const out  = [];
+      for(const j of list){
+        const id = String(j["Job ID"] || j["JobID"] || j["jobId"] || "").trim();
+        if(!id || seen.has(id)) continue;
+        seen.add(id);
+        out.push(j);
+      }
+      return out;
+    }
+
+    /* ── Live stats — mirrors dashboard.html renderAnalytics() */
     async function loadStats(){
       const elTotal     = document.getElementById("totalJobs");
       const elRate      = document.getElementById("completionPct");
       const elBreakdown = document.getElementById("statsBreakdown");
       try {
+        /* Fetch all 3 tabs in parallel — same as dashboard.html loadData() */
         const [resCTP, resWDP, resFAT] = await Promise.all([
           API.listJobs({ tab: "permohonan" }),
           API.listJobs({ tab: "wdp" }),
           API.listJobs({ tab: "fat" }),
         ]);
 
-        const jobs = [
+        /* Combine then dedupe — same as dashboard.html JOBS assembly */
+        const jobs = dedupeByJobId([
           ...extractJobs(resCTP),
           ...extractJobs(resWDP),
           ...extractJobs(resFAT),
-        ];
+        ]);
 
-        const total   = jobs.length;
-        const selesai = jobs.filter(j => /selesai/i.test(j.Status || "")).length;
-        const dalam   = jobs.filter(j => /dalam/i.test( j.Status || "")).length;
-        const belum   = jobs.filter(j => /belum/i.test( j.Status || "")).length;
-        const batal   = jobs.filter(j => /dibatal/i.test(j.Status || "")).length;
-        const rate    = total > 0 ? Math.round((selesai / total) * 100) : 0;
+        /* Count using normalizeStatus — same as dashboard.html renderAnalytics() */
+        const total      = jobs.length;
+        const completed  = jobs.filter(j => normalizeStatus(j.Status) === "Completed").length;
+        const inProgress = jobs.filter(j => normalizeStatus(j.Status) === "In Progress").length;
+        const pending    = jobs.filter(j => normalizeStatus(j.Status) === "Pending").length;
+        const cancelled  = jobs.filter(j => normalizeStatus(j.Status) === "Cancelled").length;
+        const rate       = total > 0 ? Math.round((completed / total) * 100) : 0;
 
         if(elTotal){ elTotal.innerHTML = ""; animateCounter(elTotal, total, 1200); }
         if(elRate)  elRate.textContent = rate + "%";
@@ -1231,10 +1260,10 @@
 
         if(elBreakdown){
           elBreakdown.innerHTML = `
-            <div class="bd-item"><span class="bd-dot bd-selesai"></span><span>${selesai} Selesai</span></div>
-            <div class="bd-item"><span class="bd-dot bd-dalam"></span><span>${dalam} Dalam Pemeriksaan</span></div>
-            <div class="bd-item"><span class="bd-dot bd-belum"></span><span>${belum} Belum Diperiksa</span></div>
-            ${batal > 0 ? `<div class="bd-item"><span class="bd-dot bd-batal"></span><span>${batal} Dibatal</span></div>` : ""}
+            <div class="bd-item"><span class="bd-dot bd-selesai"></span><span>${completed} Selesai</span></div>
+            <div class="bd-item"><span class="bd-dot bd-dalam"></span><span>${inProgress} Dalam Pemeriksaan</span></div>
+            <div class="bd-item"><span class="bd-dot bd-belum"></span><span>${pending} Belum Diperiksa</span></div>
+            ${cancelled > 0 ? `<div class="bd-item"><span class="bd-dot bd-batal"></span><span>${cancelled} Dibatal</span></div>` : ""}
           `;
         }
       } catch(err) {
