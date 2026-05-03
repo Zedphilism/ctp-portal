@@ -6,7 +6,8 @@
       "Bash(py:*)",
       "Read(//c/Users/user/.claude/skills/ui-ux-pro-max/**)",
       "Bash(python scripts/search.py \"government portal SaaS dashboard technical inspection professional dark elegant\" --design-system -p \"CT&P Portal\" -f markdown)",
-      "Bash(where python:*)"
+      "Bash(where python:*)",
+      "Bash(node *)"
     ]
   }
 }

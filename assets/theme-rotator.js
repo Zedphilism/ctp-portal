@@ -7,11 +7,11 @@
  * Rotation order (week % 4):
  *   0 → Hutan Digital    (forest-green OLED, EB Garamond + Lato)
  *   1 → Neon Archipelago (cyberpunk dark, Fira Code + Fira Sans)
- *   2 → Senja Emas       (golden dusk, Playfair Display + Inter)
- *   3 → Batu Putih       (minimal stone-white, Inter only)
+ *   2 → Batu Putih       (minimal stone-white, Inter only)
+ *   3 → Glass Data       (glassmorphism dark, Playfair Display + Manrope)
  *
  * Manual overrides:
- *   URL param  : ?theme=hutan|neon|senja|batu
+ *   URL param  : ?theme=hutan|neon|batu|glass
  *   localStorage: ctp_ui_theme_override
  *   Badge click : cycles to next theme
  *   Badge right-click: resets to auto (weekly rotation)
@@ -95,43 +95,6 @@
       css:   'theme-neon',
     },
 
-    senja: {
-      name: 'Senja Emas',
-      week: 'C',
-      vars: {
-        '--bg':          '#0f0700',
-        '--panel':       '#1c0e00',
-        '--panel2':      '#150a00',
-        '--text':        '#fff8ec',
-        '--muted':       '#c4986a',
-        '--line':        'rgba(255,160,50,0.09)',
-        '--shadow':      '0 8px 32px rgba(245,158,11,0.18), 0 24px 60px rgba(0,0,0,0.5)',
-        '--radius':      '18px',
-        '--tech':        '#f59e0b',
-        '--nontech':     '#d97706',
-        '--gold':        '#fbbf24',
-        '--cream':       '#fff8f0',
-        '--accent':      '#f59e0b',
-        '--glow':        'rgba(245,158,11,0.28)',
-      },
-      varsLight: {
-        '--bg':          '#fffbf2',
-        '--panel':       '#ffffff',
-        '--panel2':      '#fef9ed',
-        '--text':        '#2c1a00',
-        '--muted':       '#8a5c1a',
-        '--line':        'rgba(200,100,0,0.1)',
-        '--shadow':      '0 8px 28px rgba(180,100,0,0.1), 0 20px 52px rgba(160,80,0,0.08)',
-        '--tech':        '#b45309',
-        '--nontech':     '#92400e',
-        '--gold':        '#d97706',
-        '--cream':       '#fef9ed',
-        '--glow':        'rgba(180,100,0,0.1)',
-      },
-      fonts: 'Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500|Inter:wght@300;400;500;600;700',
-      css:   'theme-senja',
-    },
-
     batu: {
       name: 'Batu Putih',
       week: 'D',
@@ -204,43 +167,6 @@
       },
       fonts: 'Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700|Manrope:wght@300;400;500;600;700;800',
       css:   'theme-glass',
-    },
-
-    terminal: {
-      name: 'Retro Terminal',
-      week: 'G',
-      vars: {
-        '--bg':          '#000000',
-        '--panel':       '#090909',
-        '--panel2':      '#060606',
-        '--text':        '#00ff41',
-        '--muted':       '#007a1e',
-        '--line':        'rgba(0,255,65,0.12)',
-        '--shadow':      '0 0 0 1px rgba(0,255,65,0.2), 0 0 20px rgba(0,255,65,0.06)',
-        '--radius':      '0px',
-        '--tech':        '#00ff41',
-        '--nontech':     '#ffcc00',
-        '--gold':        '#ffcc00',
-        '--cream':       '#ccffcc',
-        '--accent':      '#00ff41',
-        '--glow':        'rgba(0,255,65,0.3)',
-      },
-      varsLight: {
-        '--bg':          '#001200',
-        '--panel':       '#002200',
-        '--panel2':      '#001a00',
-        '--text':        '#00ff41',
-        '--muted':       '#00aa2e',
-        '--line':        'rgba(0,255,65,0.15)',
-        '--shadow':      '0 0 0 1px rgba(0,255,65,0.15)',
-        '--tech':        '#00cc33',
-        '--nontech':     '#cccc00',
-        '--gold':        '#aaaa00',
-        '--cream':       '#aaffaa',
-        '--glow':        'rgba(0,200,50,0.2)',
-      },
-      fonts: 'VT323|Share+Tech+Mono',
-      css:   'theme-terminal',
     },
 
   };

@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ms">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ctptek · mechanism</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"/>
+
+  <style>
+    :root{
+      --bg:#08111f;
+      --bg-2:#0c1828;
+      --ink:#e6f0ff;
+      --ink-2:#a8bcd6;
+      --ink-3:#6a809c;
+      --rule:#1a2a40;
+      --bp-line: #b8d4ee;
+      --bp-line-2: #6088b4;
+      --acc: oklch(0.88 0.14 220);
+      --fault: oklch(0.68 0.22 25);
+    }
+    *{ box-sizing:border-box;}
+    html, body{
+      margin:0; padding:0;
+      background:var(--bg);
+      color:var(--ink);
+      font-family:'JetBrains Mono', monospace;
+      overflow:hidden;
+      height:100vh;
+    }
+
+    /* Fixed background canvas */
+    .bg-canvas{
+      position:fixed; inset:0;
+      z-index:1;
+      pointer-events:none;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .bg-canvas svg{
+      width:min(96vw, 1400px);
+      height:min(96vh, 1000px);
+      display:block;
+    }
+
+    /* Hover strip — bottom of viewport */
+    .hover-strip{
+      position:fixed; left:50%; bottom:60px;
+      transform:translateX(-50%);
+      z-index:20;
+      display:grid; grid-template-columns:repeat(5, 1fr);
+      gap:0;
+      width:min(92vw, 880px);
+      padding:0;
+    }
+    .hover-strip .hs-rail{
+      grid-column:1 / -1; grid-row:1;
+      height:1px; background:var(--rule);
+      margin-bottom:14px;
+      align-self:end;
+    }
+    .hs-stage{
+      grid-row:2;
+      background:transparent; border:none;
+      color:var(--ink-3);
+      font-family:inherit;
+      padding:14px 8px 10px;
+      display:flex; flex-direction:column; align-items:center; gap:6px;
+      cursor:pointer;
+      transition:color .25s;
+      position:relative;
+    }
+    .hs-stage::before{
+      content:""; position:absolute; left:0; right:0; top:-1px;
+      height:1px; background:var(--acc);
+      transform:scaleX(0); transform-origin:center;
+      transition:transform .35s cubic-bezier(.22,.68,0,1);
+    }
+    .hs-stage:hover, .hs-stage.on{ color:var(--ink);}
+    .hs-stage.on::before{ transform:scaleX(1);}
+    .hs-stage .hs-dot{
+      width:6px; height:6px; border-radius:50%;
+      background:var(--rule);
+      transition:background .25s, box-shadow .25s;
+    }
+    .hs-stage.on .hs-dot{
+      background:var(--acc);
+      box-shadow:0 0 12px var(--acc);
+    }
+    .hs-stage .hs-code{
+      font-size:10px; letter-spacing:.22em; color:var(--acc); opacity:.6;
+    }
+    .hs-stage.on .hs-code{ opacity:1;}
+    .hs-stage .hs-name{
+      font-size:11px; letter-spacing:.04em;
+    }
+
+    /* Hint */
+    .hint{
+      position:fixed; left:50%; top:24px;
+      transform:translateX(-50%);
+      z-index:10;
+      display:flex; align-items:center; gap:10px;
+      font-size:10px; letter-spacing:.22em; text-transform:uppercase;
+      color:var(--ink-3);
+    }
+    .hint .hint-pip{
+      width:6px; height:6px; border-radius:50%;
+      background:var(--acc);
+      box-shadow:0 0 10px var(--acc);
+      animation:hp 1.6s infinite;
+    }
+    @keyframes hp{ 0%,100%{opacity:.4;} 50%{opacity:1;} }
+
+    /* Stage tag */
+    .stage-tag{
+      position:fixed; left:24px; bottom:24px;
+      z-index:10;
+      display:flex; flex-direction:column; gap:4px;
+      font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+      color:var(--ink-3);
+    }
+    .stage-tag .st-num{ color:var(--acc); font-size:13px; letter-spacing:.22em;}
+    .stage-tag .st-name{ color:var(--ink); font-size:14px; letter-spacing:.04em; text-transform:none;}
+    .stage-tag .st-en{ font-size:9.5px;}
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="hero-scenes.jsx"></script>
+  <script type="text/babel" src="app.v3.jsx"></script>
+
+  <template id="__bundler_thumbnail" data-bg-color="#08111f">
+    <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#b8d4ee" stroke-width="6">
+      <line x1="120" y1="400" x2="1080" y2="400" stroke="#6088b4" stroke-width="2" stroke-dasharray="24 14 4 14"/>
+      <circle cx="600" cy="400" r="200" stroke-width="8"/>
+      <circle cx="600" cy="400" r="180" stroke-width="3" opacity=".5"/>
+      <circle cx="600" cy="400" r="40"/>
+      <g stroke-width="3" opacity=".7">
+        <line x1="600" y1="240" x2="600" y2="200"/>
+        <line x1="713" y1="287" x2="741" y2="259"/>
+        <line x1="760" y1="400" x2="800" y2="400"/>
+        <line x1="713" y1="513" x2="741" y2="541"/>
+        <line x1="600" y1="560" x2="600" y2="600"/>
+        <line x1="487" y1="513" x2="459" y2="541"/>
+        <line x1="440" y1="400" x2="400" y2="400"/>
+        <line x1="487" y1="287" x2="459" y2="259"/>
+      </g>
+      <circle cx="320" cy="400" r="120" stroke-width="6" opacity=".7"/>
+      <circle cx="880" cy="400" r="120" stroke-width="6" opacity=".7"/>
+      <circle cx="600" cy="180" r="22" fill="#08111f" stroke="#a8d4f0" stroke-width="3"/>
+      <text x="600" y="190" text-anchor="middle" fill="#a8d4f0" font-family="monospace" font-size="22" stroke="none">2</text>
+      <line x1="600" y1="200" x2="600" y2="240" stroke="#a8d4f0" stroke-width="2" opacity=".7"/>
+    </svg>
+  </template>
+</body>
+</html>
