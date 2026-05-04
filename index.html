@@ -16,6 +16,26 @@
   <style>
     /* ── Tokens ─────────────────────────────────────────── */
     :root {
+      --bg: #f8f9fa;
+      --bg2: #ffffff;
+      --ink: #0f172a;
+      --ink2: #334155;
+      --ink3: #64748b;
+      --rule: #e2e8f0;
+      --bp: #3b82f6;
+      --bp2: #93c5fd;
+      --acc: oklch(0.65 0.15 240);
+      --grn: #10b981;
+      --gold: #f59e0b;
+      --fault: oklch(0.6 0.22 25);
+      --bg-rgb: 248, 249, 250;
+      --bp-rgb: 59, 130, 246;
+      --grid-color: rgba(15, 23, 42, .06);
+      --panel-bg: rgba(255, 255, 255, .97);
+      --glass-bg: rgba(59, 130, 246, .08);
+      --glass-hover: rgba(59, 130, 246, .15);
+    }
+    body.theme-dark {
       --bg: #08111f;
       --bg2: #0c1828;
       --ink: #e6f0ff;
@@ -28,6 +48,12 @@
       --grn: #1ba05a;
       --gold: #c8a840;
       --fault: oklch(0.68 0.22 25);
+      --bg-rgb: 8, 17, 31;
+      --bp-rgb: 184, 212, 238;
+      --grid-color: var(--grid-color);
+      --panel-bg: var(--panel-bg);
+      --glass-bg: var(--glass-bg);
+      --glass-hover: var(--glass-hover);
     }
 
     /* ── Reset & base ───────────────────────────────────── */
@@ -67,8 +93,8 @@
       z-index: 0;
       pointer-events: none;
       background-image:
-        linear-gradient(rgba(26, 42, 64, .06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(26, 42, 64, .06) 1px, transparent 1px);
+        linear-gradient(var(--grid-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
       background-size: 40px 40px;
     }
 
@@ -104,9 +130,9 @@
       height: 140px;
       background: linear-gradient(180deg,
           transparent 0%,
-          rgba(184, 212, 238, .04) 40%,
-          rgba(184, 212, 238, .09) 50%,
-          rgba(184, 212, 238, .04) 60%,
+          var(--glass-bg) 40%,
+          rgba(var(--bp-rgb), .09) 50%,
+          var(--glass-bg) 60%,
           transparent 100%);
       animation: scanPass 8s linear infinite;
       top: -140px;
@@ -123,6 +149,7 @@
     }
 
     /* ── Top nav ─────────────────────────────────────────── */
+    .theme-toggle { background: none; border: none; color: var(--ink2); cursor: pointer; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; margin-right: 12px; transition: color 0.2s; } .theme-toggle:hover { color: var(--ink); } .theme-toggle svg { width: 18px; height: 18px; }
     .top-nav {
       position: fixed;
       top: 0;
@@ -134,7 +161,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 20px;
-      background: rgba(8, 17, 31, .92);
+      background: rgba(var(--bg-rgb), .92);
       border-bottom: 1px solid var(--rule);
       backdrop-filter: blur(16px);
     }
@@ -155,7 +182,7 @@
       width: 28px;
       height: 28px;
       object-fit: contain;
-      filter: drop-shadow(0 0 5px rgba(184, 212, 238, .18));
+      filter: drop-shadow(0 0 5px rgba(var(--bp-rgb), .18));
     }
 
     .nav-id {
@@ -231,8 +258,8 @@
     }
 
     .hamburger:hover {
-      background: rgba(184, 212, 238, .07);
-      border-color: rgba(184, 212, 238, .2);
+      background: rgba(var(--bp-rgb), .07);
+      border-color: rgba(var(--bp-rgb), .2);
     }
 
     .burger {
@@ -298,9 +325,9 @@
       padding: 32px 28px 24px;
       /* Fade toward center so turbine shows through */
       background: linear-gradient(to right,
-          rgba(8, 17, 31, .97) 0%,
-          rgba(8, 17, 31, .97) 74%,
-          rgba(8, 17, 31, .72) 88%,
+          var(--panel-bg) 0%,
+          var(--panel-bg) 74%,
+          rgba(var(--bg-rgb), .72) 88%,
           transparent 100%);
       border-right: none;
       display: flex;
@@ -438,9 +465,9 @@
     }
 
     .form-item:hover {
-      background: rgba(184, 212, 238, .055);
-      border-color: rgba(184, 212, 238, .22);
-      box-shadow: 0 0 20px rgba(184, 212, 238, .03);
+      background: rgba(var(--bp-rgb), .055);
+      border-color: rgba(var(--bp-rgb), .22);
+      box-shadow: 0 0 20px rgba(var(--bp-rgb), .03);
     }
 
     .form-item:hover::before {
@@ -502,7 +529,7 @@
       padding: 14px 18px;
       width: 100%;
       border: 1px solid var(--bp2);
-      background: rgba(184, 212, 238, .04);
+      background: var(--glass-bg);
       color: var(--ink);
       font-family: inherit;
       font-size: 12px;
@@ -514,9 +541,9 @@
     }
 
     .cta-btn:hover {
-      background: rgba(184, 212, 238, .10);
+      background: var(--glass-hover);
       border-color: var(--bp);
-      box-shadow: 0 0 32px rgba(184, 212, 238, .06);
+      box-shadow: 0 0 32px rgba(var(--bp-rgb), .06);
     }
 
     .cta-inner {
@@ -551,9 +578,9 @@
       margin-left: auto;
       padding: 32px 22px 24px;
       background: linear-gradient(to left,
-          rgba(8, 17, 31, .97) 0%,
-          rgba(8, 17, 31, .97) 74%,
-          rgba(8, 17, 31, .72) 88%,
+          var(--panel-bg) 0%,
+          var(--panel-bg) 74%,
+          rgba(var(--bg-rgb), .72) 88%,
           transparent 100%);
       border-left: none;
       display: flex;
@@ -626,7 +653,7 @@
       width: 50px;
       height: 50px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(184, 212, 238, .04), transparent 70%);
+      background: radial-gradient(circle, var(--glass-bg), transparent 70%);
       pointer-events: none;
     }
 
@@ -663,7 +690,7 @@
       display: block;
       border-radius: 2px;
       background: linear-gradient(90deg,
-          rgba(184, 212, 238, .04) 0%, rgba(184, 212, 238, .1) 50%, rgba(184, 212, 238, .04) 100%);
+          var(--glass-bg) 0%, rgba(var(--bp-rgb), .1) 50%, var(--glass-bg) 100%);
       background-size: 200% 100%;
       animation: shimmer 1.6s infinite;
     }
@@ -874,7 +901,7 @@
       height: 42px;
       display: flex;
       align-items: center;
-      background: rgba(8, 17, 31, .93);
+      background: rgba(var(--bg-rgb), .93);
       border-top: 1px solid var(--rule);
       backdrop-filter: blur(16px);
     }
@@ -982,7 +1009,7 @@
 
     .bb-support:hover {
       color: var(--acc);
-      background: rgba(184, 212, 238, .04);
+      background: var(--glass-bg);
     }
 
     /* ── Drawer ───────────────────────────────────────────── */
@@ -1088,8 +1115,8 @@
     }
 
     .drawer-link:hover {
-      background: rgba(184, 212, 238, .055);
-      border-color: rgba(184, 212, 238, .18);
+      background: rgba(var(--bp-rgb), .055);
+      border-color: rgba(var(--bp-rgb), .18);
     }
 
     .d-notice {
@@ -1116,10 +1143,10 @@
       font-family: 'JetBrains Mono', ui-monospace, monospace;
       opacity: 0;
       transition: opacity .08s;
-      background-color: rgba(8, 17, 31, .97);
+      background-color: var(--panel-bg);
       background-image: repeating-linear-gradient(0deg,
           transparent 0px, transparent 2px, rgba(0, 0, 0, .08) 2px, rgba(0, 0, 0, .08) 4px);
-      box-shadow: 0 0 0 1px rgba(184, 212, 238, .09), 0 8px 32px rgba(0, 0, 0, .55);
+      box-shadow: 0 0 0 1px rgba(var(--bp-rgb), .09), 0 8px 32px rgba(0, 0, 0, .55);
     }
 
     .ctp-tip-box.active {
@@ -1215,7 +1242,7 @@
         width: 100%;
         max-width: 100%;
         min-width: unset;
-        background: rgba(8, 17, 31, .95);
+        background: rgba(var(--bg-rgb), .95);
         border-bottom: 1px solid var(--rule);
       }
 
@@ -1228,7 +1255,7 @@
         max-width: 100%;
         min-width: unset;
         margin-left: 0;
-        background: rgba(8, 17, 31, .95);
+        background: rgba(var(--bg-rgb), .95);
       }
 
       .panel-r::before {
@@ -1284,6 +1311,11 @@
       </div>
     </div>
     <div class="nav-right">
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Tukar Tema">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="themeIcon">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
       <div class="sys-pill">
         <span class="sys-dot" aria-hidden="true"></span>
         Sistem Aktif
@@ -1303,7 +1335,7 @@
     <div class="panel-l">
 
       <div>
-        <p class="hero-over">Sistem Pemantauan Pemeriksaan Peralatan ATM</p>
+        <p class="hero-over">Sistem Pemantauan Pemeriksaan</p>
         <h1 class="hero-h1">Cawangan<br>Teknik &amp;<br><em>Pemeriksaan</em></h1>
       </div>
 
@@ -1363,17 +1395,7 @@
         </a>
       </p>
 
-      <button class="cta-btn" type="button" data-cell="teknikal" data-target="dashboard.html"
-        data-engine-view="dashboard"
-        data-ctp-tip="Dashboard Teknikal|Senarai permohonan yang diterima oleh CT&P untuk pemantauan status, pemeriksa yang ditugaskan, beban semasa dan sebagainya.">
-        <div class="cta-inner">
-          <div>Masuk Dashboard Teknikal</div>
-          <div class="cta-sub">Sel Teknikal · Pemantauan Penuh</div>
-        </div>
-        <span class="cta-arrow" aria-hidden="true">→</span>
-      </button>
-
-    </div><!-- /panel-l -->
+      </div><!-- /panel-l -->
 
     <!-- Right panel: live stats -->
     <aside class="panel-r" aria-label="Statistik semasa">
@@ -1422,6 +1444,15 @@
           <div class="cta-inner">
             <div>Masuk Dashboard Teknikal</div>
             <div class="cta-sub">Sel Teknikal · Pemantauan Penuh</div>
+          </div>
+          <span class="cta-arrow" aria-hidden="true">→</span>
+        </button>
+      </div>
+      <div style="margin-top: 10px;">
+        <button class="cta-btn" type="button" data-target="tentang-kami.html">
+          <div class="cta-inner">
+            <div>Tentang Kami</div>
+            <div class="cta-sub">Mengenai Sel Teknikal</div>
           </div>
           <span class="cta-arrow" aria-hidden="true">→</span>
         </button>
