@@ -15,6 +15,19 @@
       --ink-3: #6a809c;
       --bp-line: #b8d4ee;
       --bp-line-2: #6088b4;
+      --popup-bg: rgba(8,14,28,.94);
+      --popup-text: #e6f0ff;
+    }
+    html[data-theme="light"] {
+      --acc: oklch(0.42 0.22 240);
+      --fault: oklch(0.48 0.26 25);
+      --ink: #0d1e33;
+      --ink-2: #1a3558;
+      --ink-3: #2d5080;
+      --bp-line: #1a3a62;
+      --bp-line-2: #0d2240;
+      --popup-bg: rgba(240,245,255,.97);
+      --popup-text: #0d1e33;
     }
     body { margin: 0; padding: 0; overflow: hidden; background: transparent; }
     #root { width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; }
@@ -384,9 +397,9 @@ function HeroCanvas({ progress }){
             <line x1={cx} y1={cy-r-20} x2={cx} y2={cy-r+10} stroke="var(--fault)" strokeWidth="1"/>
             <line x1={cx} y1={cy+r-10} x2={cx} y2={cy+r+20} stroke="var(--fault)" strokeWidth="1"/>
             <line x1={cx+120} y1={cy-90} x2={px} y2={py+20} stroke="var(--fault)" strokeWidth=".8" strokeDasharray="2 3"/>
-            <rect x={px} y={py} width="300" height="130" fill="rgba(8,14,28,.94)" stroke="var(--fault)" strokeWidth="1"/>
+            <rect x={px} y={py} width="300" height="130" fill="var(--popup-bg)" stroke="var(--fault)" strokeWidth="1"/>
             <text x={px+14} y={py+26} fontFamily="JetBrains Mono, monospace" fontSize="11" fill="var(--fault)" letterSpacing="2">FAULT · F-203</text>
-            <text x={px+14} y={py+52} fontFamily="JetBrains Mono, monospace" fontSize="14" fill="var(--ink)" letterSpacing="1">ROTOR STAGE II</text>
+            <text x={px+14} y={py+52} fontFamily="JetBrains Mono, monospace" fontSize="14" fill="var(--popup-text)" letterSpacing="1">ROTOR STAGE II</text>
             <text x={px+14} y={py+72} fontFamily="JetBrains Mono, monospace" fontSize="10" fill="var(--ink-2)">BLADE 14 · WEAR 0.42mm</text>
             <text x={px+14} y={py+88} fontFamily="JetBrains Mono, monospace" fontSize="10" fill="var(--ink-2)">VIBRATION · +12.6%</text>
             <text x={px+14} y={py+108} fontFamily="JetBrains Mono, monospace" fontSize="10" fill="var(--fault)">REPLACE · BORANG F-02</text>
@@ -500,6 +513,10 @@ window.HERO_STAGES = [
 
       useEffect(() => {
         const onMessage = (e) => {
+          if (e.data && e.data.type === 'ctp-theme') {
+            document.documentElement.setAttribute('data-theme', e.data.mode);
+            return;
+          }
           if (e.data && e.data.type === 'ctp-engine-view') {
             const code = e.data.code;
             if (!code) {
