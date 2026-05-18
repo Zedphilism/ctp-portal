@@ -99,6 +99,7 @@ function onFormSubmit(e) {
 
 function doGet(e) {
   if (e && e.parameter && e.parameter.action) return handleApi_(e);
+    if (e && e.parameter && e.parameter.app === "report") return HtmlService.createHtmlOutputFromFile("report").setTitle("CT&P Report Generator").setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 
   const template = HtmlService.createTemplateFromFile("WebApp");
   return template.evaluate()
@@ -1728,7 +1729,7 @@ function wipeTestData() {
    ========================================== */
 
 function sendSubmissionEmail(jobId, headers, rowData) {
-  const ADMIN_EMAILS = "pokjay7997@gmail.com";
+  const ADMIN_EMAILS = "";
   const EMAIL_SUBJECT = `[CT&P Portal] New Request: ${jobId}`;
 
   const colUnit = findCol(headers, ["Nama pasukan / unit", "Unit", "Pasukan"]);
