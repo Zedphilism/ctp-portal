@@ -80,6 +80,11 @@
       text-overflow:ellipsis;
     }
 
+    .btn-group {
+      display: flex;
+      gap: 10px;
+    }
+
     .btn{
       display:inline-flex;
       align-items:center;
@@ -409,6 +414,10 @@
         flex-direction:column;
         align-items:stretch;
       }
+      .btn-group {
+        flex-direction: column;
+        width: 100%;
+      }
       .btn{
         justify-content:center;
       }
@@ -432,7 +441,10 @@
         <h1>Rancangan Pergerakan</h1>
         <p>Portal CT&amp;P &bull; Itinerari tugas pemeriksaan</p>
       </div>
-      <a class="btn" href="dashboard.html" onclick="if(history.length > 1){ history.back(); return false; }">Kembali ke Schedule</a>
+      <div class="btn-group">
+        <a class="btn" href="https://www.camscanner.com/share/show?device_id=AD_AID-6EE08749A5DACC96&sid=A5250E26555D46BASX7AX7X1US&pid=dsa&style=1&t=1788490353&share_page_style=0&img=1&app_version=7.24.0&guide_login_dialog=1&support_applink=2&app_id=CS_01&share_download_panel_renew=1&pic_share_template=2" target="_blank">&#128196; Maklumbalas</a>
+        <a class="btn" href="dashboard.html" onclick="if(history.length > 1){ history.back(); return false; }">Kembali ke Schedule</a>
+      </div>
     </div>
   </header>
 
@@ -444,7 +456,7 @@
         <div><b>Bahagian Perolehan, Kementerian Pertahanan</b></div>
       </div>
       <div class="chips">
-        <span class="chip"><span class="dot"></span>1 - 5 September 2026</span>
+        <span class="chip"><span class="dot"></span>7 - 11 September 2026</span>
         <span class="chip"><span class="dot" style="background:var(--good); box-shadow:0 0 0 3px rgba(35,194,107,.14);"></span>Sarawak &amp; Sabah</span>
       </div>
     </section>
@@ -471,7 +483,7 @@
 
       <details class="day" open>
         <summary>
-          <span class="day-date"><span class="badge">1 September 2026 (Selasa)</span></span>
+          <span class="day-date"><span class="badge">7 September 2026 (Isnin)</span></span>
           <span class="day-route">Kuala Lumpur &rarr; Sibu &rarr; Kuching</span>
         </summary>
         <div class="day-body">
@@ -483,9 +495,9 @@
             <div class="k">&#9992; Penerbangan 1</div>
             <div class="flight-grid">
               <div class="flight-item"><b>Syarikat</b>AirAsia</div>
-              <div class="flight-item"><b>&#9992; Penerbangan</b>AK 5876</div>
-              <div class="flight-item"><b>&#128339; Berlepas</b>06:05 pagi &ndash; KLIA</div>
-              <div class="flight-item"><b>&#128339; Tiba</b>08:05 pagi &ndash; Sibu</div>
+              <div class="flight-item"><b>&#9992; Penerbangan</b>AK 5872</div>
+              <div class="flight-item"><b>&#128339; Berlepas</b>09:30 pagi &ndash; KLIA Terminal 2</div>
+              <div class="flight-item"><b>&#128339; Tiba</b>11:30 pagi &ndash; Sibu</div>
             </div>
           </div>
           <div class="row">
@@ -502,8 +514,8 @@
             <div class="flight-grid">
               <div class="flight-item"><b>Syarikat</b>AirAsia</div>
               <div class="flight-item"><b>&#9992; Penerbangan</b>AK 6469</div>
-              <div class="flight-item"><b>&#128339; Berlepas</b>18:20 petang &ndash; Sibu</div>
-              <div class="flight-item"><b>&#128339; Tiba</b>18:55 petang &ndash; Kuching</div>
+              <div class="flight-item"><b>&#128339; Berlepas</b>16:55 petang &ndash; Sibu</div>
+              <div class="flight-item"><b>&#128339; Tiba</b>17:30 petang &ndash; Kuching</div>
             </div>
           </div>
         </div>
@@ -511,7 +523,7 @@
 
       <details class="day">
         <summary>
-          <span class="day-date"><span class="badge">2 September 2026 (Rabu)</span></span>
+          <span class="day-date"><span class="badge">8 September 2026 (Selasa)</span></span>
           <span class="day-route">Kuching, Sarawak</span>
         </summary>
         <div class="day-body">
@@ -535,7 +547,7 @@
 
       <details class="day">
         <summary>
-          <span class="day-date"><span class="badge">3 September 2026 (Khamis)</span></span>
+          <span class="day-date"><span class="badge">9 September 2026 (Rabu)</span></span>
           <span class="day-route">Kuching &rarr; Kota Kinabalu</span>
         </summary>
         <div class="day-body">
@@ -547,9 +559,9 @@
             <div class="k">&#9992; Penerbangan</div>
             <div class="flight-grid">
               <div class="flight-item"><b>Syarikat</b>AirAsia</div>
-              <div class="flight-item"><b>&#9992; Penerbangan</b>AK 6350</div>
-              <div class="flight-item"><b>&#128339; Berlepas</b>06:00 pagi &ndash; Kuching</div>
-              <div class="flight-item"><b>&#128339; Tiba</b>07:25 pagi &ndash; Kota Kinabalu</div>
+              <div class="flight-item"><b>&#9992; Penerbangan</b>AK 6352</div>
+              <div class="flight-item"><b>&#128339; Berlepas</b>10:30 pagi &ndash; Kuching</div>
+              <div class="flight-item"><b>&#128339; Tiba</b>12:00 t/hari &ndash; Kota Kinabalu Terminal 1</div>
             </div>
           </div>
           <div class="row">
@@ -565,7 +577,7 @@
 
       <details class="day">
         <summary>
-          <span class="day-date"><span class="badge">4 September 2026 (Jumaat)</span></span>
+          <span class="day-date"><span class="badge">10 September 2026 (Khamis)</span></span>
           <span class="day-route">Kota Kinabalu &rarr; Tawau</span>
         </summary>
         <div class="day-body">
@@ -578,7 +590,7 @@
             <div class="flight-grid">
               <div class="flight-item"><b>Syarikat</b>AirAsia</div>
               <div class="flight-item"><b>&#9992; Penerbangan</b>AK 6260</div>
-              <div class="flight-item"><b>&#128339; Berlepas</b>09:30 pagi &ndash; Kota Kinabalu</div>
+              <div class="flight-item"><b>&#128339; Berlepas</b>09:30 pagi &ndash; Kota Kinabalu Terminal 1</div>
               <div class="flight-item"><b>&#128339; Tiba</b>10:20 pagi &ndash; Tawau</div>
             </div>
           </div>
@@ -594,7 +606,7 @@
 
       <details class="day">
         <summary>
-          <span class="day-date"><span class="badge">5 September 2026 (Sabtu)</span></span>
+          <span class="day-date"><span class="badge">11 September 2026 (Jumaat)</span></span>
           <span class="day-route">Tawau &rarr; Kuala Lumpur</span>
         </summary>
         <div class="day-body">
@@ -606,9 +618,9 @@
             <div class="k">&#9992; Penerbangan</div>
             <div class="flight-grid">
               <div class="flight-item"><b>Syarikat</b>AirAsia</div>
-              <div class="flight-item"><b>&#9992; Penerbangan</b>AK 5747</div>
-              <div class="flight-item"><b>&#128339; Berlepas</b>12:15 t/hari &ndash; Tawau</div>
-              <div class="flight-item"><b>&#128339; Tiba</b>14:55 petang &ndash; KLIA</div>
+              <div class="flight-item"><b>&#9992; Penerbangan</b>AK 5745</div>
+              <div class="flight-item"><b>&#128339; Berlepas</b>09:15 pagi &ndash; Tawau</div>
+              <div class="flight-item"><b>&#128339; Tiba</b>12:00 t/hari &ndash; KLIA Terminal 2</div>
             </div>
           </div>
           <div class="row">
@@ -632,27 +644,27 @@
           </thead>
           <tbody>
             <tr>
-              <td>1 Sep</td>
+              <td>7 Sep</td>
               <td>Kuala Lumpur &rarr; Sibu &rarr; Kuching</td>
               <td>Penerbangan dan pemeriksaan di KSOD 9 WKSP, 9 KOD &amp; 9 KOMP KPTD</td>
             </tr>
             <tr>
-              <td>2 Sep</td>
+              <td>8 Sep</td>
               <td>Kuching</td>
               <td>Pemeriksaan di KSOD 34 WKSP ARMOR &amp; KSOD 3 WKSP BGD</td>
             </tr>
             <tr>
-              <td>3 Sep</td>
+              <td>9 Sep</td>
               <td>Kuching &rarr; Kota Kinabalu</td>
               <td>Penerbangan dan pemeriksaan di 75 BOD</td>
             </tr>
             <tr>
-              <td>4 Sep</td>
+              <td>10 Sep</td>
               <td>Kota Kinabalu &rarr; Tawau</td>
               <td>Penerbangan dan pemeriksaan di MK ATB 2</td>
             </tr>
             <tr>
-              <td>5 Sep</td>
+              <td>11 Sep</td>
               <td>Tawau &rarr; Kuala Lumpur</td>
               <td>Penerbangan pulang</td>
             </tr>
