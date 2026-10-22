@@ -1,0 +1,2 @@
+# Removed stale submodule reference for SavageZed.
+# The repo no longer uses this submodule; the GitHub Pages deployment was failing while initializing it.
