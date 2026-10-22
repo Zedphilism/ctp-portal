@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Laporan Lengkap & Analitik Logistik ATM — CT&P Portal</title>
-  <meta name="description" content="Laporan Lengkap & Analitik Logistik ATM (Pemeriksaan Alat Ganti Kenderaan & Mewujudkan Dokumen WDP) — Cawangan Teknik & Pemeriksaan.">
+  <title>Laporan Lengkap & Analitik Sel Teknikal — CT&P Portal</title>
+  <meta name="description" content="Laporan Lengkap & Analitik Sel Teknikal (Pemeriksaan Alat Ganti Kenderaan & Mewujudkan Dokumen) — Cawangan Teknik & Pemeriksaan.">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1223,8 +1223,8 @@
         </div>
         <div class="brand-title-wrap">
           <h1>
-            Laporan Lengkap & Analitik Logistik ATM
-            <span class="badge-submod">Termasuk Tab WDP & Permohonan</span>
+            Laporan Lengkap & Analitik Sel Teknikal
+            <span class="badge-submod">Pemeriksaan Alat Ganti & Mewujudkan Dokumen</span>
           </h1>
           <div class="header-subtitle">
             <span>Pemeriksaan Alat Ganti Kenderaan & Mewujudkan Dokumen Peralatan</span>
@@ -1253,12 +1253,12 @@
 
         <button class="btn-action btn-primary" onclick="window.open('https://script.google.com/macros/s/AKfycbzyCi-6stLedx0-un55ldx_qOuPgRUrP5A_7nu6uCAINOZvQJatVIzfdowW6Vo02Dby/exec', '_blank')">
           <i class="ri-add-line"></i>
-          <span>+Permohonan</span>
+          <span>+Alat Ganti</span>
         </button>
 
         <button class="btn-action btn-emerald" onclick="window.open('https://script.google.com/macros/s/AKfycbzyCi-6stLedx0-un55ldx_qOuPgRUrP5A_7nu6uCAINOZvQJatVIzfdowW6Vo02Dby/exec?tab=wdp', '_blank')">
           <i class="ri-add-line"></i>
-          <span>+WDP</span>
+          <span>+Mewujudkan Dokumen</span>
         </button>
       </div>
     </div>
@@ -1266,10 +1266,10 @@
     <!-- Controls Strip: Scope Filter & Primary Navigation Tabs -->
     <div class="controls-strip">
       <div class="scope-selector">
-        <span class="scope-label">Skop Laporan:</span>
-        <button class="scope-pill active" data-scope="all" id="scopeBtnAll">Laporan Gabungan (<span class="cnt-all">453</span>)</button>
-        <button class="scope-pill" data-scope="CTP" id="scopeBtnCtp">Tab Permohonan (<span class="cnt-ctp">257</span>)</button>
-        <button class="scope-pill" data-scope="WDP" id="scopeBtnWdp">Tab WDP (<span class="cnt-wdp">196</span>)</button>
+        <span class="scope-label">Skop Pemeriksaan:</span>
+        <button class="scope-pill active" data-scope="all" id="scopeBtnAll">Semua Pemeriksaan (<span class="cnt-all">453</span>)</button>
+        <button class="scope-pill" data-scope="CTP" id="scopeBtnCtp">Pemeriksaan Alat Ganti (<span class="cnt-ctp">257</span>)</button>
+        <button class="scope-pill" data-scope="WDP" id="scopeBtnWdp">Pemeriksaan Mewujudkan Dokumen (<span class="cnt-wdp">196</span>)</button>
       </div>
 
       <nav class="nav-tabs" role="tablist">
@@ -1343,10 +1343,10 @@
       
       <div class="report-header-banner">
         <div>
-          <span class="official-tag">DOKUMEN ANALITIK RASMI • TENTERA DARAT MALAYSIA</span>
-          <h2>Laporan Lengkap Status & Analisis:<br>Tab Permohonan & Tab WDP</h2>
+          <span class="official-tag">DOKUMEN ANALITIK RASMI • SEL TEKNIKAL</span>
+          <h2>Laporan Lengkap Status & Analisis:<br>Pemeriksaan Alat Ganti & Pemeriksaan Mewujudkan Dokumen</h2>
           <div class="report-meta">
-            Sumber Data: Sheet "Permohonan" (<span class="cnt-ctp">257</span> rekod) & Sheet "WDP" (<span class="cnt-wdp">196</span> rekod) • Dijana pada: <span id="reportGenDate"></span>
+            Modul: Pemeriksaan Alat Ganti (<span class="cnt-ctp">257</span> rekod) & Pemeriksaan Mewujudkan Dokumen (<span class="cnt-wdp">196</span> rekod) • Dijana pada: <span id="reportGenDate"></span>
           </div>
         </div>
 
@@ -1368,14 +1368,14 @@
           <i class="ri-refresh-line"></i>
           <div>
             <div class="reactive-box-text">
-              <strong>Penyegerakan Automatik (Live Reactive):</strong> Laporan dikemaskini serta-merta tanpa perlu muat semula apabila terdapat rekod baharu atau perubahan dalam tab <em>Permohonan</em> & tab <em>WDP</em>.
+              <strong>Penyegerakan Automatik (Live Reactive):</strong> Laporan dikemaskini serta-merta tanpa perlu muat semula apabila terdapat rekod baharu atau perubahan dalam modul Pemeriksaan Alat Ganti & Pemeriksaan Mewujudkan Dokumen.
             </div>
             <span class="reactive-badge">Auto-Sync Aktif</span>
           </div>
         </div>
 
         <p class="exec-summary-text" id="execSummaryP1">
-          Sistem pemantauan ini merangkumi dua modul utama logistik teknikal ATM: (i) <strong>Pemeriksaan Penerimaan Alat Ganti Kenderaan (Tab Permohonan)</strong> dengan jumlah <strong class="cnt-ctp">257</strong> permohonan dan nilai keseluruhan LO sebanyak <strong id="execLoValTotal">RM 37,025,852.49</strong>, serta (ii) <strong>Pemeriksaan Mewujudkan Dokumen Peralatan (Tab WDP)</strong> sebanyak <strong class="cnt-wdp">196</strong> permohonan yang melibatkan pendaftaran buku rekod seperti BAT M 430, BAT M 488, dan BAT M 112/113.
+          Sistem pemantauan ini merangkumi dua modul utama logistik teknikal: (i) <strong>Pemeriksaan Alat Ganti Kenderaan</strong> (Tab Permohonan) dengan jumlah <strong class="cnt-ctp">257</strong> permohonan dan nilai keseluruhan LO sebanyak <strong id="execLoValTotal">RM 36,815,050.96</strong>, serta (ii) <strong>Pemeriksaan Mewujudkan Dokumen Peralatan</strong> (Tab WDP) sebanyak <strong class="cnt-wdp">196</strong> permohonan yang melibatkan pendaftaran buku rekod seperti BAT M 430, BAT M 488, dan BAT M 112/113.
         </p>
         <p class="exec-summary-text" id="execSummaryP2">
           Secara agregat, daripada <strong class="cnt-all">453</strong> rekod keseluruhan: sebanyak <strong id="execCompletedCount">157</strong> (<span id="execCompletedPct">34.7%</span>) telah selesai (<em>Completed</em>), <strong id="execAssignedCount">123</strong> telah ditugaskan kepada pegawai pemeriksa, <strong id="execProgressCount">18</strong> sedang giat dilaksanakan, dan <strong id="execPendingCount">149</strong> masih dalam giliran penugasan (<em>Pending</em>).
@@ -1384,16 +1384,16 @@
 
       <!-- 2. Perbandingan Metrik: Permohonan vs WDP -->
       <section class="report-section">
-        <h3 class="report-section-title">2. Perbandingan Metrik: Permohonan Alat Ganti vs WDP (Mewujudkan Dokumen)</h3>
+        <h3 class="report-section-title">2. Perbandingan Metrik: Pemeriksaan Alat Ganti vs Pemeriksaan Mewujudkan Dokumen</h3>
         
         <div class="data-table-container">
           <table class="data-table" id="comparisonTable">
             <thead>
               <tr>
                 <th>Status</th>
-                <th>Permohonan (Alat Ganti)</th>
-                <th>Nilai LO Permohonan (RM)</th>
-                <th>WDP (Dokumen)</th>
+                <th>Pemeriksaan Alat Ganti</th>
+                <th>Nilai LO (RM)</th>
+                <th>Pemeriksaan Mewujudkan Dokumen</th>
                 <th>Jumlah Gabungan</th>
                 <th>Kadar Gabungan (%)</th>
               </tr>
@@ -1405,9 +1405,9 @@
         </div>
       </section>
 
-      <!-- 3. Analisis Khusus Tab WDP -->
+      <!-- 3. Analisis Khusus: Pemeriksaan Mewujudkan Dokumen -->
       <section class="report-section">
-        <h3 class="report-section-title">3. Analisis Khusus Tab WDP (Mewujudkan Dokumen Peralatan)</h3>
+        <h3 class="report-section-title">3. Analisis Khusus: Pemeriksaan Mewujudkan Dokumen</h3>
         
         <div class="grid-2col">
           <div class="report-card-box">
@@ -1423,7 +1423,7 @@
           <div class="report-card-box">
             <div class="report-card-title">
               <i class="ri-shield-check-line"></i>
-              <span>Klasifikasi Servisibiliti Peralatan (WDP)</span>
+              <span>Klasifikasi Servisibiliti Peralatan (Pemeriksaan Mewujudkan Dokumen)</span>
             </div>
             <div id="wdpServiceabilityList">
               <!-- Populated dynamically -->
@@ -1434,16 +1434,16 @@
 
       <!-- 4. Taburan Mengikut Zon Wilayah -->
       <section class="report-section">
-        <h3 class="report-section-title">4. Taburan Mengikut Zon Wilayah Bagi Kedua-dua Tab</h3>
+        <h3 class="report-section-title">4. Taburan Mengikut Zon Wilayah (Pemeriksaan Alat Ganti & Mewujudkan Dokumen)</h3>
         
         <div class="data-table-container">
           <table class="data-table" id="zoneSummaryTable">
             <thead>
               <tr>
                 <th>Zon Operasi</th>
-                <th>Permohonan Alat Ganti</th>
+                <th>Pemeriksaan Alat Ganti</th>
                 <th>Nilai LO (RM)</th>
-                <th>WDP</th>
+                <th>Pemeriksaan Mewujudkan Dokumen</th>
                 <th>Jumlah Gabungan</th>
               </tr>
             </thead>
@@ -1458,7 +1458,7 @@
       <footer class="report-signoff">
         <div>
           <strong>Cawangan Teknik & Pemeriksaan (CT&P)</strong><br>
-          Markas Logistik Tentera Darat Malaysia • Cawangan Pengurusan Logistik
+          Sel Teknikal
         </div>
         <div class="audit-stamp">
           AUDIT ID: <span id="auditHash">ATM-CTP-2026-V4</span> • VERIFIED DATA
@@ -1495,7 +1495,7 @@
       <div class="chart-card">
         <div class="chart-card-header">
           <div class="chart-card-title">
-            <h3>Taburan Permohonan Mengikut Zon</h3>
+            <h3>Taburan Pemeriksaan Mengikut Zon</h3>
             <p>Bilangan kes keseluruhan bagi setiap wilayah operasi</p>
           </div>
           <div class="chart-icon-btn"><i class="ri-bar-chart-fill"></i></div>
@@ -1514,7 +1514,7 @@
       <div class="chart-card">
         <div class="chart-card-header">
           <div class="chart-card-title">
-            <h3>Jenis Dokumen Dimohon (Tab WDP)</h3>
+            <h3>Jenis Dokumen Dimohon (Pemeriksaan Mewujudkan Dokumen)</h3>
             <p>Agihan buku rekod peralatan yang diwujudkan</p>
           </div>
           <div class="chart-icon-btn"><i class="ri-folders-line"></i></div>
@@ -1534,9 +1534,9 @@
           </div>
           <div style="display:flex; align-items:center; gap:8px;">
             <div class="workload-scope-toggle" id="workloadScopeToggle" style="display:flex; background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.08); border-radius:999px; padding:3px; gap:4px;">
-              <button type="button" class="w-scope-btn active" data-scope="CTP" style="padding:5px 12px; font-size:11.5px; font-weight:700; border-radius:999px; border:none; background:#10b981; color:#fff; cursor:pointer; transition:all 0.15s ease;">Permohonan (75 Kes)</button>
-              <button type="button" class="w-scope-btn" data-scope="all" style="padding:5px 12px; font-size:11.5px; font-weight:700; border-radius:999px; border:none; background:transparent; color:#94a3b8; cursor:pointer; transition:all 0.15s ease;">Gabungan (95 Kes)</button>
-              <button type="button" class="w-scope-btn" data-scope="WDP" style="padding:5px 12px; font-size:11.5px; font-weight:700; border-radius:999px; border:none; background:transparent; color:#94a3b8; cursor:pointer; transition:all 0.15s ease;">WDP (20 Kes)</button>
+              <button type="button" class="w-scope-btn active" data-scope="CTP" style="padding:5px 12px; font-size:11.5px; font-weight:700; border-radius:999px; border:none; background:#10b981; color:#fff; cursor:pointer; transition:all 0.15s ease;">Pemeriksaan Alat Ganti (257 Kes)</button>
+              <button type="button" class="w-scope-btn" data-scope="all" style="padding:5px 12px; font-size:11.5px; font-weight:700; border-radius:999px; border:none; background:transparent; color:#94a3b8; cursor:pointer; transition:all 0.15s ease;">Semua Pemeriksaan (453 Kes)</button>
+              <button type="button" class="w-scope-btn" data-scope="WDP" style="padding:5px 12px; font-size:11.5px; font-weight:700; border-radius:999px; border:none; background:transparent; color:#94a3b8; cursor:pointer; transition:all 0.15s ease;">Pemeriksaan Mewujudkan Dokumen (196 Kes)</button>
             </div>
             <div class="chart-icon-btn"><i class="ri-user-star-line"></i></div>
           </div>
@@ -1554,7 +1554,7 @@
   <main id="viewMatrix" class="view-content">
     <div class="matrix-card">
       <div class="matrix-header">
-        <h3>Matriks Status Zon (Gabungan Permohonan & WDP)</h3>
+        <h3>Matriks Status Zon (Pemeriksaan Alat Ganti & Mewujudkan Dokumen)</h3>
         <p>Agihan terperinci bagi setiap zon operasi merentasi status tindakan</p>
       </div>
 
@@ -1563,8 +1563,8 @@
           <thead>
             <tr>
               <th>Zon</th>
-              <th>Permohonan</th>
-              <th>WDP</th>
+              <th>Pemeriksaan Alat Ganti</th>
+              <th>Pemeriksaan Mewujudkan Dokumen</th>
               <th>Jumlah Kes</th>
               <th>Nilai LO (RM)</th>
               <th>Completed</th>

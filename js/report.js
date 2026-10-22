@@ -1,7 +1,7 @@
 /**
  * report.js — Interactive Report & Visual Analytics Engine
  * Portal CT&P — Cawangan Teknik & Pemeriksaan
- * Laporan Lengkap & Analitik Logistik ATM
+ * Laporan Lengkap & Analitik Sel Teknikal
  */
 
 (function () {
@@ -22,7 +22,7 @@
 
   let rawJobs = Array.isArray(window.CTP_REPORT_DATA) ? [...window.CTP_REPORT_DATA] : [];
   let activeScope = 'all'; // 'all', 'CTP', 'WDP'
-  let workloadScope = 'CTP'; // Default to CTP where Mohamad Zaidi has 75 verified cases
+  let workloadScope = 'CTP'; // 'CTP' (Pemeriksaan Alat Ganti), 'WDP' (Pemeriksaan Mewujudkan Dokumen), 'all' (Keseluruhan)
   let statusFilter = '';
   let zoneFilter = '';
   let searchQuery = '';
@@ -419,7 +419,7 @@
 
     if (els.kpiTotal) els.kpiTotal.textContent = total;
     if (els.kpiScopeSub) {
-      els.kpiScopeSub.textContent = activeScope === 'all' ? 'All Mod' : (activeScope === 'CTP' ? 'Permohonan Sahaja' : 'WDP Sahaja');
+      els.kpiScopeSub.textContent = activeScope === 'all' ? 'Semua Skop Pemeriksaan' : (activeScope === 'CTP' ? 'Pemeriksaan Alat Ganti' : 'Pemeriksaan Mewujudkan Dokumen');
     }
 
     if (els.kpiCompleted) els.kpiCompleted.textContent = counts.Completed;
@@ -812,20 +812,20 @@
     const subEl = document.getElementById('workloadCardSubtitle');
     if (titleEl) {
       if (effectiveScope === 'CTP') {
-        titleEl.textContent = 'Beban Tugasan Pegawai Pemeriksa (Permohonan Alat Ganti)';
+        titleEl.textContent = 'Beban Tugasan Pegawai Pemeriksa (Pemeriksaan Alat Ganti)';
       } else if (effectiveScope === 'WDP') {
-        titleEl.textContent = 'Beban Tugasan Pegawai Pemeriksa (WDP Peralatan)';
+        titleEl.textContent = 'Beban Tugasan Pegawai Pemeriksa (Pemeriksaan Mewujudkan Dokumen)';
       } else {
-        titleEl.textContent = 'Beban Tugasan Pegawai Pemeriksa (Gabungan Permohonan & WDP)';
+        titleEl.textContent = 'Beban Tugasan Pegawai Pemeriksa (Kedua-dua Modul)';
       }
     }
     if (subEl) {
       if (effectiveScope === 'CTP') {
-        subEl.textContent = 'Agihan 257 kes merentasi Pegawai Pemeriksa 1 & 2 • Mohamad Zaidi: 75 Kes (P1: 40 • P2: 35)';
+        subEl.textContent = 'Agihan tugasan 257 kes keseluruhan merentasi Pegawai Pemeriksa 1 & 2 mengikut rekod pemeriksaan alat ganti';
       } else if (effectiveScope === 'WDP') {
-        subEl.textContent = 'Agihan 196 kes merentasi Pegawai Pemeriksa 1 & 2 • Mohamad Zaidi: 20 Kes (P1: 5 • P2: 15)';
+        subEl.textContent = 'Agihan tugasan 196 kes keseluruhan merentasi Pegawai Pemeriksa 1 & 2 mengikut rekod permohonan dokumen peralatan';
       } else {
-        subEl.textContent = 'Agihan 453 kes gabungan merentasi Pegawai Pemeriksa 1 & 2 • Mohamad Zaidi: 95 Kes (P1: 45 • P2: 50)';
+        subEl.textContent = 'Agihan tugasan 453 kes keseluruhan merentasi Pegawai Pemeriksa 1 & 2 bagi kedua-dua skop pemeriksaan';
       }
     }
 
@@ -865,17 +865,12 @@
       inspList.forEach(([name, data]) => {
         const pct = data.total > 0 ? ((data.completed / data.total) * 100).toFixed(1) : 0;
         const baki = data.total - data.completed;
-        const isZaidi = name.includes('ZAIDI');
-        const badgeHighlight = isZaidi
-          ? `<span style="background:rgba(16,185,129,0.22); color:#34d399; border:1px solid rgba(16,185,129,0.35); font-size:10.5px; padding:2px 8px; border-radius:6px; font-weight:800; letter-spacing:0.3px;">75 KES (P1: 40 • P2: 35)</span>`
-          : '';
 
         html += `
-          <div class="workload-item" style="${isZaidi ? 'border-color:rgba(16,185,129,0.45); background:rgba(16,185,129,0.05); box-shadow:0 0 16px rgba(16,185,129,0.08);' : ''}">
+          <div class="workload-item">
             <div class="workload-top">
               <div style="display:flex; align-items:center; flex-wrap:wrap; gap:6px;">
                 <span class="workload-name">${name}</span>
-                ${badgeHighlight}
                 <span style="font-size:11px; color:#94a3b8; font-weight:600;">(Pemeriksa 1: ${data.p1Count} • Pemeriksa 2: ${data.p2Count})</span>
               </div>
               <span class="workload-stats">${data.total} Kes • <strong>${data.completed} Selesai</strong></span>
@@ -953,7 +948,7 @@
     let html = '';
     pagedJobs.forEach(j => {
       const isWdp = j.type === 'WDP';
-      const modBadge = isWdp ? '<span class="badge-modul mod-wdp">WDP</span>' : '<span class="badge-modul mod-ctp">PERMOHONAN</span>';
+      const modBadge = isWdp ? '<span class="badge-modul mod-wdp">MEWUJUDKAN DOKUMEN</span>' : '<span class="badge-modul mod-ctp">ALAT GANTI</span>';
       const dateFormatted = j.date ? j.date.substring(0, 10) : (j.timestamp ? j.timestamp.substring(0, 10) : '-');
       const normSt = normalizeStatus(j.status);
       const pillClass = 'status-' + normSt.toLowerCase().replace(/\s+/g, '');
@@ -1119,17 +1114,17 @@
     const pend = rawJobs.filter(j => normalizeStatus(j.status) === 'Pending').length;
 
     let txt = `========================================================================
-LAPORAN LENGKAP & ANALITIK LOGISTIK TENTERA DARAT MALAYSIA (ATM)
-Cawangan Teknik & Pemeriksaan (CT&P)
-Sumber Data: Tab "Permohonan" (${ctpJobs.length}) & Tab "WDP" (${wdpJobs.length})
+LAPORAN LENGKAP & ANALITIK SEL TEKNIKAL
+Cawangan Teknik & Pemeriksaan (CT&P) • Sel Teknikal
+Sumber Data: Pemeriksaan Alat Ganti (${ctpJobs.length}) & Pemeriksaan Mewujudkan Dokumen (${wdpJobs.length})
 Dijana Pada: ${new Date().toLocaleString('ms-MY')}
 ========================================================================
 
 1. RINGKASAN EKSEKUTIF
 ------------------------------------------------------------------------
 - Jumlah Rekod Keseluruhan: ${total} kes
-- Modul Permohonan Alat Ganti: ${ctpJobs.length} kes (Nilai LO: ${formatRM(totalLO)})
-- Modul WDP (Mewujudkan Dokumen): ${wdpJobs.length} kes
+- Pemeriksaan Alat Ganti: ${ctpJobs.length} kes (Nilai LO: ${formatRM(totalLO)})
+- Pemeriksaan Mewujudkan Dokumen: ${wdpJobs.length} kes
 
 Status Agregat:
 - Selesai (Completed): ${comp} kes (${((comp / total) * 100).toFixed(1)}%)
@@ -1145,31 +1140,47 @@ Status Agregat:
       const wdpZ = wdpJobs.filter(j => (j.zone || '').includes(z) || z.includes(j.zone || ''));
       const loZ = ctpZ.reduce((a, b) => a + (b.loVal || 0), 0);
       txt += `* ${z.toUpperCase()}:\n`;
-      txt += `   - Permohonan: ${ctpZ.length} kes (${formatRM(loZ)})\n`;
-      txt += `   - WDP: ${wdpZ.length} kes\n`;
-      txt += `   - Jumlah: ${ctpZ.length + wdpZ.length} kes\n\n`;
+      txt += `   - Pemeriksaan Alat Ganti: ${ctpZ.length} kes (${formatRM(loZ)})\n`;
+      txt += `   - Pemeriksaan Mewujudkan Dokumen: ${wdpZ.length} kes\n`;
+      txt += `   - Jumlah Gabungan: ${ctpZ.length + wdpZ.length} kes\n\n`;
     });
 
-    txt += `3. ANALISIS DOKUMEN WDP
+    txt += `3. ANALISIS DOKUMEN (PEMERIKSAAN MEWUJUDKAN DOKUMEN)
 ------------------------------------------------------------------------
 - BAT M 430: 168 permohonan (84.8%)
 - BAT M 488: 12 permohonan (6.1%)
 - BAT M 430 A: 10 permohonan (5.1%)
 - BAT M 112/113: 8 permohonan (4.0%)
 
-4. BEBAN TUGASAN PEGAWAI PEMERIKSA (PERMOHONAN: 257 KES)
-------------------------------------------------------------------------
-- MOHAMAD ZAIDI BIN ABDULLAH: 75 kes (P1: 40, P2: 35 | 29 Selesai, 46 Baki)
-- JAY AZRIN BIN CHE YAHAYA: 48 kes (P1: 42, P2: 6 | 2 Selesai, 46 Baki)
-- MOHAMAD FAZWAN BIN ZAKARIA: 45 kes (P1: 25, P2: 20 | 6 Selesai, 39 Baki)
-- MOHAMAD SHARUL IZAM BIN MOHD HAIZENMAN: 43 kes (P1: 13, P2: 30 | 18 Selesai, 25 Baki)
-- AMIR SYAIFUDIN BIN ISMAIL: 41 kes (P1: 32, P2: 9 | 38 Selesai, 3 Baki)
-- MUHAMMAD IZZAT BIN ABU ZAHARIN: 30 kes (P1: 5, P2: 25 | 6 Selesai, 24 Baki)
-- MUHAMMAD FAIZAL BIN BATALUMI: 22 kes (P1: 9, P2: 13 | 19 Selesai, 3 Baki)
-- NAZIRUL HAFIZ BIN ABD SHUKOR: 19 kes (P1: 17, P2: 2 | 19 Selesai, 0 Baki)
+4. BEBAN TUGASAN PEGAWAI PEMERIKSA (PEMERIKSAAN ALAT GANTI: ${ctpJobs.length} KES)
+------------------------------------------------------------------------\n`;
 
-Disediakan oleh Sistem Portal CT&P.
-`;
+    const ctpInspMap = {};
+    ctpJobs.forEach(j => {
+      const isCompleted = normalizeStatus(j.status) === 'Completed';
+      const p1 = (j.inspector1 || '').trim();
+      const p2 = (j.inspector2 || '').trim();
+      if (p1) {
+        if (!ctpInspMap[p1]) ctpInspMap[p1] = { total: 0, p1Count: 0, p2Count: 0, completed: 0 };
+        ctpInspMap[p1].total++;
+        ctpInspMap[p1].p1Count++;
+        if (isCompleted) ctpInspMap[p1].completed++;
+      }
+      if (p2 && p2 !== p1) {
+        if (!ctpInspMap[p2]) ctpInspMap[p2] = { total: 0, p1Count: 0, p2Count: 0, completed: 0 };
+        ctpInspMap[p2].total++;
+        ctpInspMap[p2].p2Count++;
+        if (isCompleted) ctpInspMap[p2].completed++;
+      }
+    });
+
+    Object.entries(ctpInspMap)
+      .sort((a, b) => b[1].total - a[1].total)
+      .forEach(([name, d]) => {
+        txt += `- ${name}: ${d.total} kes (Pemeriksa 1: ${d.p1Count}, Pemeriksa 2: ${d.p2Count} | ${d.completed} Selesai, ${d.total - d.completed} Baki)\n`;
+      });
+
+    txt += `\nDisediakan oleh Sel Teknikal • Sistem Portal CT&P.\n`;
 
     if (els.docsTextarea) els.docsTextarea.value = txt;
     if (els.docsFormatModal) els.docsFormatModal.classList.add('active');
