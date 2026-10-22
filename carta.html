@@ -4,322 +4,1134 @@
   <meta charset="utf-8" />
   <script src="assets/theme-rotator.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Carta Alir Sel Teknikal | CT&amp;P</title>
-  <meta name="description" content="Paparan carta alir asal Sel Teknikal daripada SOP PDF." />
+  <title>Carta Alir Interaktif Sel Teknikal | CT&amp;P</title>
+  <meta name="description" content="Carta alir interaktif Prosedur Operasi Standard (SOP) Sel Teknikal bagi FAT, Mewujudkan Dokumen, dan Bekalan Teknikal." />
+  
+  <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+
   <style>
-    :root{
-      --bg:#072b1d;
-      --panel:#0c3a28;
-      --panel2:#0a3222;
-      --soft:rgba(255,255,255,.04);
-      --text:#f5fff6;
-      --muted:#bfd8c6;
-      --line:rgba(224,255,232,.14);
-      --shadow:0 24px 70px rgba(0,0,0,.32);
-      --tech:#1ba05a;
-      --gold:#d7a447;
-      --paper:#ffffff;
-      --paper-shadow:0 22px 50px rgba(0,0,0,.22);
+    :root {
+      --bg: #072b1d;
+      --panel: #0c3a28;
+      --panel2: #0a3222;
+      --soft: rgba(255, 255, 255, 0.05);
+      --soft-hover: rgba(255, 255, 255, 0.09);
+      --text: #f5fff6;
+      --muted: #bfd8c6;
+      --dim: #7da58b;
+      --line: rgba(224, 255, 232, 0.14);
+      --line-strong: rgba(224, 255, 232, 0.28);
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
+      --tech: #1ba05a;
+      --tech-glow: rgba(27, 160, 90, 0.35);
+      --gold: #d7a447;
+      --gold-glow: rgba(215, 164, 71, 0.3);
+      --blue: #38bdf8;
+      --purple: #a855f7;
+      --rose: #fb7185;
+      --paper: #ffffff;
+      --paper-shadow: 0 22px 50px rgba(0, 0, 0, 0.22);
+      --node-bg: rgba(12, 58, 40, 0.85);
+      --node-border: rgba(27, 160, 90, 0.38);
     }
 
-    body.theme-light{
-      --bg:#f5fbf1;
-      --panel:#ffffff;
-      --panel2:#edf7eb;
-      --soft:rgba(20,79,49,.045);
-      --text:#153625;
-      --muted:#5b7665;
-      --line:rgba(18,79,48,.12);
-      --shadow:0 20px 52px rgba(16,63,38,.12);
-      --tech:#148b4f;
-      --gold:#bf8a2d;
-      --paper:#ffffff;
-      --paper-shadow:0 16px 36px rgba(20,64,39,.12);
+    body.theme-light {
+      --bg: #f5fbf1;
+      --panel: #ffffff;
+      --panel2: #edf7eb;
+      --soft: rgba(20, 79, 49, 0.05);
+      --soft-hover: rgba(20, 79, 49, 0.09);
+      --text: #153625;
+      --muted: #4b6655;
+      --dim: #6e8a78;
+      --line: rgba(18, 79, 48, 0.14);
+      --line-strong: rgba(18, 79, 48, 0.28);
+      --shadow: 0 20px 52px rgba(16, 63, 38, 0.12);
+      --tech: #148b4f;
+      --tech-glow: rgba(20, 139, 79, 0.25);
+      --gold: #bf8a2d;
+      --gold-glow: rgba(191, 138, 45, 0.25);
+      --blue: #0284c7;
+      --purple: #7e22ce;
+      --rose: #e11d48;
+      --paper: #ffffff;
+      --paper-shadow: 0 16px 36px rgba(20, 64, 39, 0.12);
+      --node-bg: rgba(255, 255, 255, 0.95);
+      --node-border: rgba(20, 139, 79, 0.28);
     }
 
-    *{ box-sizing:border-box; }
-    html, body{ height:100%; }
-    body{
-      margin:0;
-      font-family:"Inter", system-ui, sans-serif;
-      color:var(--text);
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      color: var(--text);
       background:
-        radial-gradient(920px 560px at 18% 8%, rgba(50,161,92,.18), transparent 60%),
-        radial-gradient(860px 540px at 82% 18%, rgba(215,164,71,.16), transparent 52%),
+        radial-gradient(920px 560px at 18% 8%, rgba(50, 161, 92, 0.18), transparent 60%),
+        radial-gradient(860px 540px at 82% 18%, rgba(215, 164, 71, 0.16), transparent 52%),
         var(--bg);
-    }
-    body::before{
-      content:"";
-      position:fixed;
-      inset:-40px;
-      pointer-events:none;
-      background:radial-gradient(closest-side at 50% 42%, rgba(0,0,0,0) 55%, rgba(0,0,0,.24) 100%);
-    }
-    body.theme-light::before{
-      background:radial-gradient(closest-side at 50% 45%, rgba(255,255,255,0) 62%, rgba(20,64,39,.08) 100%);
+      background-attachment: fixed;
+      line-height: 1.5;
     }
 
-    a{ color:inherit; }
-
-    .theme-fab{ position:fixed; top:18px; left:18px; z-index:40; }
-    .theme-switch{ border:0; padding:0; background:transparent; cursor:pointer; line-height:0; }
-    .theme-track{
-      position:relative;
-      width:86px;
-      height:40px;
-      border-radius:999px;
-      display:block;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.12);
-      background:linear-gradient(165deg, #7d848e, #4c525d);
-      box-shadow:inset 0 2px 2px rgba(255,255,255,.14), inset 0 -6px 12px rgba(0,0,0,.35), 0 7px 14px rgba(0,0,0,.25);
-    }
-    .theme-track::before{
-      content:"";
-      position:absolute;
-      inset:3px;
-      border-radius:999px;
-      background:linear-gradient(180deg, #757d88, #5a616d);
-      z-index:1;
-    }
-    .theme-thumb{
-      position:absolute;
-      top:4px;
-      left:4px;
-      width:37px;
-      height:32px;
-      border-radius:999px;
-      z-index:2;
-      background:linear-gradient(180deg, #8b929d, #5c6470);
-      box-shadow:inset 0 1px 1px rgba(255,255,255,.25), 0 4px 8px rgba(0,0,0,.3);
-      transition:left .28s ease;
-    }
-    .theme-icon{
-      position:absolute;
-      top:50%;
-      transform:translateY(-50%);
-      width:16px;
-      height:16px;
-      color:rgba(255,255,255,.5);
-      z-index:3;
-    }
-    .theme-icon svg{
-      width:100%;
-      height:100%;
-      fill:currentColor;
-    }
-    .theme-icon-sun{ left:12px; }
-    .theme-icon-moon{ right:12px; }
-    body.theme-light .theme-thumb{ left:4px; }
-    body.theme-dark .theme-thumb{ left:45px; }
-    body.theme-light .theme-icon-sun{ color:#ffffff; }
-    body.theme-dark .theme-icon-moon{ color:#e7fff0; }
-    .theme-switch:focus-visible .theme-track{
-      outline:2px solid var(--tech);
-      outline-offset:2px;
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -40px;
+      pointer-events: none;
+      background: radial-gradient(closest-side at 50% 42%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.28) 100%);
+      z-index: 0;
     }
 
-    .wrap{
-      position:relative;
-      z-index:1;
-      width:min(1260px, calc(100% - 28px));
-      margin:0 auto;
-      padding:86px 0 42px;
+    body.theme-light::before {
+      background: radial-gradient(closest-side at 50% 45%, rgba(255,255,255,0) 62%, rgba(20,64,39,0.08) 100%);
     }
 
-    .shell,
-    .workflow{
-      border:1px solid var(--line);
-      border-radius:24px;
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(12px);
+    a { color: inherit; text-decoration: none; }
+
+    /* Theme Switch FAB */
+    .theme-fab { position: fixed; top: 18px; left: 18px; z-index: 50; }
+    .theme-switch { border: 0; padding: 0; background: transparent; cursor: pointer; line-height: 0; }
+    .theme-track {
+      position: relative;
+      width: 86px;
+      height: 40px;
+      border-radius: 999px;
+      display: block;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: linear-gradient(165deg, #7d848e, #4c525d);
+      box-shadow: inset 0 2px 2px rgba(255,255,255,0.14), inset 0 -6px 12px rgba(0,0,0,0.35), 0 7px 14px rgba(0,0,0,0.25);
+    }
+    .theme-track::before {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #757d88, #5a616d);
+      z-index: 1;
+    }
+    .theme-thumb {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 37px;
+      height: 32px;
+      border-radius: 999px;
+      z-index: 2;
+      background: linear-gradient(180deg, #8b929d, #5c6470);
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.25), 0 4px 8px rgba(0,0,0,0.3);
+      transition: left 0.28s ease;
+    }
+    .theme-icon {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: rgba(255, 255, 255, 0.5);
+      z-index: 3;
+    }
+    .theme-icon svg { width: 100%; height: 100%; fill: currentColor; }
+    .theme-icon-sun { left: 12px; }
+    .theme-icon-moon { right: 12px; }
+    body.theme-light .theme-thumb { left: 4px; }
+    body.theme-dark .theme-thumb { left: 45px; }
+    body.theme-light .theme-icon-sun { color: #ffffff; }
+    body.theme-dark .theme-icon-moon { color: #e7fff0; }
+
+    /* Layout Wrapper */
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: min(1360px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 76px 0 60px;
     }
 
-    .shell{
-      padding:18px;
-      display:grid;
-      gap:16px;
+    /* Header Shell */
+    .shell {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      padding: 22px 26px;
+      display: grid;
+      gap: 20px;
+      margin-bottom: 24px;
     }
 
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      flex-wrap:wrap;
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
     }
 
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width:0;
-      flex-wrap:wrap;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 0;
+      flex-wrap: wrap;
     }
 
-    .logos{
-      display:flex;
-      gap:10px;
-      flex:0 0 auto;
+    .logos {
+      display: flex;
+      gap: 10px;
+      flex: 0 0 auto;
     }
 
-    .logos img{
-      width:46px;
-      height:46px;
-      object-fit:contain;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.05);
-      padding:7px;
+    .logos img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.06);
+      padding: 6px;
     }
 
-    .title-wrap{ min-width:0; }
-    .eyebrow{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:7px 12px;
-      border-radius:999px;
-      border:1px solid rgba(215,164,71,.28);
-      background:rgba(215,164,71,.16);
-      font-size:11px;
-      font-weight:900;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      margin-bottom:10px;
+    .title-wrap { min-width: 0; }
+    .eyebrows-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(215, 164, 71, 0.35);
+      background: rgba(215, 164, 71, 0.14);
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .eyebrow-tech {
+      border-color: rgba(27, 160, 90, 0.35);
+      background: rgba(27, 160, 90, 0.14);
+      color: var(--tech);
     }
 
-    h1, h2{
-      margin:0;
-      font-family:"Space Grotesk", "Inter", sans-serif;
+    h1 {
+      margin: 0;
+      font-family: "Space Grotesk", "Inter", sans-serif;
+      font-size: clamp(1.8rem, 2.5vw, 2.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
     }
 
-    h1{
-      font-size:clamp(1.8rem, 2.8vw, 2.8rem);
-      line-height:1.05;
+    .header-desc {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13.5px;
+      max-width: 720px;
     }
 
-    .actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
     }
 
-    .btn,
-    .quick-link{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      padding:11px 16px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:var(--soft);
-      text-decoration:none;
-      font-weight:800;
-      transition:.18s ease;
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--soft);
+      font-size: 13px;
+      font-weight: 800;
+      transition: all 0.2s ease;
+      cursor: pointer;
     }
-    .btn:hover,
-    .quick-link:hover{
-      transform:translateY(-1px);
-      border-color:rgba(27,160,90,.34);
-      background:rgba(27,160,90,.12);
+    .btn:hover {
+      transform: translateY(-2px);
+      border-color: var(--tech);
+      background: rgba(27, 160, 90, 0.15);
+      box-shadow: 0 6px 18px var(--tech-glow);
     }
-
-    .quick-nav{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
+    .btn-primary {
+      background: linear-gradient(135deg, var(--tech), #127941);
+      color: #ffffff !important;
+      border-color: rgba(27, 160, 90, 0.5);
+      box-shadow: 0 4px 14px var(--tech-glow);
     }
-
-    .workflow-list{
-      margin-top:20px;
-      display:grid;
-      gap:18px;
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #22b868, #168d4d);
     }
 
-    .workflow{
-      padding:16px;
-      scroll-margin-top:100px;
+    /* Workflow Tabs & Control Toolbar */
+    .controls-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
     }
 
-    .workflow-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:14px;
-      flex-wrap:wrap;
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
-    .workflow-tag{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:7px 12px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
-      font-size:11px;
-      font-weight:900;
-      letter-spacing:.12em;
-      text-transform:uppercase;
+    .nav-tab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--soft);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .nav-tab-btn:hover {
+      background: var(--soft-hover);
+      color: var(--text);
+      border-color: var(--line-strong);
+    }
+    .nav-tab-btn.active {
+      background: var(--tech);
+      color: #ffffff;
+      border-color: var(--tech);
+      box-shadow: 0 4px 16px var(--tech-glow);
+    }
+    .nav-tab-btn .badge-pill {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.25);
+      font-weight: 800;
     }
 
-    .page-stack{
-      display:grid;
-      gap:18px;
+    .tool-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
-    .page-frame{
-      border-radius:22px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
-      padding:14px;
+    /* Search & Filter Inputs */
+    .search-box {
+      position: relative;
+      min-width: 200px;
+    }
+    .search-box i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--dim);
+      font-size: 14px;
+    }
+    .search-input {
+      width: 100%;
+      padding: 9px 12px 9px 34px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--soft);
+      color: var(--text);
+      font-size: 12.5px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .search-input:focus {
+      border-color: var(--tech);
+      box-shadow: 0 0 0 3px var(--tech-glow);
     }
 
-    .page-paper{
-      width:100%;
-      border-radius:14px;
-      overflow:hidden;
-      background:var(--paper);
-      box-shadow:var(--paper-shadow);
+    .role-select {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      font-size: 12.5px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
     }
 
-    .page-paper canvas{
-      display:block;
-      width:100%;
-      height:auto;
-      background:#ffffff;
+    /* Simulation Control Strip */
+    .sim-bar {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(27, 160, 90, 0.12), rgba(12, 58, 40, 0.45));
+      backdrop-filter: blur(12px);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+    .sim-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .sim-beacon {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--tech);
+      box-shadow: 0 0 0 0 rgba(27, 160, 90, 0.7);
+      animation: pulse-beacon 1.8s infinite;
+      flex-shrink: 0;
+    }
+    @keyframes pulse-beacon {
+      0% { box-shadow: 0 0 0 0 rgba(27, 160, 90, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(27, 160, 90, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(27, 160, 90, 0); }
+    }
+    .sim-text {
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .sim-text strong {
+      color: var(--gold);
+    }
+    .sim-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-sim {
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--soft);
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text);
+      transition: all 0.2s ease;
+    }
+    .btn-sim:hover:not(:disabled) {
+      border-color: var(--tech);
+      background: rgba(27, 160, 90, 0.2);
+    }
+    .btn-sim:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .btn-sim.active-play {
+      background: var(--tech);
+      color: #fff;
     }
 
-    .loading,
-    .error{
-      padding:18px;
-      text-align:center;
-      font-weight:700;
-      color:var(--muted);
+    /* Workflow Cards & Sections */
+    .flowchart-container {
+      display: grid;
+      gap: 32px;
     }
 
-    .error{ color:#ffb3b3; }
+    .workflow-panel {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      padding: 24px 28px;
+      position: relative;
+      overflow: hidden;
+    }
 
-    @media (max-width: 760px){
-      .wrap{ width:min(100% - 20px, 1260px); padding-top:80px; }
-      .shell,
-      .workflow{ padding:14px; }
-      .theme-fab{ top:12px; left:12px; }
-      .topbar{ align-items:flex-start; }
+    .workflow-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .workflow-meta-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .workflow-meta-title h2 {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.45rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+
+    .sop-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: rgba(215, 164, 71, 0.16);
+      border: 1px solid rgba(215, 164, 71, 0.35);
+      color: var(--gold);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11.5px;
+      font-weight: 700;
+    }
+
+    .page-ref-tag {
+      font-size: 12px;
+      color: var(--dim);
+      font-weight: 600;
+    }
+
+    /* Swimlane Table Grid */
+    .swimlane-board {
+      display: grid;
+      grid-template-columns: 220px 1fr 240px;
+      gap: 20px;
+      position: relative;
+    }
+
+    .swimlane-col-header {
+      padding: 10px 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      font-size: 11.5px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .col-role { text-align: left; }
+    .col-flow { text-align: center; justify-content: center; }
+    .col-interface { text-align: left; }
+
+    /* Flow Stages */
+    .flow-phase {
+      margin: 28px 0 16px;
+      position: relative;
+    }
+    .flow-phase-banner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 24px 0 20px;
+    }
+    .flow-phase-line {
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+    }
+    .flow-phase-pill {
+      padding: 6px 18px;
+      border-radius: 999px;
+      background: var(--panel2);
+      border: 1px solid var(--line-strong);
+      font-size: 11.5px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    /* Flow Step Rows */
+    .flow-step-row {
+      display: grid;
+      grid-template-columns: 220px 1fr 240px;
+      gap: 20px;
+      align-items: center;
+      position: relative;
+      margin-bottom: 22px;
+      transition: all 0.25s ease;
+    }
+
+    .flow-step-row.highlighted {
+      transform: scale(1.015);
+    }
+    .flow-step-row.highlighted .flow-node {
+      border-color: var(--tech) !important;
+      box-shadow: 0 0 24px var(--tech-glow), 0 8px 24px rgba(0,0,0,0.3) !important;
+      background: linear-gradient(135deg, rgba(27, 160, 90, 0.22), rgba(12, 58, 40, 0.95)) !important;
+    }
+    .flow-step-row.highlighted .role-card {
+      border-color: var(--gold);
+      background: rgba(215, 164, 71, 0.15);
+    }
+    .flow-step-row.highlighted .interface-card {
+      border-color: var(--blue);
+      background: rgba(56, 189, 248, 0.15);
+    }
+
+    /* Role Lane Card */
+    .role-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--line);
+      font-size: 12.5px;
+      font-weight: 700;
+      transition: all 0.2s ease;
+    }
+    .role-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+    .role-pp .role-avatar {
+      background: linear-gradient(135deg, #10b981, #047857);
+      color: #fff;
+    }
+    .role-pemeriksa .role-avatar {
+      background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+      color: #fff;
+    }
+    .role-name {
+      display: block;
+      line-height: 1.2;
+    }
+    .role-title {
+      font-size: 10.5px;
+      color: var(--dim);
+      font-weight: 500;
+    }
+
+    /* Interface Lane Card */
+    .interface-card {
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--line);
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+    .interface-card i {
+      color: var(--blue);
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .interface-card.empty-interface {
+      opacity: 0.35;
+      border-style: dashed;
+    }
+
+    /* Center Flow Node */
+    .flow-node-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .flow-node {
+      width: 100%;
+      max-width: 580px;
+      background: var(--node-bg);
+      border: 1px solid var(--node-border);
+      border-radius: 16px;
+      padding: 14px 18px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+      cursor: pointer;
+      position: relative;
+      transition: all 0.22s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .flow-node:hover {
+      transform: translateY(-2px);
+      border-color: var(--tech);
+      box-shadow: 0 10px 28px var(--tech-glow);
+    }
+
+    .node-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .node-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: rgba(27, 160, 90, 0.2);
+      border: 1px solid rgba(27, 160, 90, 0.45);
+      color: #34d399;
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 800;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    body.theme-light .node-num {
+      background: rgba(20, 139, 79, 0.15);
+      color: #0d6b38;
+    }
+
+    .node-content {
+      min-width: 0;
+    }
+
+    .node-title {
+      font-weight: 800;
+      font-size: 13.5px;
+      line-height: 1.35;
+      color: var(--text);
+      letter-spacing: 0.01em;
+    }
+
+    .node-desc {
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-top: 3px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .node-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .doc-pill {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: var(--blue);
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    /* Start / End Terminals */
+    .flow-terminal {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 24px;
+      border-radius: 999px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    }
+    .terminal-start {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      border: 1px solid rgba(16, 185, 129, 0.6);
+    }
+    .terminal-end {
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      color: #fff;
+      border: 1px solid rgba(99, 102, 241, 0.6);
+    }
+
+    .connector-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--panel2);
+      border: 1.5px solid var(--gold);
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      box-shadow: 0 4px 12px var(--gold-glow);
+      margin: 6px auto;
+    }
+
+    /* Vertical Flow Arrow Connector */
+    .flow-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 28px;
+      position: relative;
+    }
+    .flow-connector-line {
+      width: 2px;
+      height: 100%;
+      background: var(--line-strong);
+      position: relative;
+    }
+    .flow-connector i {
+      color: var(--tech);
+      font-size: 16px;
+      margin-top: -6px;
+    }
+
+    /* Decision Diamond Card */
+    .flow-node-decision {
+      width: 100%;
+      max-width: 580px;
+      border: 1.5px solid var(--gold);
+      background: linear-gradient(135deg, rgba(215, 164, 71, 0.12), rgba(12, 58, 40, 0.9));
+      box-shadow: 0 8px 24px rgba(0,0,0,0.22);
+      border-radius: 18px;
+      padding: 16px 20px;
+      cursor: pointer;
+    }
+    .decision-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .decision-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .diamond-icon {
+      width: 28px;
+      height: 28px;
+      background: var(--gold);
+      color: #072b1d;
+      border-radius: 6px;
+      transform: rotate(45deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+    .diamond-icon span {
+      transform: rotate(-45deg);
+    }
+    .decision-text {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .decision-paths {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed rgba(215, 164, 71, 0.35);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .path-btn {
+      flex: 1;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--soft);
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: var(--text);
+    }
+    .path-btn:hover, .path-btn.active {
+      border-color: var(--gold);
+      background: rgba(215, 164, 71, 0.25);
+    }
+    .path-btn.active {
+      box-shadow: 0 0 14px var(--gold-glow);
+    }
+
+    /* Branch Container Visual */
+    .branch-subpath {
+      margin-left: 20px;
+      padding-left: 16px;
+      border-left: 2px dashed rgba(215, 164, 71, 0.45);
+      transition: opacity 0.3s ease;
+    }
+    .branch-subpath.collapsed {
+      opacity: 0.35;
+    }
+
+    /* Documents & Reference Tags Box */
+    .doc-ref-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    /* Modal Detail View */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-window {
+      width: min(680px, 100%);
+      border-radius: 24px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      max-height: 90vh;
+      transform: translateY(16px);
+      transition: transform 0.25s ease;
+    }
+    .modal-overlay.active .modal-window {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .modal-header h3 {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+    .modal-close-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: var(--soft);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.2s ease;
+    }
+    .modal-close-btn:hover {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: #ef4444;
+      color: #ef4444;
+    }
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+      display: grid;
+      gap: 18px;
+    }
+    .modal-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+    .modal-meta-card {
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: var(--soft);
+      border: 1px solid var(--line);
+    }
+    .modal-meta-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--dim);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .modal-meta-value {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .modal-checklist {
+      padding: 16px;
+      border-radius: 14px;
+      background: rgba(27, 160, 90, 0.08);
+      border: 1px solid rgba(27, 160, 90, 0.25);
+    }
+    .modal-checklist h4 {
+      margin: 0 0 10px;
+      font-size: 13px;
+      color: var(--tech);
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .modal-checklist ul {
+      margin: 0;
+      padding-left: 20px;
+      font-size: 13px;
+      color: var(--text);
+    }
+    .modal-checklist li {
+      margin-bottom: 6px;
+    }
+
+    /* PDF View Mode Frame */
+    .pdf-viewer-frame {
+      display: none;
+      width: 100%;
+      height: 780px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      box-shadow: var(--shadow);
+    }
+
+    /* Comparison Table Mode */
+    .comparison-section {
+      display: none;
+    }
+    .comparison-section.active {
+      display: block;
+    }
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+    }
+    .comparison-table th {
+      padding: 12px 16px;
+      background: var(--panel2);
+      border: 1px solid var(--line);
+      font-weight: 800;
+      color: var(--muted);
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .comparison-table td {
+      padding: 12px 16px;
+      border: 1px solid var(--line);
+      vertical-align: top;
+      background: var(--soft);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 980px) {
+      .swimlane-board, .flow-step-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .swimlane-col-header { display: none; }
+      .role-card, .interface-card {
+        max-width: 580px;
+        margin: 0 auto;
+        width: 100%;
+      }
+      .flow-node {
+        max-width: 100%;
+      }
+      .branch-subpath {
+        margin-left: 8px;
+        padding-left: 10px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .wrap { width: min(100% - 20px, 1360px); padding-top: 76px; }
+      .shell, .workflow-panel { padding: 16px; }
+      .theme-fab { top: 12px; left: 12px; }
+      .topbar { flex-direction: column; align-items: flex-start; }
+      .actions { width: 100%; }
+      .actions .btn { flex: 1; }
+      .nav-tabs { width: 100%; }
+      .nav-tab-btn { flex: 1; justify-content: center; }
+    }
+
+    /* Print styles */
+    @media print {
+      body { background: #ffffff !important; color: #000000 !important; }
+      .theme-fab, .shell, .sim-bar, .controls-toolbar, .actions { display: none !important; }
+      .workflow-panel { border: none !important; box-shadow: none !important; background: none !important; padding: 0 !important; }
+      .flow-node { border: 1px solid #000 !important; color: #000 !important; background: #fff !important; box-shadow: none !important; }
     }
   </style>
 </head>
 <body class="theme-dark">
+
+  <!-- Theme Switcher FAB -->
   <div class="theme-fab">
-    <button class="theme-switch" id="themeSwitch" type="button" aria-label="Toggle light and dark theme" title="Switch theme">
+    <button class="theme-switch" id="themeSwitch" type="button" aria-label="Tukar tema cerah dan gelap" title="Tukar Tema">
       <span class="theme-track">
         <span class="theme-thumb"></span>
         <span class="theme-icon theme-icon-sun" aria-hidden="true">
@@ -337,188 +1149,1353 @@
   </div>
 
   <main class="wrap">
-    <section class="shell">
+    
+    <!-- Top Header Card -->
+    <header class="shell">
       <div class="topbar">
         <div class="brand">
           <div class="logos" aria-hidden="true">
-            <img src="assets/icon1.png" alt="" />
-            <img src="assets/icon2.png" alt="" />
+            <img src="assets/icon1.png" alt="ATM Logo" />
+            <img src="assets/icon2.png" alt="Cawangan Logistik" />
           </div>
           <div class="title-wrap">
-            <div class="eyebrow">Sel Teknikal</div>
-            <h1>Carta Alir Asal</h1>
+            <div class="eyebrows-row">
+              <span class="eyebrow eyebrow-tech"><i class="ri-shield-flash-line"></i> Sel Teknikal</span>
+              <span class="eyebrow"><i class="ri-git-merge-line"></i> Carta Alir Interaktif</span>
+              <span class="eyebrow" style="border-color:rgba(56,189,248,0.35); color:var(--blue); background:rgba(56,189,248,0.12);"><i class="ri-file-text-line"></i> SOP Rasmi ATM</span>
+            </div>
+            <h1>Carta Alir Prosedur Operasi Standard (SOP)</h1>
+            <p class="header-desc">
+              Visualisasi carta alir interaktif bagi 3 prosedur utama Sel Teknikal mengikut dokumen SOP asal: FAT (Final Acceptance Test), Mewujudkan Dokumen Peralatan, dan Pemeriksaan Bekalan Teknikal.
+            </p>
           </div>
         </div>
+
         <div class="actions">
-          <a class="btn" href="index.html">Kembali</a>
-          <a class="btn" href="assets/docs/sel-teknikal-workflows.pdf" target="_blank" rel="noopener">Buka PDF</a>
+          <a class="btn" href="index.html" title="Kembali ke Laman Utama">
+            <i class="ri-arrow-left-line"></i> Kembali
+          </a>
+          <a class="btn" href="ctpreprt.html" title="Buka Laporan Lengkap & Analitik">
+            <i class="ri-pie-chart-2-line"></i> Laporan CTP
+          </a>
+          <button class="btn btn-primary" id="btnTogglePdf" title="Paparkan / Sembunyikan PDF Asal">
+            <i class="ri-file-pdf-2-line"></i> Dokumen PDF Asal
+          </button>
         </div>
       </div>
 
-      <nav class="quick-nav" aria-label="Pilih workflow">
-        <a class="quick-link" href="#fat">FAT</a>
-        <a class="quick-link" href="#dokumen">Mewujudkan Dokumen</a>
-        <a class="quick-link" href="#bekalan">Bekalan Teknikal</a>
-      </nav>
+      <!-- Controls Toolbar: Tabs & Filters -->
+      <div class="controls-toolbar">
+        <nav class="nav-tabs" aria-label="Pilih SOP Workflow">
+          <button class="nav-tab-btn active" data-flow="fat">
+            <i class="ri-checkbox-circle-line"></i> FAT (Final Acceptance Test)
+            <span class="badge-pill">10 Langkah</span>
+          </button>
+          <button class="nav-tab-btn" data-flow="dokumen">
+            <i class="ri-file-list-3-line"></i> Mewujudkan Dokumen
+            <span class="badge-pill">10 Langkah</span>
+          </button>
+          <button class="nav-tab-btn" data-flow="bekalan">
+            <i class="ri-truck-line"></i> Bekalan Teknikal
+            <span class="badge-pill">10 Langkah</span>
+          </button>
+          <button class="nav-tab-btn" data-flow="all">
+            <i class="ri-layout-grid-line"></i> Ringkasan Matriks
+          </button>
+        </nav>
+
+        <div class="tool-group">
+          <!-- Role Filter -->
+          <select class="role-select" id="roleFilter" title="Tapis mengikut peranan tanggungjawab">
+            <option value="all">Semua Peranan</option>
+            <option value="PP">Pegawai Penguasa (PP)</option>
+            <option value="PEMERIKSA">Pegawai Pemeriksa</option>
+          </select>
+
+          <!-- Quick Search -->
+          <div class="search-box">
+            <i class="ri-search-line"></i>
+            <input type="text" class="search-input" id="flowSearch" placeholder="Cari langkah atau dokumen..." />
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Interactive Step Simulator Bar -->
+    <section class="sim-bar" id="simBar">
+      <div class="sim-info">
+        <div class="sim-beacon"></div>
+        <div class="sim-text" id="simStatusText">
+          Mod Simulasi: Sedia untuk menjalankan simulasi aliran langkah-demi-langkah.
+        </div>
+      </div>
+      <div class="sim-controls">
+        <button class="btn-sim" id="btnPrevStep" disabled title="Langkah Sebelumnya">
+          <i class="ri-skip-back-line"></i> Undur
+        </button>
+        <button class="btn-sim" id="btnPlaySim" title="Main / Jeda Simulasi Automatik">
+          <i class="ri-play-fill" id="playIcon"></i> Simulasi Aliran
+        </button>
+        <button class="btn-sim" id="btnNextStep" title="Langkah Seterusnya">
+          Maju <i class="ri-skip-forward-line"></i>
+        </button>
+        <button class="btn-sim" id="btnResetSim" title="Set Semula Simulasi">
+          <i class="ri-refresh-line"></i> Reset
+        </button>
+      </div>
     </section>
 
-    <section class="workflow-list">
-      <section class="workflow" id="fat">
-        <div class="workflow-head">
-          <h2>FAT (Final Acceptance Test)</h2>
-          <span class="workflow-tag">Halaman 2 - 4</span>
-        </div>
-        <div class="page-stack" data-pages="2,3,4"></div>
-      </section>
-
-      <section class="workflow" id="dokumen">
-        <div class="workflow-head">
-          <h2>Mewujudkan Dokumen</h2>
-          <span class="workflow-tag">Halaman 5 - 7</span>
-        </div>
-        <div class="page-stack" data-pages="5,6,7"></div>
-      </section>
-
-      <section class="workflow" id="bekalan">
-        <div class="workflow-head">
-          <h2>Bekalan Teknikal</h2>
-          <span class="workflow-tag">Halaman 8 - 10</span>
-        </div>
-        <div class="page-stack" data-pages="8,9,10"></div>
-      </section>
+    <!-- PDF Viewer Frame (Toggled on demand) -->
+    <section id="pdfViewerContainer" style="display: none; margin-bottom: 24px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <h3 style="margin:0; font-size:16px; font-weight:800;">Rujukan PDF Asal (SOP Sel Teknikal)</h3>
+        <a href="assets/docs/sel-teknikal-workflows.pdf" target="_blank" class="btn" style="padding:6px 14px; font-size:12px;">
+          <i class="ri-external-link-line"></i> Buka Tab Baharu
+        </a>
+      </div>
+      <iframe src="assets/docs/sel-teknikal-workflows.pdf" class="pdf-viewer-frame" id="pdfFrame"></iframe>
     </section>
+
+    <!-- FLOWCHART CONTAINER -->
+    <div class="flowchart-container" id="flowchartWrapper">
+      <!-- Generated dynamically by JavaScript -->
+    </div>
+
+    <!-- Comparison Matrix Section (when 'all' is chosen) -->
+    <section class="workflow-panel comparison-section" id="comparisonMatrix">
+      <div class="workflow-header">
+        <div class="workflow-meta-title">
+          <h2>Perbandingan Matriks Ketiga-tiga SOP Sel Teknikal</h2>
+          <span class="sop-badge">Kompilasi Penuh</span>
+        </div>
+      </div>
+      <div style="overflow-x: auto;">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th style="width: 80px;">No.</th>
+              <th style="width: 140px;">Tanggungjawab</th>
+              <th>1. FAT (Final Acceptance Test)</th>
+              <th>2. Mewujudkan Dokumen</th>
+              <th>3. Bekalan Teknikal</th>
+            </tr>
+          </thead>
+          <tbody id="comparisonTableBody">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
   </main>
 
-  <script type="module">
-    import * as pdfjsLib from "./assets/vendor/pdfjs/pdf.mjs";
+  <!-- Step Details Modal -->
+  <div class="modal-overlay" id="stepDetailModal" role="dialog" aria-modal="true" aria-labelledby="modalStepTitle">
+    <div class="modal-window">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span class="node-num" id="modalStepNum">1</span>
+          <div>
+            <span class="sop-badge" id="modalFlowTag">FAT</span>
+            <h3 id="modalStepTitle" style="margin-top: 4px;">Penyediaan Laporan</h3>
+          </div>
+        </div>
+        <button class="modal-close-btn" id="modalCloseBtn" aria-label="Tutup tetingkap">
+          <i class="ri-close-line"></i>
+        </button>
+      </div>
 
-    const THEME_KEY = "ctp_theme";
-    const themeSwitch = document.getElementById("themeSwitch");
-    const PAGE_STACKS = Array.from(document.querySelectorAll(".page-stack"));
-    const PDF_URL = "./assets/docs/sel-teknikal-workflows.pdf";
-    let pdfDoc = null;
+      <div class="modal-body">
+        <div class="modal-meta-grid">
+          <div class="modal-meta-card">
+            <div class="modal-meta-label">Fasa SOP</div>
+            <div class="modal-meta-value" id="modalPhaseName">Fasa 1: Menerima Permohonan</div>
+          </div>
+          <div class="modal-meta-card">
+            <div class="modal-meta-label">Tanggungjawab</div>
+            <div class="modal-meta-value" id="modalRoleName">Pegawai Penguasa (PP)</div>
+          </div>
+          <div class="modal-meta-card">
+            <div class="modal-meta-label">Interfasa / Pihak Terlibat</div>
+            <div class="modal-meta-value" id="modalInterfaceName">SEL TADBIR</div>
+          </div>
+          <div class="modal-meta-card">
+            <div class="modal-meta-label">Dokumen Terlibat</div>
+            <div class="modal-meta-value" id="modalDocsName">Borang SOP Rasmi</div>
+          </div>
+        </div>
 
-    pdfjsLib.GlobalWorkerOptions.workerSrc = "./assets/vendor/pdfjs/pdf.worker.mjs";
+        <div>
+          <h4 style="margin: 0 0 6px; font-size: 13.5px; font-weight: 800;">Huraian Tindakan Standard:</h4>
+          <p id="modalFullDesc" style="margin: 0; color: var(--muted); font-size: 13.5px; line-height: 1.6;"></p>
+        </div>
 
-    function normalizeTheme(theme){
-      return theme === "light" || theme === "lightB" ? "light" : "dark";
-    }
+        <div class="modal-checklist">
+          <h4><i class="ri-checkbox-circle-fill"></i> Senarai Semak & Pematuhan Arahan Pentadbiran:</h4>
+          <ul id="modalChecklistItems">
+            <!-- Injected dynamically -->
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    function applyTheme(theme){
-      const mode = normalizeTheme(theme);
-      document.body.classList.toggle("theme-light", mode === "light");
-      document.body.classList.toggle("theme-dark", mode === "dark");
-      if(themeSwitch){
-        themeSwitch.setAttribute("aria-pressed", mode === "dark" ? "true" : "false");
+  <!-- Flowchart Data & Interactive Engine -->
+  <script>
+    (function () {
+      'use strict';
+
+      // ─── 1. Flowcharts Definition (Strictly adhering to PDF SOP) ──────────
+      const FLOWCHARTS = {
+        fat: {
+          id: 'fat',
+          title: 'CARTA ALIR PEMERIKSAAN TEKNIKAL BAGI FAT (FINAL ACCEPTANCE TEST)',
+          shortTitle: 'FAT (Final Acceptance Test)',
+          sopCode: 'SOP-FAT-01',
+          pages: 'Halaman 2 - 4',
+          purpose: 'Menjalankan pemeriksaan penerimaan mutakhir terhadap peralatan dan kenderaan bagi memastikan spesifikasi teknikal menepati kontrak perolehan Kementerian Pertahanan.',
+          phases: [
+            {
+              id: 'p1',
+              title: 'Menerima Permohonan FAT (Final Acceptance Test)',
+              steps: [
+                {
+                  num: 1,
+                  type: 'process',
+                  title: 'Terima, Semak & Arahan Pentadbiran BPPTD/BLP',
+                  fullText: 'TERIMA, SEMAK DAN ARAHAN PENTADBIRAN BPPTD/BLP',
+                  role: 'PP',
+                  roleFull: 'Pegawai Penguasa (PP)',
+                  interfasa: 'SEL TADBIR',
+                  desc: 'Menerima surat atau arahan pentadbiran daripada Bahagian Perkhidmatan Pasukan Tentera Darat (BPPTD) atau Bahagian Logistik Pertahanan (BLP), membuat semakan pendaftaran, kesahihan dokumen perolehan, dan kelayakan pengujian.',
+                  checklist: [
+                    'Sahkan surat arahan pentadbiran BPPTD/BLP rasmi.',
+                    'Semak tarikh tamat kontrak dan skop serahan bekalan.',
+                    'Daftar rekod fail permohonan ke dalam Buku Daftar Sel Tadbir.'
+                  ]
+                },
+                {
+                  num: 2,
+                  type: 'process',
+                  title: 'Melantik Pemeriksa',
+                  fullText: 'MELANTIK PEMERIKSA',
+                  role: 'PP',
+                  roleFull: 'Pegawai Penguasa (PP)',
+                  interfasa: 'Dalaman Sel Teknikal',
+                  desc: 'Pegawai Penguasa melantik Pegawai Pemeriksa 1 (PP1) dan Pegawai Pemeriksa 2 (PP2) yang berkelayakan mengikut kepakaran sistem teknikal.',
+                  checklist: [
+                    'Keluarkan surat/memo pelantikan Pegawai Pemeriksa.',
+                    'Tetapkan Pegawai Pemeriksa Utama (PP1) dan Pembantu (PP2).',
+                    'Serahkan fail kes dan dokumen rujukan kepada pemeriksa.'
+                  ]
+                }
+              ]
+            },
+            {
+              id: 'p2',
+              title: 'Persediaan Sebelum Pemeriksaan FAT',
+              steps: [
+                {
+                  num: 3,
+                  type: 'process',
+                  title: 'Terima Arahan PP1 & Buat Rujukan Dokumen Kontrak',
+                  fullText: 'TERIMA ARAHAN PP1 DAN MEMBUAT RUJUKAN DOKUMEN KONTRAK, SPESIFIKASI DAN CONTOH PENGELUARAN (JIKA ADA)',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'PP1',
+                  desc: 'Pemeriksa menerima arahan khusus daripada PP1 dan mengkaji kontrak perolehan, spesifikasi teknikal kilang, standard ketenteraan (Def Stan/MIL-STD), manual pengeluar, serta sampel kelulusan.',
+                  checklist: [
+                    'Semak jadual spesifikasi teknikal kontrak perolehan.',
+                    'Kenal pasti parameter ujian kritikal dan toleransi lulus/gagal.',
+                    'Sediakan borang ujian pengesahan teknikal FAT.'
+                  ]
+                },
+                {
+                  num: 4,
+                  type: 'process',
+                  title: 'Mengkoordinasi dengan Pasukan/Premis',
+                  fullText: 'MENGKOORDINASI DENGAN PASUKAN/PREMIS',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'PASUKAN/PREMIS',
+                  desc: 'Menghubungi pasukan pengguna atau premis kilang pembekal bagi penetapan tarikh ujian, lokasi fasiliti, kesiapsiagaan peralatan pengujian, dan peralatan keselamatan.',
+                  checklist: [
+                    'Tetapkan tarikh dan masa ujian bersama wakil pembekal/pasukan.',
+                    'Pastikan aset dan instrumen ujian berada di lokasi sedia untuk diuji.',
+                    'Semak keperluan keselamatan dan permit masuk fasiliti.'
+                  ]
+                },
+                {
+                  num: 5,
+                  type: 'decision',
+                  title: 'Tugas Luar Stesen?',
+                  fullText: 'PENENTUAN TUGAS LUAR STESEN (TUGAS LUAR STESEN: YA / TIDAK)',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'Pemeriksa / Pentadbiran',
+                  desc: 'Menentukan sama ada pemeriksaan dijalankan di luar stesen pangkalan yang memerlukan kelulusan pergerakan rasmi dan peruntukan lojistik.',
+                  checklist: [
+                    'Jika YA: Lengkapkan borang permohonan tugas luar stesen dan buku perjalanan.',
+                    'Jika TIDAK: Terus lapor diri kepada PP1 untuk arahan semasa.'
+                  ],
+                  subStep: {
+                    num: '5A',
+                    title: 'Mengisi Borang & Buku Permohonan Tugas Luar Stesen',
+                    fullText: 'MENGISI BORANG DAN BUKU PERMOHONAN TUGAS LUAR STESEN',
+                    role: 'PEMERIKSA',
+                    interfasa: 'Pentadbiran / Kewangan',
+                    desc: 'Pemeriksa melengkapkan borang kelulusan pergerakan tugas rasmi luar stesen, buku permohonan kenderaan/pengangkutan, dan anggaran perbelanjaan.'
+                  }
+                },
+                {
+                  num: 6,
+                  type: 'process',
+                  title: 'Melapor kepada PP1 serta Arahan Semasa',
+                  fullText: 'MELAPOR KEPADA PP1 SERTA ARAHAN SEMASA',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'PP1/PPP/KC',
+                  desc: 'Melapor status kesiapsiagaan kepada PP1/PPP/Ketua Cawangan dan menerima arahan pentadbiran serta mandat keselamatan terkini sebelum bertolak.',
+                  checklist: [
+                    'Terima taklimat keselamatan dan SOP operasi semasa.',
+                    'Pastikan kelengkapan alat uji dan kit pemeriksaan mencukupi.',
+                    'Dapatkan tandatangan kebenaran bertolak daripada PP1.'
+                  ]
+                }
+              ]
+            },
+            {
+              id: 'p3',
+              title: 'Pelaksanaan Pemeriksaan FAT',
+              steps: [
+                {
+                  num: 7,
+                  type: 'process',
+                  title: 'Melapor Diri Pasukan/Premis',
+                  fullText: 'MELAPOR DIRI PASUKAN/PREMIS',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'PASUKAN/PREMIS',
+                  desc: 'Pemeriksa tiba di lokasi pasukan atau premis pembekal dan melapor diri secara rasmi kepada Pegawai Pemerintah atau Pengurus Fasiliti.',
+                  checklist: [
+                    'Tandatangan buku lawatan rasmi premis.',
+                    'Adakan taklimat pembukaan (entry briefing) bersama wakil pembekal.',
+                    'Sahkan senarai semak keselamatan fasiliti ujian.'
+                  ]
+                },
+                {
+                  num: 8,
+                  type: 'process',
+                  title: 'Melaksanakan Pemeriksaan FAT',
+                  fullText: 'MELAKSANAKAN PEMERIKSAAN FAT',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'Instrumen Pengujian & Premis',
+                  desc: 'Menjalankan pemeriksaan fizikal, ujian fungsi mekanikal, elektrikal, perisian, serta ujian prestasi dan ketahanan mengikut piawaian kontrak.',
+                  checklist: [
+                    'Pemeriksaan visual, kualiti binaan, dan kemasan luaran.',
+                    'Ujian kefungsian sistem penuh (operational endurance test).',
+                    'Catat bacaan instrumen pada lembaran data ujian mentah (raw test sheet).'
+                  ]
+                },
+                {
+                  num: 9,
+                  type: 'process',
+                  title: 'Taklimat dan Hasil Pemeriksaan kepada PP1',
+                  fullText: 'TAKLIMAT DAN HASIL PEMERIKSAAN KEPADA PP1',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'PP1',
+                  desc: 'Membentangkan hasil penemuan ujian awal kepada PP1, memaklumkan sebarang ketidakpatuhan (discrepancy) atau kecacatan yang dikesan.',
+                  checklist: [
+                    'Bentangkan ringkasan skor kelulusan komponen ujian.',
+                    'Senaraikan item ketidakpatuhan atau kecacatan teknikal.',
+                    'Dapatkan pandangan PP1 mengenai syor pembetulan pembekal.'
+                  ]
+                },
+                {
+                  num: 10,
+                  type: 'process',
+                  title: 'Penyediaan Laporan Pemeriksaan FAT',
+                  fullText: 'PENYEDIAAN LAPORAN PEMERIKSAAN FAT',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'PP1/PPP/KC',
+                  desc: 'Menyediakan laporan bertulis rasmi mengandungi rekod ujian, lampiran foto, analisis kecacatan, dan perakuan syor (Lulus / Gagal / Bersyarat) untuk kelulusan Ketua Cawangan.',
+                  checklist: [
+                    'Sediakan draf laporan lengkap pemeriksaan FAT bertulis.',
+                    'Sertakan sijil ujian kilang dan borang akuan pengesahan.',
+                    'Kemukakan kepada PP1/PPP/KC untuk kelulusan dan tandatangan rasmi.'
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+
+        dokumen: {
+          id: 'dokumen',
+          title: 'CARTA ALIR PEMERIKSAAN MEWUJUDKAN DOKUMEN',
+          shortTitle: 'Mewujudkan Dokumen (WDP)',
+          sopCode: 'SOP-DOK-02',
+          pages: 'Halaman 5 - 7',
+          purpose: 'Proses pemeriksaan fizikal dan pengesahan teknikal bagi menjana serta mewujudkan dokumen rasmi peralatan ATM (BAT M 430, BAT M 430A, BAT M 112, BAT M 113, BAT M 488).',
+          phases: [
+            {
+              id: 'p1',
+              title: 'Menerima Permohonan Mewujudkan Dokumen',
+              steps: [
+                {
+                  num: 1,
+                  type: 'process',
+                  title: 'Terima, Semak & Surat Permohonan Pasukan',
+                  fullText: 'TERIMA, SEMAK DAN SURAT PERMOHONAN PASUKAN',
+                  role: 'PP',
+                  roleFull: 'Pegawai Penguasa (PP)',
+                  interfasa: 'SEL TADBIR',
+                  desc: 'Menerima surat permohonan mewujudkan dokumen peralatan daripada pasukan tentera darat melalui Sel Tadbir dan menyemak kelengkapan lampiran dokumen sokongan.',
+                  checklist: [
+                    'Semak surat permohonan rasmi pasukan tentera darat.',
+                    'Semak butiran inventori aset dan justifikasi ketiadaan dokumen terdahulu.',
+                    'Daftar nombor rujukan fail permohonan mewujudkan dokumen.'
+                  ]
+                },
+                {
+                  num: 2,
+                  type: 'process',
+                  title: 'Melantik Pemeriksa',
+                  fullText: 'MELANTIK PEMERIKSA',
+                  role: 'PP',
+                  roleFull: 'Pegawai Penguasa (PP)',
+                  interfasa: 'Dalaman Sel Teknikal',
+                  desc: 'Pegawai Penguasa melantik Pegawai Pemeriksa yang kompeten bagi menjalankan pemeriksaan pengesahan dokumen dan fizikal peralatan di pasukan.',
+                  checklist: [
+                    'Lantik Pegawai Pemeriksa bertanggungjawab.',
+                    'Serahkan fail permohonan pasukan kepada pemeriksa.',
+                    'Tetapkan tempoh masa penyelesaian tindakan pemeriksaan.'
+                  ]
+                }
+              ]
+            },
+            {
+              id: 'p2',
+              title: 'Persediaan Sebelum Mewujudkan Dokumen',
+              steps: [
+                {
+                  num: 3,
+                  type: 'process',
+                  title: 'Terima Arahan PP1 & Buat Rujukan Dokumen Kontrak',
+                  fullText: 'TERIMA ARAHAN PP1 DAN MEMBUAT RUJUKAN DOKUMEN KONTRAK, SPESIFIKASI DAN CONTOH PENGELUARAN (JIKA ADA)',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'PP1',
+                  desc: 'Pemeriksa menerima arahan pelaksanaan daripada PP1 dan menyemak rekod induk aset, nombor casis/enjin, data katalog pembekal, dan spesifikasi peralatan.',
+                  checklist: [
+                    'Buat rujukan silang nombor pendaftaran aset tentera (No. Z).',
+                    'Sahkan nombor casis, nombor enjin, dan kod pengeluar.',
+                    'Sediakan set dokumen BAT M berkaitan yang bakal diwujudkan.'
+                  ]
+                },
+                {
+                  num: 4,
+                  type: 'process',
+                  title: 'Mengkoordinasi dengan Pasukan',
+                  fullText: 'MENGKOORDINASI DENGAN PASUKAN',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'PASUKAN',
+                  desc: 'Menghubungi Pegawai Pengangkutan / Kuartermaster Pasukan bagi menetapkan tarikh lawatan dan memastikan peralatan sedia di garaj untuk verifikasi.',
+                  checklist: [
+                    'Penyelarasan tarikh lawatan pemeriksaan bersama pasukan.',
+                    'Arahkan pasukan sediakan aset di tapak pemeriksaan.',
+                    'Pastikan buku log lama atau rekod penyelenggaraan sedia disemak.'
+                  ]
+                },
+                {
+                  num: 5,
+                  type: 'decision',
+                  title: 'Tugas Luar Stesen?',
+                  fullText: 'PENENTUAN TUGAS LUAR STESEN (TUGAS LUAR STESEN: YA / TIDAK)',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'Pemeriksa / Pentadbiran',
+                  desc: 'Menentukan keperluan perjalanan luar stesen pangkalan mengikut lokasi markas pasukan yang memohon.',
+                  checklist: [
+                    'Jika YA: Mengisi borang permohonan tugas luar stesen dan buku perjalanan.',
+                    'Jika TIDAK: Terus melapor kepada PP1.'
+                  ],
+                  subStep: {
+                    num: '5A',
+                    title: 'Mengisi Borang & Buku Permohonan Tugas Luar Stesen',
+                    fullText: 'MENGISI BORANG DAN BUKU PERMOHONAN TUGAS LUAR STESEN',
+                    role: 'PEMERIKSA',
+                    interfasa: 'Pentadbiran / Kewangan',
+                    desc: 'Mengisi permohonan kelulusan pergerakan tugas luar stesen bagi lawatan ke pasukan di luar zon pangkalan.'
+                  }
+                },
+                {
+                  num: 6,
+                  type: 'process',
+                  title: 'Melapor kepada PP1 serta Arahan Semasa',
+                  fullText: 'MELAPOR KEPADA PP1 SERTA ARAHAN SEMASA',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'PP1/PPP/KC',
+                  desc: 'Melaporkan status perancangan lawatan kepada PP1 dan menerima amanat serta arahan semasa.',
+                  checklist: [
+                    'Bentangkan pelan lawatan dan jadual kerja pemeriksaan.',
+                    'Dapatkan pengesahan kebenaran bertolak daripada PP1.'
+                  ]
+                }
+              ]
+            },
+            {
+              id: 'p3',
+              title: 'Pelaksanaan Semasa Mewujudkan Dokumen',
+              steps: [
+                {
+                  num: 7,
+                  type: 'process',
+                  title: 'Melapor Diri Pasukan',
+                  fullText: 'MELAPOR DIRI PASUKAN',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'PASUKAN/PREMIS',
+                  desc: 'Pemeriksa melapor diri di Markas Pasukan pemohon kepada Pegawai Memerintah atau Kuartermaster.',
+                  checklist: [
+                    'Melapor diri dan mendaftar buku pelawat markas.',
+                    'Adakan taklimat bersama Pegawai Pengangkutan/Teknikal Pasukan.'
+                  ]
+                },
+                {
+                  num: 8,
+                  type: 'process',
+                  title: 'Melaksanakan Pemeriksaan Mewujudkan Dokumen',
+                  fullText: 'MELAKSANAKAN PEMERIKSAAN MEWUJUDKAN DOKUMEN',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'Borang: BAT M 430, BAT M 430A, BAT M 112, BAT M 113, BAT M 488',
+                  docs: ['BAT M 430', 'BAT M 430A', 'BAT M 112', 'BAT M 113', 'BAT M 488'],
+                  desc: 'Pemeriksaan fizikal peralatan secara terperinci (casis, enjin, aksesori, klasifikasi servisibiliti) dan pengisian borang rasmi BAT M mengikut kategori peralatan.',
+                  checklist: [
+                    'Ukur dan rekodkan nombor identifikasi fizikal aset.',
+                    'Tentukan tahap servisibiliti peralatan (A - Servisibel, B - Perlu Baiki, C - Lupus).',
+                    'Lengkapkan borang BAT M 430 / 430A / 112 / 113 / 488.'
+                  ]
+                },
+                {
+                  num: 9,
+                  type: 'process',
+                  title: 'Taklimat dan Hasil Pemeriksaan kepada PP1',
+                  fullText: 'TAKLIMAT DAN HASIL PEMERIKSAAN KEPADA PP1',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'PP1',
+                  desc: 'Membentangkan hasil verifikasi teknikal dan draf dokumen yang diisi kepada PP1.',
+                  checklist: [
+                    'Bentangkan rekod data teknikal yang telah disahkan di tapak.',
+                    'Semak ketepatan nombor casis dan kod borang BAT M bersama PP1.'
+                  ]
+                },
+                {
+                  num: 10,
+                  type: 'process',
+                  title: 'Penyediaan Laporan Pemeriksaan Mewujudkan Dokumen',
+                  fullText: 'PENYEDIAAN LAPORAN PEMERIKSAAN MEWUJUDKAN DOKUMEN',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'PP1/PPP/KC',
+                  desc: 'Menyediakan laporan teknikal lengkap berserta dokumen rasmi BAT M yang telah dicap dan disahkan untuk tandatangan kelulusan Ketua Cawangan.',
+                  checklist: [
+                    'Sediakan laporan rasmi berserta salinan borang BAT M lengkap.',
+                    'Dapatkan perakuan dan tandatangan PP1 serta Ketua Cawangan.',
+                    'Hantar salinan sah kepada pasukan dan simpan rekod di arkib Sel Teknikal.'
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+
+        bekalan: {
+          id: 'bekalan',
+          title: 'CARTA ALIR PEMERIKSAAN BEKALAN TEKNIKAL',
+          shortTitle: 'Pemeriksaan Bekalan Teknikal',
+          sopCode: 'SOP-BEK-03',
+          pages: 'Halaman 8 - 10',
+          purpose: 'Prosedur pemeriksaan fizikal, verifikasi kualiti dan kuantiti penerimaan bekalan alat ganti serta kelengkapan teknikal di depoh ordnan atau pasukan.',
+          phases: [
+            {
+              id: 'p1',
+              title: 'Menerima Permohonan Pemeriksaan Bekalan Teknikal',
+              steps: [
+                {
+                  num: 1,
+                  type: 'process',
+                  title: 'Terima, Semak Kawat/Surat Permohonan Depoh/Pasukan',
+                  fullText: 'TERIMA, SEMAK KAWAT/SURAT PERMOHONAN DEPOH/PASUKAN',
+                  role: 'PP',
+                  roleFull: 'Pegawai Penguasa (PP)',
+                  interfasa: 'SEL TADBIR',
+                  desc: 'Menerima kawat atau surat permohonan pemeriksaan bekalan daripada depoh ordnan atau pasukan pemohon dan membuat semakan nombor pesanan tempatan (LO)/kontrak.',
+                  checklist: [
+                    'Semak kawat/surat penerimaan bekalan daripada depoh.',
+                    'Padankan nombor Pesanan Tempatan (LO) dan invois pembekal.',
+                    'Daftar permohonan ke dalam rekod kerja Sel Teknikal.'
+                  ]
+                },
+                {
+                  num: 2,
+                  type: 'process',
+                  title: 'Melantik Pemeriksa',
+                  fullText: 'MELANTIK PEMERIKSA',
+                  role: 'PP',
+                  roleFull: 'Pegawai Penguasa (PP)',
+                  interfasa: 'Dalaman Sel Teknikal',
+                  desc: 'Pegawai Penguasa melantik Pegawai Pemeriksa teknikal bagi melaksanakan pemeriksaan penerimaan barangan di depoh.',
+                  checklist: [
+                    'Lantik Pegawai Pemeriksa teknikal.',
+                    'Keluarkan surat kuasa pemeriksaan bekalan.',
+                    'Serahkan dokumen kontrak dan senarai bekalan terlibat.'
+                  ]
+                }
+              ]
+            },
+            {
+              id: 'p2',
+              title: 'Persediaan Sebelum Pemeriksaan Bekalan Teknikal',
+              steps: [
+                {
+                  num: 3,
+                  type: 'process',
+                  title: 'Terima Arahan PP1 & Buat Rujukan Dokumen Kontrak',
+                  fullText: 'TERIMA ARAHAN PP1 DAN MEMBUAT RUJUKAN DOKUMEN KONTRAK, SPESIFIKASI DAN CONTOH PENGELUARAN (JIKA ADA)',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'PP1',
+                  desc: 'Pemeriksa menerima arahan PP1 dan menyemak jadual spesifikasi bekalan, nombor bahagian (part number), NATO Stock Number (NSN), dan sampel pengeluaran.',
+                  checklist: [
+                    'Semak nombor kod bekalan dan spesifikasi bahan.',
+                    'Rujuk katalog alat ganti OEM atau manual pengeluar.',
+                    'Sedia peralatan pengukur (vernier caliper, mikrometer, multimeter).'
+                  ]
+                },
+                {
+                  num: 4,
+                  type: 'process',
+                  title: 'Mengkoordinasi dengan Depoh',
+                  fullText: 'MENGKOORDINASI DENGAN DEPOH',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'DEPOH/PASUKAN',
+                  desc: 'Berhubung dengan Pegawai Kawalan Stok Depoh bagi penetapan waktu pemeriksaan dan pemunggahan bekalan di zon penerimaan.',
+                  checklist: [
+                    'Tetapkan masa pemeriksaan bersama Pegawai Penerima Depoh.',
+                    'Pastikan bekalan diasingkan mengikut lot penerimaan.',
+                    'Pastikan ruang pemeriksaan mempunyai pencahayaan mencukupi.'
+                  ]
+                },
+                {
+                  num: 5,
+                  type: 'decision',
+                  title: 'Tugas Luar Stesen?',
+                  fullText: 'PENENTUAN TUGAS LUAR STESEN (TUGAS LUAR STESEN: YA / TIDAK)',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'Pemeriksa / Pentadbiran',
+                  desc: 'Menentukan keperluan perjalanan ke depoh luar stesen pangkalan.',
+                  checklist: [
+                    'Jika YA: Mengisi borang dan buku permohonan tugas luar stesen.',
+                    'Jika TIDAK: Terus lapor kepada PP1.'
+                  ],
+                  subStep: {
+                    num: '5A',
+                    title: 'Mengisi Borang & Buku Permohonan Tugas Luar Stesen',
+                    fullText: 'MENGISI BORANG DAN BUKU PERMOHONAN TUGAS LUAR STESEN',
+                    role: 'PEMERIKSA',
+                    interfasa: 'Pentadbiran / Kewangan',
+                    desc: 'Mengisi permohonan kelulusan pergerakan perjalanan dan tuntutan elaun tugas luar stesen.'
+                  }
+                },
+                {
+                  num: 6,
+                  type: 'process',
+                  title: 'Melapor kepada PP1 serta Arahan Semasa',
+                  fullText: 'MELAPOR KEPADA PP1 SERTA ARAHAN SEMASA',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'PP1/PPP/KC',
+                  desc: 'Melapor kesediaan kepada PP1 dan menerima arahan teknikal keselamatan terkini.',
+                  checklist: [
+                    'Sahkan kaedah pensampelan bekalan (AQL sampling standard).',
+                    'Dapatkan kelulusan bertolak daripada PP1.'
+                  ]
+                }
+              ]
+            },
+            {
+              id: 'p3',
+              title: 'Pelaksanaan Semasa Pemeriksaan Bekalan Teknikal',
+              steps: [
+                {
+                  num: 7,
+                  type: 'process',
+                  title: 'Melapor Diri Pasukan/Depoh',
+                  fullText: 'MELAPOR DIRI PASUKAN',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'DEPOH/PASUKAN',
+                  desc: 'Pemeriksa melapor diri di Markas Depoh Ordnan kepada Pegawai Bertugas Penerimaan Bekalan.',
+                  checklist: [
+                    'Tandatangan buku daftar keselamatan depoh.',
+                    'Sahkan kehadiran wakil pembekal dan wakil penerima depoh.'
+                  ]
+                },
+                {
+                  num: 8,
+                  type: 'process',
+                  title: 'Melaksanakan Pemeriksaan Bekalan Teknikal',
+                  fullText: 'MELAKSANAKAN PEMERIKSAAN BEKALAN TEKNIKAL',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'Borang: BAT L 97, AM 75 E, BAT L 5, DO',
+                  docs: ['BAT L 97', 'AM 75 E', 'BAT L 5', 'DO'],
+                  desc: 'Melaksanakan verifikasi kuantiti fizikal, semakan kualiti barangan, nombor siri/part, sijil pematuhan kualiti (COC), serta pengisian dokumen rasmi bekalan.',
+                  checklist: [
+                    'Padankan bilangan fizikal dengan Delivery Order (DO) pembekal.',
+                    'Pemeriksaan kualiti bahan, pembungkusan ketenteraan, dan label NSN.',
+                    'Tandatangan dan cap borang BAT L 97, AM 75 E, dan BAT L 5.'
+                  ]
+                },
+                {
+                  num: 9,
+                  type: 'process',
+                  title: 'Taklimat dan Hasil Pemeriksaan kepada PP1',
+                  fullText: 'TAKLIMAT DAN HASIL PEMERIKSAAN KEPADA PP1',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'PP1',
+                  desc: 'Membentangkan hasil pemeriksaan kuantiti dan kualiti bekalan kepada PP1.',
+                  checklist: [
+                    'Bentangkan kadar penerimaan bekalan (Diterima / Ditolak).',
+                    'Kemukakan laporan ketidakakuran barangan sekiranya berlaku kerosakan.'
+                  ]
+                },
+                {
+                  num: 10,
+                  type: 'process',
+                  title: 'Penyediaan Laporan Pemeriksaan Bekalan Teknikal',
+                  fullText: 'PENYEDIAAN LAPORAN PEMERIKSAAN BEKALAN TEKNIKAL',
+                  role: 'PEMERIKSA',
+                  roleFull: 'Pegawai Pemeriksa',
+                  interfasa: 'PP1/PPP/KC',
+                  desc: 'Menyediakan laporan lengkap pemeriksaan penerimaan bekalan teknikal berserta perakuan syor penerimaan stor untuk kelulusan Ketua Cawangan.',
+                  checklist: [
+                    'Sediakan laporan rasmi pemeriksaan bekalan teknikal bertulis.',
+                    'Lampirkan salinan DO dan baucar BAT L yang telah diperakui.',
+                    'Kemukakan kepada PP1/PPP/KC untuk kelulusan muktamad.'
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      };
+
+      // ─── 2. DOM Elements & State ──────────────────────────────────────────
+      let currentFlowKey = 'fat';
+      let currentRoleFilter = 'all';
+      let currentSearchQuery = '';
+      let activeSimStepIndex = -1;
+      let simTimer = null;
+      let isSimPlaying = false;
+
+      const container = document.getElementById('flowchartWrapper');
+      const tabs = document.querySelectorAll('.nav-tab-btn');
+      const roleSelect = document.getElementById('roleFilter');
+      const searchInput = document.getElementById('flowSearch');
+      const simStatusText = document.getElementById('simStatusText');
+      const btnPlaySim = document.getElementById('btnPlaySim');
+      const btnPrevStep = document.getElementById('btnPrevStep');
+      const btnNextStep = document.getElementById('btnNextStep');
+      const btnResetSim = document.getElementById('btnResetSim');
+      const playIcon = document.getElementById('playIcon');
+      const comparisonSection = document.getElementById('comparisonMatrix');
+      const comparisonTableBody = document.getElementById('comparisonTableBody');
+
+      // Modal Elements
+      const modal = document.getElementById('stepDetailModal');
+      const modalCloseBtn = document.getElementById('modalCloseBtn');
+      const modalStepNum = document.getElementById('modalStepNum');
+      const modalFlowTag = document.getElementById('modalFlowTag');
+      const modalStepTitle = document.getElementById('modalStepTitle');
+      const modalPhaseName = document.getElementById('modalPhaseName');
+      const modalRoleName = document.getElementById('modalRoleName');
+      const modalInterfaceName = document.getElementById('modalInterfaceName');
+      const modalDocsName = document.getElementById('modalDocsName');
+      const modalFullDesc = document.getElementById('modalFullDesc');
+      const modalChecklistItems = document.getElementById('modalChecklistItems');
+
+      // PDF Toggle
+      const btnTogglePdf = document.getElementById('btnTogglePdf');
+      const pdfContainer = document.getElementById('pdfViewerContainer');
+
+      // ─── 3. Initialization ───────────────────────────────────────────────
+      function init() {
+        setupEventListeners();
+        renderActiveView();
+        buildComparisonTable();
       }
-    }
 
-    (function initTheme(){
-      let stored = "";
-      try{ stored = localStorage.getItem(THEME_KEY) || ""; }catch(e){}
-      applyTheme(stored || "dark");
-      if(themeSwitch){
-        themeSwitch.addEventListener("click", () => {
-          const next = document.body.classList.contains("theme-dark") ? "light" : "dark";
-          applyTheme(next);
-          try{ localStorage.setItem(THEME_KEY, next); }catch(e){}
+      function setupEventListeners() {
+        // Tab click
+        tabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            const flow = tab.getAttribute('data-flow');
+            setActiveTab(flow);
+          });
+        });
+
+        // Role filter
+        if (roleSelect) {
+          roleSelect.addEventListener('change', (e) => {
+            currentRoleFilter = e.target.value;
+            applyFilters();
+          });
+        }
+
+        // Search input
+        if (searchInput) {
+          searchInput.addEventListener('input', (e) => {
+            currentSearchQuery = e.target.value.trim().toLowerCase();
+            applyFilters();
+          });
+        }
+
+        // Sim controls
+        if (btnPlaySim) btnPlaySim.addEventListener('click', toggleSimulation);
+        if (btnNextStep) btnNextStep.addEventListener('click', () => stepSimulation(1));
+        if (btnPrevStep) btnPrevStep.addEventListener('click', () => stepSimulation(-1));
+        if (btnResetSim) btnResetSim.addEventListener('click', resetSimulation);
+
+        // PDF toggle
+        if (btnTogglePdf) {
+          btnTogglePdf.addEventListener('click', () => {
+            const isVisible = pdfContainer.style.display !== 'none';
+            pdfContainer.style.display = isVisible ? 'none' : 'block';
+            btnTogglePdf.innerHTML = isVisible
+              ? '<i class="ri-file-pdf-2-line"></i> Dokumen PDF Asal'
+              : '<i class="ri-close-line"></i> Tutup Paparan PDF';
+            if (!isVisible) {
+              pdfContainer.scrollIntoView({ behavior: 'smooth' });
+            }
+          });
+        }
+
+        // Modal close
+        if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
+        if (modal) {
+          modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+          });
+        }
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') closeModal();
         });
       }
+
+      function setActiveTab(flowKey) {
+        currentFlowKey = flowKey;
+        tabs.forEach(t => {
+          t.classList.toggle('active', t.getAttribute('data-flow') === flowKey);
+        });
+
+        resetSimulation();
+
+        if (flowKey === 'all') {
+          container.style.display = 'none';
+          comparisonSection.classList.add('active');
+          document.getElementById('simBar').style.display = 'none';
+        } else {
+          container.style.display = 'grid';
+          comparisonSection.classList.remove('active');
+          document.getElementById('simBar').style.display = 'flex';
+          renderActiveView();
+        }
+      }
+
+      // ─── 4. Render Flowchart Diagram ──────────────────────────────────────
+      function renderActiveView() {
+        const data = FLOWCHARTS[currentFlowKey];
+        if (!data) return;
+
+        let html = `
+          <article class="workflow-panel" id="panel-${data.id}">
+            <div class="workflow-header">
+              <div>
+                <div class="workflow-meta-title">
+                  <h2>${data.title}</h2>
+                  <span class="sop-badge">${data.sopCode}</span>
+                  <span class="page-ref-tag"><i class="ri-book-read-line"></i> ${data.pages}</span>
+                </div>
+                <p style="margin: 6px 0 0; color: var(--muted); font-size: 13.5px;">${data.purpose}</p>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <button class="btn" onclick="window.print()" title="Cetak Carta Alir Ini">
+                  <i class="ri-printer-line"></i> Cetak
+                </button>
+              </div>
+            </div>
+
+            <div class="swimlane-board">
+              <div class="swimlane-col-header col-role">
+                <i class="ri-user-star-line"></i> Tanggungjawab
+              </div>
+              <div class="swimlane-col-header col-flow">
+                <i class="ri-git-commit-line"></i> Aliran Proses SOP
+              </div>
+              <div class="swimlane-col-header col-interface">
+                <i class="ri-links-line"></i> Interfasa / Dokumen
+              </div>
+            </div>
+
+            <!-- Terminal Start -->
+            <div style="text-align:center; margin: 24px 0 10px;">
+              <div class="flow-terminal terminal-start">
+                <i class="ri-play-circle-line"></i> MULA
+              </div>
+            </div>
+            <div class="flow-connector"><div class="flow-connector-line"></div><i class="ri-arrow-down-s-line"></i></div>
+        `;
+
+        data.phases.forEach((phase, pIdx) => {
+          html += `
+            <div class="flow-phase" data-phase-id="${phase.id}">
+              <div class="flow-phase-banner">
+                <div class="flow-phase-line"></div>
+                <div class="flow-phase-pill">
+                  <i class="ri-flag-line"></i> Fasa ${pIdx + 1}: ${phase.title}
+                </div>
+                <div class="flow-phase-line"></div>
+              </div>
+          `;
+
+          phase.steps.forEach((step) => {
+            const roleClass = step.role === 'PP' ? 'role-pp' : 'role-pemeriksa';
+            const roleLabel = step.role === 'PP' ? 'Pegawai Penguasa' : 'Pegawai Pemeriksa';
+            const docsHtml = Array.isArray(step.docs)
+              ? `<div class="doc-ref-chips">${step.docs.map(d => `<span class="doc-pill">${d}</span>`).join('')}</div>`
+              : '';
+
+            if (step.type === 'decision') {
+              // Decision diamond node
+              html += `
+                <div class="flow-step-row" data-step-num="${step.num}" data-role="${step.role}" data-type="decision" id="step-row-${step.num}">
+                  <!-- Left: Role -->
+                  <div class="role-card ${roleClass}">
+                    <div class="role-avatar">${step.role}</div>
+                    <div>
+                      <span class="role-name">${step.role}</span>
+                      <span class="role-title">${roleLabel}</span>
+                    </div>
+                  </div>
+
+                  <!-- Center: Decision Node -->
+                  <div class="flow-node-wrap">
+                    <div class="flow-node-decision" onclick="window.CTP_FLOW.openModal('${currentFlowKey}', ${step.num})">
+                      <div class="decision-top">
+                        <div class="decision-label">
+                          <div class="diamond-icon"><span>?</span></div>
+                          <div class="decision-text">${step.title}</div>
+                        </div>
+                        <span class="sop-badge" style="border-color:rgba(215,164,71,0.5);">Pilihan Laluan</span>
+                      </div>
+                      <div class="decision-paths">
+                        <button type="button" class="path-btn active" id="btnPathYes" onclick="event.stopPropagation(); window.CTP_FLOW.toggleDecisionPath('yes')">
+                          <span><i class="ri-check-line" style="color:#10b981;"></i> YA (Luar Stesen)</span>
+                          <span style="font-size:10px; color:var(--dim);">Isi Borang 5A</span>
+                        </button>
+                        <button type="button" class="path-btn" id="btnPathNo" onclick="event.stopPropagation(); window.CTP_FLOW.toggleDecisionPath('no')">
+                          <span><i class="ri-close-line" style="color:#ef4444;"></i> TIDAK (Dalam Stesen)</span>
+                          <span style="font-size:10px; color:var(--dim);">Terus ke Langkah 6</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Right: Interface -->
+                  <div class="interface-card">
+                    <i class="ri-git-branch-line"></i>
+                    <div>
+                      <div>${step.interfasa}</div>
+                      <small style="color:var(--dim); font-size:10.5px;">Keputusan Lokasi</small>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Substep 5A branch (Mengisi Borang Tugas Luar Stesen) -->
+                <div class="branch-subpath" id="branchSubpathYes">
+                  <div class="flow-connector"><div class="flow-connector-line"></div><i class="ri-arrow-down-s-line"></i></div>
+                  <div class="flow-step-row" data-step-num="5" data-role="PEMERIKSA" id="step-row-5">
+                    <div class="role-card role-pemeriksa">
+                      <div class="role-avatar">5</div>
+                      <div>
+                        <span class="role-name">PEMERIKSA</span>
+                        <span class="role-title">Pegawai Pemeriksa</span>
+                      </div>
+                    </div>
+                    <div class="flow-node-wrap">
+                      <div class="flow-node" onclick="window.CTP_FLOW.openModal('${currentFlowKey}', 5)" style="border-color: rgba(215, 164, 71, 0.45);">
+                        <div class="node-left">
+                          <span class="node-num" style="background:rgba(215,164,71,0.2); color:var(--gold); border-color:rgba(215,164,71,0.45);">5</span>
+                          <div class="node-content">
+                            <div class="node-title">${step.subStep.title}</div>
+                            <div class="node-desc">${step.subStep.desc}</div>
+                          </div>
+                        </div>
+                        <div class="node-right">
+                          <i class="ri-information-line" style="color:var(--gold); font-size:18px;"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="interface-card">
+                      <i class="ri-booklet-line" style="color:var(--gold);"></i>
+                      <div>
+                        <div>${step.subStep.interfasa}</div>
+                        <small style="color:var(--dim); font-size:10.5px;">Buku &amp; Borang Perjalanan</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flow-connector"><div class="flow-connector-line"></div><i class="ri-arrow-down-s-line"></i></div>
+              `;
+            } else {
+              // Standard Process Node
+              html += `
+                <div class="flow-step-row" data-step-num="${step.num}" data-role="${step.role}" id="step-row-${step.num}">
+                  <!-- Left: Role -->
+                  <div class="role-card ${roleClass}">
+                    <div class="role-avatar">${step.role === 'PP' ? 'PP' : 'PP1'}</div>
+                    <div>
+                      <span class="role-name">${step.role}</span>
+                      <span class="role-title">${roleLabel}</span>
+                    </div>
+                  </div>
+
+                  <!-- Center: Process Node Card -->
+                  <div class="flow-node-wrap">
+                    <div class="flow-node" onclick="window.CTP_FLOW.openModal('${currentFlowKey}', ${step.num})">
+                      <div class="node-left">
+                        <span class="node-num">${step.num}</span>
+                        <div class="node-content">
+                          <div class="node-title">${step.title}</div>
+                          <div class="node-desc">${step.desc}</div>
+                          ${docsHtml}
+                        </div>
+                      </div>
+                      <div class="node-right">
+                        <i class="ri-arrow-right-s-line" style="color:var(--dim); font-size:20px;"></i>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Right: Interface -->
+                  <div class="interface-card ${!step.interfasa || step.interfasa.includes('Dalaman') ? '' : ''}">
+                    <i class="ri-building-line"></i>
+                    <div>
+                      <div>${step.interfasa || 'Dalaman'}</div>
+                      <small style="color:var(--dim); font-size:10.5px;">Pihak Berurusan</small>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flow-connector"><div class="flow-connector-line"></div><i class="ri-arrow-down-s-line"></i></div>
+              `;
+            }
+          });
+
+          // Phase connector
+          if (pIdx < data.phases.length - 1) {
+            html += `
+              <div class="connector-circle" title="Penyambung Aliran Fasa">A</div>
+              <div class="flow-connector"><div class="flow-connector-line"></div><i class="ri-arrow-down-s-line"></i></div>
+            `;
+          }
+
+          html += `</div>`; // end flow-phase
+        });
+
+        // Terminal End
+        html += `
+          <div style="text-align:center; margin: 18px 0 10px;">
+            <div class="connector-circle" title="Penyambung Aliran Akhir">A</div>
+            <div class="flow-connector"><div class="flow-connector-line"></div><i class="ri-arrow-down-s-line"></i></div>
+            <div class="flow-terminal terminal-end">
+              <i class="ri-checkbox-circle-line"></i> SELESAI / TAMAT
+            </div>
+          </div>
+
+          <footer style="margin-top:24px; padding-top:14px; border-top:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; font-size:12px; color:var(--dim);">
+            <div>Cawangan Teknik &amp; Pemeriksaan (CT&amp;P) • Sel Teknikal</div>
+            <div>VERIFIKASI SOP ATM • REKOD AKTIF 2026</div>
+          </footer>
+        </article>`;
+
+        container.innerHTML = html;
+        applyFilters();
+      }
+
+      // ─── 5. Decision Path Toggle (YA vs TIDAK) ───────────────────────────
+      function toggleDecisionPath(path) {
+        const btnYes = document.getElementById('btnPathYes');
+        const btnNo = document.getElementById('btnPathNo');
+        const subpath = document.getElementById('branchSubpathYes');
+
+        if (path === 'yes') {
+          if (btnYes) btnYes.classList.add('active');
+          if (btnNo) btnNo.classList.remove('active');
+          if (subpath) {
+            subpath.style.display = 'block';
+            subpath.classList.remove('collapsed');
+          }
+          if (simStatusText) simStatusText.innerHTML = 'Laluan Dipilih: <strong>YA</strong> (Pemeriksa mengisi Borang &amp; Buku Tugas Luar Stesen).';
+        } else {
+          if (btnYes) btnYes.classList.remove('active');
+          if (btnNo) btnNo.classList.add('active');
+          if (subpath) {
+            subpath.style.display = 'none';
+            subpath.classList.add('collapsed');
+          }
+          if (simStatusText) simStatusText.innerHTML = 'Laluan Dipilih: <strong>TIDAK</strong> (Pemeriksaan dalam stesen, bypass borang luar stesen terus ke Langkah 6).';
+        }
+      }
+
+      // ─── 6. Filtering (Role & Search) ────────────────────────────────────
+      function applyFilters() {
+        const rows = document.querySelectorAll('.flow-step-row');
+        let matchedCount = 0;
+
+        rows.forEach(row => {
+          const role = row.getAttribute('data-role') || '';
+          const text = row.innerText.toLowerCase();
+
+          const matchesRole = currentRoleFilter === 'all' || role === currentRoleFilter;
+          const matchesSearch = !currentSearchQuery || text.includes(currentSearchQuery);
+
+          if (matchesRole && matchesSearch) {
+            row.style.display = 'grid';
+            matchedCount++;
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      }
+
+      // ─── 7. Step Simulation Engine ───────────────────────────────────────
+      function getAllStepRows() {
+        return Array.from(document.querySelectorAll('.flow-step-row')).filter(r => r.style.display !== 'none');
+      }
+
+      function stepSimulation(delta) {
+        const rows = getAllStepRows();
+        if (rows.length === 0) return;
+
+        // Clear previous highlight
+        rows.forEach(r => r.classList.remove('highlighted'));
+
+        activeSimStepIndex += delta;
+
+        if (activeSimStepIndex >= rows.length) {
+          activeSimStepIndex = rows.length - 1;
+          stopSimulation();
+          if (simStatusText) simStatusText.innerHTML = '<span style="color:#10b981;">Simulasi Tamat!</span> Semua langkah telah dilengkapkan mengikut SOP.';
+          return;
+        }
+
+        if (activeSimStepIndex < 0) {
+          activeSimStepIndex = 0;
+        }
+
+        const activeRow = rows[activeSimStepIndex];
+        activeRow.classList.add('highlighted');
+        activeRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        const stepNum = activeRow.getAttribute('data-step-num');
+        const role = activeRow.getAttribute('data-role');
+        const title = activeRow.querySelector('.node-title, .decision-text')?.textContent || '';
+
+        if (simStatusText) {
+          simStatusText.innerHTML = `Langkah Aktif: <strong>[${stepNum}] ${title}</strong> (Tanggungjawab: <strong>${role}</strong>)`;
+        }
+
+        if (btnPrevStep) btnPrevStep.disabled = activeSimStepIndex <= 0;
+        if (btnNextStep) btnNextStep.disabled = activeSimStepIndex >= rows.length - 1;
+      }
+
+      function toggleSimulation() {
+        if (isSimPlaying) {
+          stopSimulation();
+        } else {
+          startSimulation();
+        }
+      }
+
+      function startSimulation() {
+        isSimPlaying = true;
+        if (btnPlaySim) {
+          btnPlaySim.classList.add('active-play');
+          btnPlaySim.innerHTML = '<i class="ri-pause-fill"></i> Jeda Simulasi';
+        }
+
+        stepSimulation(activeSimStepIndex === -1 ? 1 : 0);
+
+        simTimer = setInterval(() => {
+          const rows = getAllStepRows();
+          if (activeSimStepIndex >= rows.length - 1) {
+            stopSimulation();
+          } else {
+            stepSimulation(1);
+          }
+        }, 3200);
+      }
+
+      function stopSimulation() {
+        isSimPlaying = false;
+        clearInterval(simTimer);
+        simTimer = null;
+        if (btnPlaySim) {
+          btnPlaySim.classList.remove('active-play');
+          btnPlaySim.innerHTML = '<i class="ri-play-fill"></i> Simulasi Aliran';
+        }
+      }
+
+      function resetSimulation() {
+        stopSimulation();
+        activeSimStepIndex = -1;
+        document.querySelectorAll('.flow-step-row').forEach(r => r.classList.remove('highlighted'));
+        if (btnPrevStep) btnPrevStep.disabled = true;
+        if (btnNextStep) btnNextStep.disabled = false;
+        if (simStatusText) simStatusText.textContent = 'Mod Simulasi: Sedia untuk menjalankan simulasi aliran langkah-demi-langkah.';
+      }
+
+      // ─── 8. Step Detail Modal ────────────────────────────────────────────
+      function openModal(flowKey, stepNum) {
+        const flow = FLOWCHARTS[flowKey];
+        if (!flow) return;
+
+        let foundStep = null;
+        let foundPhase = null;
+
+        for (const phase of flow.phases) {
+          for (const s of phase.steps) {
+            if (s.num == stepNum) {
+              foundStep = s;
+              foundPhase = phase;
+              break;
+            }
+            if (s.type === 'decision' && stepNum == 5) {
+              foundStep = s.subStep;
+              foundPhase = phase;
+              break;
+            }
+          }
+          if (foundStep) break;
+        }
+
+        if (!foundStep) return;
+
+        if (modalStepNum) modalStepNum.textContent = stepNum;
+        if (modalFlowTag) modalFlowTag.textContent = flow.shortTitle;
+        if (modalStepTitle) modalStepTitle.textContent = foundStep.title;
+        if (modalPhaseName) modalPhaseName.textContent = foundPhase.title;
+        if (modalRoleName) modalRoleName.textContent = foundStep.roleFull || foundStep.role;
+        if (modalInterfaceName) modalInterfaceName.textContent = foundStep.interfasa || 'Dalaman Sel Teknikal';
+        if (modalDocsName) {
+          modalDocsName.textContent = Array.isArray(foundStep.docs) ? foundStep.docs.join(', ') : (foundStep.docs || 'Borang SOP Berkaitan');
+        }
+        if (modalFullDesc) modalFullDesc.textContent = foundStep.desc || foundStep.fullText;
+
+        if (modalChecklistItems) {
+          const list = Array.isArray(foundStep.checklist) && foundStep.checklist.length > 0
+            ? foundStep.checklist
+            : [
+                'Semak dokumen arahan mengikut tatacara pentadbiran.',
+                'Pastikan rekod ditandatangani oleh pegawai bertaraf kuasa.',
+                'Laksanakan pengesahan mengikut piawaian ketenteraan ATM.'
+              ];
+          modalChecklistItems.innerHTML = list.map(item => `<li>${item}</li>`).join('');
+        }
+
+        if (modal) modal.classList.add('active');
+      }
+
+      function closeModal() {
+        if (modal) modal.classList.remove('active');
+      }
+
+      // ─── 9. Build Comparison Matrix Table ────────────────────────────────
+      function buildComparisonTable() {
+        if (!comparisonTableBody) return;
+
+        const maxSteps = 10;
+        let rowsHtml = '';
+
+        for (let i = 1; i <= maxSteps; i++) {
+          const sFat = findStepByNum(FLOWCHARTS.fat, i);
+          const sDok = findStepByNum(FLOWCHARTS.dokumen, i);
+          const sBek = findStepByNum(FLOWCHARTS.bekalan, i);
+
+          const role = sFat ? sFat.role : (sDok ? sDok.role : (sBek ? sBek.role : 'PEMERIKSA'));
+
+          rowsHtml += `
+            <tr>
+              <td style="font-weight:800; text-align:center; color:var(--gold); font-family:'JetBrains Mono',monospace;">${i}</td>
+              <td>
+                <span class="role-badge" style="display:inline-block; padding:3px 8px; border-radius:6px; font-weight:800; font-size:11px; background:${role === 'PP' ? 'rgba(16,185,129,0.2)' : 'rgba(168,85,247,0.2)'}; color:${role === 'PP' ? '#34d399' : '#c084fc'};">
+                  ${role}
+                </span>
+              </td>
+              <td>
+                <strong>${sFat ? sFat.title : '-'}</strong><br>
+                <small style="color:var(--dim);">Interfasa: ${sFat ? sFat.interfasa : '-'}</small>
+              </td>
+              <td>
+                <strong>${sDok ? sDok.title : '-'}</strong><br>
+                <small style="color:var(--dim);">Interfasa: ${sDok ? sDok.interfasa : '-'}</small>
+              </td>
+              <td>
+                <strong>${sBek ? sBek.title : '-'}</strong><br>
+                <small style="color:var(--dim);">Interfasa: ${sBek ? sBek.interfasa : '-'}</small>
+              </td>
+            </tr>
+          `;
+        }
+
+        comparisonTableBody.innerHTML = rowsHtml;
+      }
+
+      function findStepByNum(flow, num) {
+        for (const phase of flow.phases) {
+          for (const s of phase.steps) {
+            if (s.num == num) return s;
+            if (s.type === 'decision' && num == 5) return s.subStep;
+          }
+        }
+        return null;
+      }
+
+      // ─── 10. Expose to Global Scope ──────────────────────────────────────
+      window.CTP_FLOW = {
+        openModal,
+        closeModal,
+        toggleDecisionPath,
+        setActiveTab
+      };
+
+      // Auto start on load
+      document.addEventListener('DOMContentLoaded', init);
     })();
-
-    function setLoading(container, label){
-      container.innerHTML = `
-        <div class="page-frame">
-          <div class="page-paper">
-            <div class="loading">${label}</div>
-          </div>
-        </div>
-      `;
-    }
-
-    function setError(container, message){
-      container.innerHTML = `
-        <div class="page-frame">
-          <div class="page-paper">
-            <div class="error">${message}</div>
-          </div>
-        </div>
-      `;
-    }
-
-    async function renderPageInto(container, pageNumber){
-      const page = await pdfDoc.getPage(pageNumber);
-      const frame = document.createElement("div");
-      frame.className = "page-frame";
-
-      const paper = document.createElement("div");
-      paper.className = "page-paper";
-
-      const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
-
-      const baseViewport = page.getViewport({ scale: 1 });
-      const maxWidth = Math.min(container.clientWidth || 980, 980);
-      const scale = maxWidth / baseViewport.width;
-      const viewport = page.getViewport({ scale });
-      const outputScale = window.devicePixelRatio || 1;
-
-      canvas.width = Math.floor(viewport.width * outputScale);
-      canvas.height = Math.floor(viewport.height * outputScale);
-      canvas.style.width = `${Math.floor(viewport.width)}px`;
-      canvas.style.height = `${Math.floor(viewport.height)}px`;
-
-      context.setTransform(outputScale, 0, 0, outputScale, 0, 0);
-      await page.render({ canvasContext: context, viewport }).promise;
-
-      paper.appendChild(canvas);
-      frame.appendChild(paper);
-      container.appendChild(frame);
-    }
-
-    async function renderStack(container){
-      const pages = String(container.dataset.pages || "")
-        .split(",")
-        .map(x => Number(x.trim()))
-        .filter(Boolean);
-
-      setLoading(container, "Memuatkan carta...");
-      container.innerHTML = "";
-
-      for(const pageNumber of pages){
-        await renderPageInto(container, pageNumber);
-      }
-    }
-
-    async function renderAll(){
-      if(!pdfDoc) return;
-      for(const container of PAGE_STACKS){
-        await renderStack(container);
-      }
-    }
-
-    let resizeTimer = null;
-    window.addEventListener("resize", () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        renderAll().catch(() => {});
-      }, 180);
-    });
-
-    async function initPdf(){
-      PAGE_STACKS.forEach((container) => setLoading(container, "Memuatkan carta..."));
-      try{
-        pdfDoc = await pdfjsLib.getDocument(PDF_URL).promise;
-        await renderAll();
-      }catch(err){
-        PAGE_STACKS.forEach((container) => {
-          setError(container, "Gagal memuatkan PDF.");
-        });
-        console.error(err);
-      }
-    }
-
-    initPdf();
   </script>
 </body>
 </html>
