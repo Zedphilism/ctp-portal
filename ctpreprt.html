@@ -1527,12 +1527,19 @@
 
       <!-- Chart 4: Inspector Workload & Completion -->
       <div class="chart-card">
-        <div class="chart-card-header">
+        <div class="chart-card-header" style="flex-wrap:wrap; gap:12px;">
           <div class="chart-card-title">
-            <h3>Beban Tugasan Pegawai Pemeriksa Gabungan</h3>
-            <p>Jumlah kes Permohonan + WDP yang diselesaikan</p>
+            <h3 id="workloadCardTitle">Beban Tugasan Pegawai Pemeriksa</h3>
+            <p id="workloadCardSubtitle">Berdasarkan tugasan Pegawai Pemeriksa 1 &amp; 2</p>
           </div>
-          <div class="chart-icon-btn"><i class="ri-user-star-line"></i></div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div class="workload-scope-toggle" id="workloadScopeToggle" style="display:flex; background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.08); border-radius:999px; padding:3px; gap:4px;">
+              <button type="button" class="w-scope-btn active" data-scope="CTP" style="padding:5px 12px; font-size:11.5px; font-weight:700; border-radius:999px; border:none; background:#10b981; color:#fff; cursor:pointer; transition:all 0.15s ease;">Permohonan (75 Kes)</button>
+              <button type="button" class="w-scope-btn" data-scope="all" style="padding:5px 12px; font-size:11.5px; font-weight:700; border-radius:999px; border:none; background:transparent; color:#94a3b8; cursor:pointer; transition:all 0.15s ease;">Gabungan (95 Kes)</button>
+              <button type="button" class="w-scope-btn" data-scope="WDP" style="padding:5px 12px; font-size:11.5px; font-weight:700; border-radius:999px; border:none; background:transparent; color:#94a3b8; cursor:pointer; transition:all 0.15s ease;">WDP (20 Kes)</button>
+            </div>
+            <div class="chart-icon-btn"><i class="ri-user-star-line"></i></div>
+          </div>
         </div>
 
         <div class="inspector-workload-list" id="inspectorWorkloadContainer">

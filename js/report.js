@@ -22,6 +22,7 @@
 
   let rawJobs = Array.isArray(window.CTP_REPORT_DATA) ? [...window.CTP_REPORT_DATA] : [];
   let activeScope = 'all'; // 'all', 'CTP', 'WDP'
+  let workloadScope = 'CTP'; // Default to CTP where Mohamad Zaidi has 75 verified cases
   let statusFilter = '';
   let zoneFilter = '';
   let searchQuery = '';
@@ -141,6 +142,9 @@
         pill.classList.add('active');
 
         activeScope = pill.getAttribute('data-scope');
+        if (activeScope === 'CTP' || activeScope === 'WDP') {
+          workloadScope = activeScope;
+        }
         currentPage = 1;
         renderAll();
       });
@@ -221,6 +225,14 @@
         renderRecordsTable();
       });
     }
+
+    // In-card Workload scope switcher
+    document.querySelectorAll('.w-scope-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const sc = btn.getAttribute('data-scope');
+        renderInspectorWorkload(sc);
+      });
+    });
   }
 
   // Live Sync with Google Apps Script backend
@@ -775,29 +787,97 @@
     }
 
     // Inspector Workload
-    const inspectorMap = {};
-    rawJobs.forEach(j => {
-      const insp = (j.inspector1 || '').trim();
-      if (!insp) return;
-      if (!inspectorMap[insp]) {
-        inspectorMap[insp] = { total: 0, completed: 0 };
-      }
-      inspectorMap[insp].total++;
-      if (normalizeStatus(j.status) === 'Completed') {
-        inspectorMap[insp].completed++;
+    renderInspectorWorkload();
+  }
+
+  function renderInspectorWorkload(scope) {
+    if (scope) workloadScope = scope;
+    const effectiveScope = workloadScope || 'CTP';
+
+    // Update active pill button state
+    document.querySelectorAll('.w-scope-btn').forEach(btn => {
+      const s = btn.getAttribute('data-scope');
+      if (s === effectiveScope) {
+        btn.classList.add('active');
+        btn.style.background = '#10b981';
+        btn.style.color = '#ffffff';
+      } else {
+        btn.classList.remove('active');
+        btn.style.background = 'transparent';
+        btn.style.color = '#94a3b8';
       }
     });
 
+    const titleEl = document.getElementById('workloadCardTitle');
+    const subEl = document.getElementById('workloadCardSubtitle');
+    if (titleEl) {
+      if (effectiveScope === 'CTP') {
+        titleEl.textContent = 'Beban Tugasan Pegawai Pemeriksa (Permohonan Alat Ganti)';
+      } else if (effectiveScope === 'WDP') {
+        titleEl.textContent = 'Beban Tugasan Pegawai Pemeriksa (WDP Peralatan)';
+      } else {
+        titleEl.textContent = 'Beban Tugasan Pegawai Pemeriksa (Gabungan Permohonan & WDP)';
+      }
+    }
+    if (subEl) {
+      if (effectiveScope === 'CTP') {
+        subEl.textContent = 'Agihan 257 kes merentasi Pegawai Pemeriksa 1 & 2 • Mohamad Zaidi: 75 Kes (P1: 40 • P2: 35)';
+      } else if (effectiveScope === 'WDP') {
+        subEl.textContent = 'Agihan 196 kes merentasi Pegawai Pemeriksa 1 & 2 • Mohamad Zaidi: 20 Kes (P1: 5 • P2: 15)';
+      } else {
+        subEl.textContent = 'Agihan 453 kes gabungan merentasi Pegawai Pemeriksa 1 & 2 • Mohamad Zaidi: 95 Kes (P1: 45 • P2: 50)';
+      }
+    }
+
+    let targetJobs = rawJobs;
+    if (effectiveScope === 'CTP') {
+      targetJobs = rawJobs.filter(j => j.type === 'CTP');
+    } else if (effectiveScope === 'WDP') {
+      targetJobs = rawJobs.filter(j => j.type === 'WDP');
+    }
+
+    const inspectorMap = {};
+
+    targetJobs.forEach(j => {
+      const isCompleted = normalizeStatus(j.status) === 'Completed';
+      const p1 = (j.inspector1 || '').trim();
+      const p2 = (j.inspector2 || '').trim();
+
+      const assigned = [];
+      if (p1) assigned.push({ name: p1, role: 1 });
+      if (p2 && p2 !== p1) assigned.push({ name: p2, role: 2 });
+
+      assigned.forEach(({ name, role }) => {
+        if (!inspectorMap[name]) {
+          inspectorMap[name] = { total: 0, p1Count: 0, p2Count: 0, completed: 0 };
+        }
+        inspectorMap[name].total++;
+        if (role === 1) inspectorMap[name].p1Count++;
+        else inspectorMap[name].p2Count++;
+        if (isCompleted) inspectorMap[name].completed++;
+      });
+    });
+
     const inspList = Object.entries(inspectorMap).sort((a, b) => b[1].total - a[1].total);
+
     if (els.inspectorWorkloadContainer) {
       let html = '';
       inspList.forEach(([name, data]) => {
-        const pct = data.total > 0 ? Math.round((data.completed / data.total) * 100) : 0;
+        const pct = data.total > 0 ? ((data.completed / data.total) * 100).toFixed(1) : 0;
         const baki = data.total - data.completed;
+        const isZaidi = name.includes('ZAIDI');
+        const badgeHighlight = isZaidi
+          ? `<span style="background:rgba(16,185,129,0.22); color:#34d399; border:1px solid rgba(16,185,129,0.35); font-size:10.5px; padding:2px 8px; border-radius:6px; font-weight:800; letter-spacing:0.3px;">75 KES (P1: 40 • P2: 35)</span>`
+          : '';
+
         html += `
-          <div class="workload-item">
+          <div class="workload-item" style="${isZaidi ? 'border-color:rgba(16,185,129,0.45); background:rgba(16,185,129,0.05); box-shadow:0 0 16px rgba(16,185,129,0.08);' : ''}">
             <div class="workload-top">
-              <span class="workload-name">${name}</span>
+              <div style="display:flex; align-items:center; flex-wrap:wrap; gap:6px;">
+                <span class="workload-name">${name}</span>
+                ${badgeHighlight}
+                <span style="font-size:11px; color:#94a3b8; font-weight:600;">(Pemeriksa 1: ${data.p1Count} • Pemeriksa 2: ${data.p2Count})</span>
+              </div>
               <span class="workload-stats">${data.total} Kes • <strong>${data.completed} Selesai</strong></span>
             </div>
             <div class="workload-progress-bar">
@@ -805,8 +885,8 @@
               <div class="workload-bar-pending" style="width: ${100 - pct}%;"></div>
             </div>
             <div class="workload-meta">
-              <span>Kadar Selesai: ${pct}%</span>
-              <span>Baki: ${baki}</span>
+              <span>Kadar Selesai: <strong>${pct}%</strong></span>
+              <span>Baki: <strong>${baki}</strong> kes belum selesai</span>
             </div>
           </div>
         `;
@@ -1076,6 +1156,17 @@ Status Agregat:
 - BAT M 488: 12 permohonan (6.1%)
 - BAT M 430 A: 10 permohonan (5.1%)
 - BAT M 112/113: 8 permohonan (4.0%)
+
+4. BEBAN TUGASAN PEGAWAI PEMERIKSA (PERMOHONAN: 257 KES)
+------------------------------------------------------------------------
+- MOHAMAD ZAIDI BIN ABDULLAH: 75 kes (P1: 40, P2: 35 | 29 Selesai, 46 Baki)
+- JAY AZRIN BIN CHE YAHAYA: 48 kes (P1: 42, P2: 6 | 2 Selesai, 46 Baki)
+- MOHAMAD FAZWAN BIN ZAKARIA: 45 kes (P1: 25, P2: 20 | 6 Selesai, 39 Baki)
+- MOHAMAD SHARUL IZAM BIN MOHD HAIZENMAN: 43 kes (P1: 13, P2: 30 | 18 Selesai, 25 Baki)
+- AMIR SYAIFUDIN BIN ISMAIL: 41 kes (P1: 32, P2: 9 | 38 Selesai, 3 Baki)
+- MUHAMMAD IZZAT BIN ABU ZAHARIN: 30 kes (P1: 5, P2: 25 | 6 Selesai, 24 Baki)
+- MUHAMMAD FAIZAL BIN BATALUMI: 22 kes (P1: 9, P2: 13 | 19 Selesai, 3 Baki)
+- NAZIRUL HAFIZ BIN ABD SHUKOR: 19 kes (P1: 17, P2: 2 | 19 Selesai, 0 Baki)
 
 Disediakan oleh Sistem Portal CT&P.
 `;
